@@ -1,0 +1,7 @@
+# Ignoring files according to https://microchipdeveloper.com/mplabx:version-control-working-with
+/Simon-MPLAB.X/.generated_files/
+/Simon-MPLAB.X/build/
+/Simon-MPLAB.X/dist/
+/Simon-MPLAB.X/nbproject/Makefile-*
+/Simon-MPLAB.X/nbproject/Package-*
+/Simon-MPLAB.X/nbproject/private/
