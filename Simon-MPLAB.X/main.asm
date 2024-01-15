@@ -71,7 +71,7 @@
 ;*******************************************************************************
 
 ; TODO INSERT INCLUDE CODE HERE
-#include "p18f25k40.inc"
+
 ;*******************************************************************************
 ;
 ; TODO Step #2 - Configuration Word Setup
@@ -93,15 +93,51 @@
 
 ; TODO INSERT CONFIG HERE
 
+;*******************************************************************************
+;
+; TODO Step #3 - Variable Definitions
+;
+; Refer to datasheet for available data memory (RAM) organization assuming
+; relocatible code organization (which is an option in project
+; properties > mpasm (Global Options)).  Absolute mode generally should
+; be used sparingly.
+;
+; Example of using GPR Uninitialized Data
+;
+;   GPR_VAR        UDATA
+;   MYVAR1         RES        1      ; User variable linker places
+;   MYVAR2         RES        1      ; User variable linker places
+;   MYVAR3         RES        1      ; User variable linker places
+;
+;   ; Example of using Access Uninitialized Data Section (when available)
+;   ; The variables for the context saving in the device datasheet may need
+;   ; memory reserved here.
+;   INT_VAR        UDATA_ACS
+;   W_TEMP         RES        1      ; w register for context saving (ACCESS)
+;   STATUS_TEMP    RES        1      ; status used for context saving
+;   BSR_TEMP       RES        1      ; bank select used for ISR context saving
+;
+;*******************************************************************************
 
+; TODO PLACE VARIABLE DEFINITIONS GO HERE
+
+;*******************************************************************************
+; Reset Vector
+;*******************************************************************************
+RES_VECT  CODE    0x0000            ; processor reset vector
+    GOTO    DEBUT                   ; go to beginning of program
+    
 ; PIC18F25K40 Configuration Bit Settings
 
 ; Assembly source line config statements
 
+; Assembly source line config statements
+
+#include "p18f25k40.inc"
 
 ; CONFIG1L
   CONFIG  FEXTOSC = OFF         ; External Oscillator mode Selection bits (Oscillator not enabled)
-  CONFIG  RSTOSC = LFINTOSC     ; Power-up default value for COSC bits (Low-Frequency Oscillator)
+  CONFIG  RSTOSC = SOSC         ; Power-up default value for COSC bits (Secondary Oscillator)
 
 ; CONFIG1H
   CONFIG  CLKOUTEN = OFF        ; Clock Out Enable bit (CLKOUT function is disabled)
@@ -158,42 +194,6 @@
 ; CONFIG6H
   CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 
-  
-
-;*******************************************************************************
-;
-; TODO Step #3 - Variable Definitions
-;
-; Refer to datasheet for available data memory (RAM) organization assuming
-; relocatible code organization (which is an option in project
-; properties > mpasm (Global Options)).  Absolute mode generally should
-; be used sparingly.
-;
-; Example of using GPR Uninitialized Data
-;
-;   GPR_VAR        UDATA
-;   MYVAR1         RES        1      ; User variable linker places
-;   MYVAR2         RES        1      ; User variable linker places
-;   MYVAR3         RES        1      ; User variable linker places
-;
-;   ; Example of using Access Uninitialized Data Section (when available)
-;   ; The variables for the context saving in the device datasheet may need
-;   ; memory reserved here.
-;   INT_VAR        UDATA_ACS
-;   W_TEMP         RES        1      ; w register for context saving (ACCESS)
-;   STATUS_TEMP    RES        1      ; status used for context saving
-;   BSR_TEMP       RES        1      ; bank select used for ISR context saving
-;
-;*******************************************************************************
-
-; TODO PLACE VARIABLE DEFINITIONS GO HERE
-
-;*******************************************************************************
-; Reset Vector
-;*******************************************************************************
-
-RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    DEBUT                   ; go to beginning of program
 
 ;*******************************************************************************
 ; TODO Step #4 - Interrupt Service Routines
@@ -246,118 +246,87 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 MAIN_PROG CODE                      ; let linker place main program
 
-CONFIG_CUSTOM
- ; Configuration de l'ADC
-; Remplacer les _ par les bits/valeurs correspondantes
-; début de la configuration
-;	MOVLB
-;	0x 01
-;	; sélection de la banque d?adresse
-;	MOVLW   
-;	b'000101'
-;	MOVWF   
-;	ADPCH, 1
-;	; sélection du channel ADC
-;	MOVLW   
-;	b'00000000'
-;	MOVWF   
-;	ADREF, 1
-;	; configuration des références analogiques
-;	MOVLW   
-;	b'000000    '
-;	MOVWF   
-;	ADCLK, 1
-;	; configuration de l?horloge de l?ADC : 1µs ? T    ? 6µs
-;	AD
-;	MOVLW   
-;	b'11111111'
-;	MOVWF   
-;	ADPRE, 1
-;	; configuration du temps de précharge (max. par défaut)
-;	MOVWF   
-;	ADACQ, 1
-;	; configuration du temps d?acquisition (max. par défaut)
-;	CLRF    
-;	ADCAP, 1
-;	; pas de capacité additionnelle
-;	MOVLW   
-;	b'00000000'
-;	MOVWF   
-;	ADACT, 1
-;	; pas d?activation auto. de l?ADC sur événement 
-;	MOVLW   
-;	b'00000000'
-;	MOVWF   
-;	ADCON3, 1
-;	; pas d?interruption sur l?ADC
-;	MOVLW   
-;	b'00000000'
-;	MOVWF   
-;	ADCON2, 1
-;	; configuration de l?ADC en mode basique
-;	MOVLW   
-;	b'00000000'
-;	MOVWF   
-;	ADCON1, 1
-;	; configuration des options de précharge
-;	MOVLW   
-;	b'10000100'
-;	MOVWF   
-;	ADCON0
-;	; configuration générale et format du résultat
-;; fin de la configuration
-	
-	
-; Configuration du CCP2 en mode PWM sortant sur la patte RC1
-; Remplacer les _ par les bits/valeurs correspondantes
-; début de la configuration
-;	MOVLW     b'00000100'
-;	MOVWF     CCPTMRS                ; associe le module CCP2 avec le timer 2
-;	MOVLB    0x 02 
-;	MOVLW    0x06
-;	; sélection de la banque d?adresse
-;	MOVWF     RC1PPS, 1                ; associe le pin RC1 avec la fonction de sortie de CCP2
-;	; désactivation de la sortie PWM pour configuration ; fixe la période de PWM (voir formule p.271)
-;	BSF            TRISC, 1 
-;	MOVLW     b'01111111'
-;	MOVWF     T2PR
-;	MOVLW	  b'00010000'
-;	MOVWF     CCP2CON                 ; configuration du module CCP2 et format des données 
-;	MOVLW     d'00000000'
-;	MOVWF     CCPR2H 
-;	MOVLW     d'00000000'
-;	MOVWF     CCPR2L 
-;	MOVLW     b'00000001'
-;	; fixe le rapport cyclique du signal (voir formule p.272)
-;	MOVWF     T2CLK CON               ; configuration de l?horloge du timer 2 = Fosc/4 
-;	MOVLW     b'00000100'
-;	; choix des options du timer 2 (voir p.256) ; activation de la sortie PWM
-;	MOVWF     T2CON 
-;	BCF           TRISC, 1
-; fin de la configuration
-;RANDOM
-;   BANKSEL ADCON0
-;   BSF     ADCON0, GO_nDONE ; Démarrer la conversion ADC
-;
-;WAIT_FOR_ADC
-;    BTFSC   ADCON0, GO_nDONE ; Attendre que la conversion soit terminée
-;    GOTO    WAIT_FOR_ADC
-; 
-;    ; La conversion est terminée, lire la valeur ADC
-;    BANKSEL ADRESH
-;    MOVF    ADRESH, W ; Lire la valeur haute
-;    ; Effectuez des opérations supplémentaires si nécessaire
-; 
-;    ; Répétez le processus pour générer un autre nombre aléatoire
-;    GOTO RANDOM
- 
 DEBUT
 
     ; TODO Step #5 - Insert Your Program Here
-
-    ; Boucle de génération de nombres aléatoires
-
     
-    GOTO $                          ; loop forever
+    ; Configuration initiale LEDs (verte)
+    BANKSEL TRISC       ; Sélection de la banque pour TRISC
+    CLRF TRISC          ; Configure PORTC comme sortie
+
+    ; Allumer et éteindre les LEDs
+    loop:
+        CALL TurnOnLD0
+        CALL TunOffLD0
+        GOTO loop
+
+    ; Sous-routine pour allumer toutes les LEDs
+    TurnOnAllLEDs:
+        BANKSEL LATC    ; Sélection de la banque pour LATC
+        BSF LATC, 4     ; Allume la LED sur RC4
+        BSF LATC, 5     ; Allume la LED sur RC5
+        BSF LATC, 6     ; Allume la LED sur RC6
+        BSF LATC, 7     ; Allume la LED sur RC7
+        RETURN
+
+    ; Sous-routien pour alumer un led par une LED
+    ;LD0 On
+    TurnOnLD0:
+	BANKSEL LATC    ; Sélection de la banque pour LATC
+        BSF LATC, 4     ; Allume la LED sur RC4
+	RETURN
+
+    ;LD1 On
+    TurnOnLD1:
+	BANKSEL LATC    ; Sélection de la banque pour LATC
+        BSF LATC, 5     ; Allume la LED sur RC4
+	RETURN
+
+    ;LD2 On
+    TurnOnLD2:
+	BANKSEL LATC    ; Sélection de la banque pour LATC
+        BSF LATC, 6     ; Allume la LED sur RC4
+	RETURN
+
+    ;LD3 On
+    TurnOnLD3:
+	BANKSEL LATC    ; Sélection de la banque pour LATC
+        BSF LATC, 7     ; Allume la LED sur RC4
+	RETURN
+	
+	
+    ; Sous-routine pour éteindre toutes les LEDs
+    TurnOffAllLEDs:
+        BANKSEL LATC    ; Sélection de la banque pour LATC
+        BCF LATC, 4     ; Éteint la LED sur RC4
+        BCF LATC, 5     ; Éteint la LED sur RC5
+        BCF LATC, 6     ; Éteint la LED sur RC6
+        BCF LATC, 7     ; Éteint la LED sur RC7
+        RETURN
+
+    ; Sous-rounie pour éteindre une LED
+    ; LD0 Off
+    TunOffLD0:
+	BANKSEL LATC
+	BCF LATC, 4
+	RETURN
+    
+    ; LD1 Off
+    TunOffLD1:
+	BANKSEL LATC
+	BCF LATC, 5
+	RETURN
+
+    ; LD2 Off
+    TunOffLD2:
+	BANKSEL LATC
+	BCF LATC, 6
+	RETURN
+
+    ; LD3 Off
+    TunOffLD3:
+	BANKSEL LATC
+	BCF LATC, 7
+	RETURN
 
     END
