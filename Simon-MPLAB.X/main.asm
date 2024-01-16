@@ -349,7 +349,6 @@ DEBUTS
     movwf TRISB                 ; Broches RB0, RB1, RB2, RB3 en sortie
     bcf STATUS, 5            ; Retour à la banque de registres par défaut
 
-    
     ColorBitOn:
 	return b'1'
     ColorBitOff:
@@ -363,22 +362,19 @@ DEBUTS
 	CALL ColorDisable
 	CALL ColorDisable
 	CALL ColorDisable
+	
     ColorBlue:
 	CALL ColorDisable
 	CALL ColorDisable
 	CALL ColorEnable
 	CALL ColorDisable
+	
     ColorRed:
 	CALL ColorDisable
 	CALL ColorEnable
 	CALL ColorDisable
 	CALL ColorDisable
-    ColorWhite:
-	CALL ColorDisable
-	CALL ColorDisable
-	CALL ColorDisable
-	CALL ColorEnable
-    
+	    
     Delay:
         
 END
