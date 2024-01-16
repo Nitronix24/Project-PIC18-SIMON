@@ -192,7 +192,7 @@
 ; Reset Vector
 ;*******************************************************************************
 RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    DEBUTS                   ; go to beginning of program
+    GOTO    DEBUT                   ; go to beginning of program
     
 
 ;*******************************************************************************
@@ -346,62 +346,62 @@ DEBUT
 ;*******************************************************************************
     
     
-    bsf STATUS,5             ; Sï¿½lection du registre de configuration
-    movlw 0x04                  ; Configuration des broches en sortie
+    bsf STATUS,5		; Sélection du registre de configuration
+    movlw 0x04			; Configuration des broches en sortie
     movwf TRISB                 ; Broches RB0, RB1, RB2, RB3 en sortie
-    bcf STATUS, 5            ; Retour ï¿½ la banque de registres par dï¿½faut
+    bcf STATUS, 5		; Retour à la banque de registres par dï¿½faut
 
     ColorBitOn:
 	
-	RETURN b'1'
+	RETURN b'1'		; renvoie 1 pour le charger sur le pin des LED
 
 
     ColorBitOff:
 
-	RETURN b'0'
+	RETURN b'0'		; renvoie 0 pour le charger sur le pin des LED
 
 
     ColorEnable:
 
 	MOVLW	0x08
-	MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter ï¿½ 8
+	MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter à 8
 	MOVLW	0X05
-	MOVWF	colorSwitchOn					; initialiser la valeur de colorSwitchOn ï¿½ 5
+	MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn à 5
 
     LoopColorEnable
-	CPFSEQ	colorBitCounter,1				; test si le colorSwitchOn = colorBitCounter; skip if =
+	CPFSEQ	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
 		GOTO	SetBitOff
 		GOTO	SetBitOn
 
 	SetBitOff
-		CALL	ColorBitOff						; appel la fonction de mise ï¿½ 0 du bit
+		CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
 		GOTO 	EndSetBit
 
 	SetBitOn
-		CALL 	ColorBitOn 						; appel la fonction de mise ï¿½ 1 du bit
+		CALL 	ColorBitOn		; appel la fonction de mise à 1 du bit
 	EndSetBit
-	DECF	colorBitCounter					; dï¿½crï¿½mente le colorBitCounter
+	DECF	colorBitCounter			; décrémente le colorBitCounter
 	MOVLW	0X00
-	CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
-		GOTO	BackToLoopColorEnable					; appel la routine qui renvoie au dï¿½but de la boucle
+	CPFSEQ	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
+		GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au début de la boucle
 		RETURN
 	BackToLoopColorEnable
-		MOVF 	colorSwitchOn,W,1				; charge colorSwitchOn dans le WREG
+		MOVF 	colorSwitchOn,W,1	; charge colorSwitchOn dans le WREG
 		GOTO 	LoopColorEnable
 
 
     ColorDisable:
 
 	MOVLW	0x08
-	MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter ï¿½ 8
+	MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter ï¿½ 8
 
     loopColorDisable
 	    MOVLW	0X00
-	    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
-	    GOTO	EndIfDisableNull				; appel la routine qui renvoie au dï¿½but de la boucle
+	    CPFSEQ	colorBitCounter,1 	; test si le colorBitCounter = 0; skip if = 0
+	    GOTO	EndIfDisableNull	; appel la routine qui renvoie au début de la boucle
 	    RETURN
 	EndIfDisableNull
-	    CALL	ColorBitOff						; appel la fonction de mise ï¿½ 0 du bit
+	    CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
 	    GOTO 	loopColorDisable
 
 
