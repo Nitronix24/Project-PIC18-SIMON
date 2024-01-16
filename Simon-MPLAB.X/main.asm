@@ -243,6 +243,48 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 ;*******************************************************************************
 
 MAIN_PROG CODE                      ; let linker place main program
+ 
+ConfigPWM:
+; Début de la configuration
+
+; Associer le module CCP2 avec le timer 2
+MOVLW     b'00000100'
+MOVWF     CCPTMRS                
+
+; Sélection de la banque d?adresse
+MOVLB    0x02
+
+; Associer le pin RC1 avec la fonction de sortie de CCP2
+MOVLW     0x06
+MOVWF     RC1PPS
+
+; Désactivation de la sortie PWM pour configuration ; Fixe la période de PWM
+BSF       TRISC, 1 
+MOVLW     0xFF
+MOVWF     T2PR
+
+; Configuration du module CCP2 et format des données
+MOVLW     b'10001100'
+MOVWF     CCP2CON                 
+
+; Fixe le rapport cyclique du signal
+MOVLW     d'01111111'   ; Valeur arbitraire, ajustez en fonction de vos besoins
+MOVWF     CCPR2H 
+MOVLW     d'00000001'   ; Valeur arbitraire, ajustez en fonction de vos besoins
+MOVWF     CCPR2L 
+
+; Configuration de l?horloge du timer 2 = Fosc/4
+MOVLW     b'00000001'
+MOVWF     T2CLKCON
+
+; Choix des options du timer 2
+MOVLW     b'00000100'
+MOVWF     T2CON
+
+; Activation de la sortie PWM
+BCF       TRISC, 1
+
+; Fin de la configuration
 
 DEBUT
 
