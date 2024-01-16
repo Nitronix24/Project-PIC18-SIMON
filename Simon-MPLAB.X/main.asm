@@ -248,6 +248,10 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 MAIN_PROG CODE                      ; let linker place main program
 
+ 
+;*******************************************************************************
+; RGB LEDs Functions
+;*******************************************************************************
 ColorBitOn:
     
     MOVLB   LATB
@@ -394,7 +398,62 @@ ColorOff:
     CALL ColorDisable
     CALL ColorDisable
     RETURN
+    
+LED0_On:
+    CALL ColorRed
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorDisable
+    RETURN
+    
+LED1_On:
+    CALL ColorDisable
+    CALL ColorBlue
+    CALL ColorDisable
+    CALL ColorDisable
+    RETURN
+    
+LED2_On:
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorGreen
+    CALL ColorDisable
+    RETURN
+    
+LED3_On:
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorYellow
+    RETURN
+    
+LEDAll_Green:
+    CALL ColorGreen
+    CALL ColorGreen
+    CALL ColorGreen
+    CALL ColorGreen
+    RETURN
+
+LEDAll_Off:
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorDisable
+    RETURN
+    
  
+;*******************************************************************************
+
+    
+;*******************************************************************************
+; Tempo
+;*******************************************************************************
+    
+Tempo_1s:
+    
+    
+    
+    
 DEBUT
  
 ;*******************************************************************************
@@ -503,29 +562,24 @@ DEBUT
     MOVWF   TRISB
     
     BANKSEL LATB
+    
 
-loop
-    call    ColorRed
-    call    ColorGreen
-    call    ColorBlue
-    call    ColorYellow
+    CALL ColorRed
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorDisable
     
-    call    ColorYellow
-    call    ColorRed
-    call    ColorGreen
-    call    ColorBlue
+    CALL ColorDisable
+    CALL ColorBlue
+    CALL ColorDisable
+    CALL ColorDisable
     
-    call    ColorBlue
-    call    ColorWhite
-    call    ColorRed
-    call    ColorOff
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorGreen
+    CALL ColorDisable
     
-    call    ColorOff
-    call    ColorOff
-    call    ColorOff
-    call    ColorOff
-    
-    goto loop
+    goto $
     
     END
 
