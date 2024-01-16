@@ -99,7 +99,7 @@
 
 ; CONFIG1L
   CONFIG  FEXTOSC = OFF         ; External Oscillator mode Selection bits (Oscillator not enabled)
-  CONFIG  RSTOSC = HFINTOSC_1MHZ; Power-up default value for COSC bits (HFINTOSC with HFFRQ = 4 MHz and CDIV = 4:1)
+  CONFIG  RSTOSC = HFINTOSC_64MHZ; Power-up default value for COSC bits (HFINTOSC with HFFRQ = 64 MHz and CDIV = 1:1)
 
 ; CONFIG1H
   CONFIG  CLKOUTEN = OFF        ; Clock Out Enable bit (CLKOUT function is disabled)
@@ -157,6 +157,8 @@
   CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 
 
+
+
 ;*******************************************************************************
 ;
 ; TODO Step #3 - Variable Definitions
@@ -184,9 +186,9 @@
 ;*******************************************************************************
 
 ; TODO PLACE VARIABLE DEFINITIONS GO HERE
-    var UDATA 0x400
-    colorBitCounter RES	1
-    colorSwitchOn   RES 1
+var	UDATA	    0X400
+colorBitCounter	    RES	    1
+colorSwitchOn	    RES	    1
 
 ;*******************************************************************************
 ; Reset Vector
@@ -246,103 +248,145 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 MAIN_PROG CODE                      ; let linker place main program
 
- ColorBitOn:
-	NOP
-	NOP
-	NOP
-	NOP
-	RETURN b'1'		; renvoie 1 pour le charger sur le pin des LED
+ColorBitOn:
+    
+    MOVLB   LATB
+    BSF	    LATB,5
+    ; attendre 0.82us
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    BCF	    LATB,5
+    ; attendre 0.43us
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    Return
 
 
-    ColorBitOff:
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	RETURN b'0'		; renvoie 0 pour le charger sur le pin des LED
+ColorBitOff:
+    
+    MOVLB   LATB
+    BSF LATB,5 
+    ; attendre 0.32us
+    NOP
+    NOP
+    NOP
+    BCF	    LATB,5
+    ; attendre 0.93us
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    NOP
+    Return
 
+ColorEnable:
+    
+    MOVLB	0X04
+    MOVLW	0x08
+    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter à 8
+    MOVLW	0X05
+    MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn à 5
 
-    ColorEnable:
+LoopColorEnable
+    CPFSEQ	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
+	    GOTO	SetBitOff
+	    GOTO	SetBitOn
 
-	MOVLW	0x08
-	MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter à 8
-	MOVLW	0X05
-	MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn à 5
-
-    LoopColorEnable
-	CPFSEQ	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
-		GOTO	SetBitOff
-		GOTO	SetBitOn
-
-	SetBitOff
-		CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
-		GOTO 	EndSetBit
-
-	SetBitOn
-		CALL 	ColorBitOn		; appel la fonction de mise à 1 du bit
-	EndSetBit
-	DECF	colorBitCounter			; décrémente le colorBitCounter
-	MOVLW	0X00
-	CPFSEQ	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
-		GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au début de la boucle
-		RETURN
-	BackToLoopColorEnable
-		MOVF 	colorSwitchOn,W,1	; charge colorSwitchOn dans le WREG
-		GOTO 	LoopColorEnable
-
-
-    ColorDisable:
-
-	MOVLW	0x08
-	MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter ï¿½ 8
-
-    loopColorDisable
-	    MOVLW	0X00
-	    CPFSEQ	colorBitCounter,1 	; test si le colorBitCounter = 0; skip if = 0
-	    GOTO	EndIfDisableNull	; appel la routine qui renvoie au début de la boucle
-	    RETURN
-	EndIfDisableNull
+    SetBitOff
 	    CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
-	    GOTO 	loopColorDisable
+	    GOTO 	EndSetBit
+
+    SetBitOn
+	    CALL 	ColorBitOn		; appel la fonction de mise à 1 du bit
+    EndSetBit
+    DECF	colorBitCounter			; décrémente le colorBitCounter
+    MOVLW	0X00
+    CPFSEQ	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
+	    GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au début de la boucle
+	    RETURN
+    BackToLoopColorEnable
+	    MOVF 	colorSwitchOn,W,1	; charge colorSwitchOn dans le WREG
+	    GOTO 	LoopColorEnable
 
 
-    ColorRed:
+ColorDisable:
+    
+    MOVLB	0X04
+    MOVLW	0x08
+    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter ï¿½ 8
 
-	CALL ColorEnable
-	CALL ColorDisable
-	CALL ColorDisable
+loopColorDisable
+	MOVLW	0X00
+	CPFSEQ	colorBitCounter,1 	; test si le colorBitCounter = 0; skip if = 0
+	GOTO	EndIfDisableNull	; appel la routine qui renvoie au début de la boucle
 	RETURN
+    EndIfDisableNull
+	DECF	colorBitCounter
+	CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
+	GOTO 	loopColorDisable
 
 
-    ColorGreen:
+ColorRed:
+    
+    CALL ColorDisable
+    CALL ColorEnable
+    CALL ColorDisable
+    RETURN
 
-	CALL ColorDisable
-	CALL ColorEnable
-	CALL ColorDisable
-	RETURN
+
+ColorGreen:
+
+    CALL ColorEnable
+    CALL ColorDisable
+    CALL ColorDisable
+    RETURN
 
 
-    ColorBlue:
+ColorBlue:
 
-	CALL ColorDisable
-	CALL ColorDisable
-	CALL ColorEnable
-	RETURN
-	
-    ColorOff:
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorEnable
+    RETURN
+    
+ColorYellow:
+    
+    CALL ColorEnable
+    CALL ColorEnable
+    CALL ColorDisable
+    RETURN
 
-	CALL ColorDisable
-	CALL ColorDisable
-	CALL ColorDisable
-	RETURN
+ColorOff:
+
+    CALL ColorDisable
+    CALL ColorDisable
+    CALL ColorDisable
+    RETURN
  
 DEBUT
  
@@ -443,20 +487,26 @@ DEBUT
 ;			TESTS SUR LES LEDS RGBW SK6812
 ;*******************************************************************************
     
+    BANKSEL OSCFRQ
+    bsf	    OSCFRQ, 3
+    BCF	    OSCFRQ, 1
     
-    bsf STATUS,5		; Sélection du registre de configuration
-    movlw 0x04			; Configuration des broches en sortie
-    movwf TRISB                 ; Broches RB0, RB1, RB2, RB3 en sortie
-    bcf STATUS, 5		; Retour à la banque de registres par dï¿½faut
+    BANKSEL TRISB
+    MOVLW   0x0F
+    MOVWF   TRISB
     
-    CALL ColorBlue
-    CALL ColorRed
-    CALL ColoGreen
-    CALL ColorRed
+    BANKSEL LATB
+
+loop
+    call    ColorRed
+    call    ColorGreen
+    call    ColorBlue
+    call    ColorYellow
+    goto loop
+
     
-    ;Delay:
         
-END
+    END
 
 ;*******************************************************************************
     
