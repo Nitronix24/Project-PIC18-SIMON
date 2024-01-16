@@ -247,12 +247,26 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 MAIN_PROG CODE                      ; let linker place main program
 
  ColorBitOn:
-	
+	NOP
+	NOP
+	NOP
+	NOP
 	RETURN b'1'		; renvoie 1 pour le charger sur le pin des LED
 
 
     ColorBitOff:
-
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
 	RETURN b'0'		; renvoie 0 pour le charger sur le pin des LED
 
 
