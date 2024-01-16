@@ -356,75 +356,75 @@ DEBUTS
 
     ColorBitOff:
 
-	    RETURN b'0'
+	RETURN b'0'
 
 
     ColorEnable:
 
-	    MOVLW	0x08
-	    MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter à 8
-	    MOVLW	0X05
-	    MOVWF	colorSwitchOn					; initialiser la valeur de colorSwitchOn à 5
+	MOVLW	0x08
+	MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter à 8
+	MOVLW	0X05
+	MOVWF	colorSwitchOn					; initialiser la valeur de colorSwitchOn à 5
 
     LoopColorEnable
-	    CPFSEQ	colorBitCounter,1				; test si le colorSwitchOn = colorBitCounter; skip if =
-		    GOTO	SetBitOff
-		    GOTO	SetBitOn
+	CPFSEQ	colorBitCounter,1				; test si le colorSwitchOn = colorBitCounter; skip if =
+		GOTO	SetBitOff
+		GOTO	SetBitOn
 
-	    SetBitOff
-		    CALL	ColorBitOff						; appel la fonction de mise à 0 du bit
-		    GOTO 	EndSetBit
+	SetBitOff
+		CALL	ColorBitOff						; appel la fonction de mise à 0 du bit
+		GOTO 	EndSetBit
 
-	    SetBitOn
-		    CALL 	ColorBitOn 						; appel la fonction de mise à 1 du bit
-	    EndSetBit
-	    DECF	colorBitCounter					; décrémente le colorBitCounter
-	    MOVLW	0X00
-	    CPFSEQ  colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
-		    GOTO	BackToLoopColorEnable					; appel la routine qui renvoie au début de la boucle
-		    RETURN
-	    BackToLoopColorEnable
-		    MOVF 	colorSwitchOn,W,1				; charge colorSwitchOn dans le WREG
-		    GOTO 	LoopColorEnable
+	SetBitOn
+		CALL 	ColorBitOn 						; appel la fonction de mise à 1 du bit
+	EndSetBit
+	DECF	colorBitCounter					; décrémente le colorBitCounter
+	MOVLW	0X00
+	CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
+		GOTO	BackToLoopColorEnable					; appel la routine qui renvoie au début de la boucle
+		RETURN
+	BackToLoopColorEnable
+		MOVF 	colorSwitchOn,W,1				; charge colorSwitchOn dans le WREG
+		GOTO 	LoopColorEnable
 
 
     ColorDisable:
 
-	    MOVLW	0x08
-	    MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter à 8
+	MOVLW	0x08
+	MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter à 8
 
     loopColorDisable
-		    MOVLW	0X00
-		    CPFSEQ  colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
-		    GOTO	EndIfDisableNull				; appel la routine qui renvoie au début de la boucle
-		    RETURN
-	    EndIfDisableNull
-		    CALL	ColorBitOff						; appel la fonction de mise à 0 du bit
-		    GOTO 	loopColorDisable
+	    MOVLW	0X00
+	    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
+	    GOTO	EndIfDisableNull				; appel la routine qui renvoie au début de la boucle
+	    RETURN
+	EndIfDisableNull
+	    CALL	ColorBitOff						; appel la fonction de mise à 0 du bit
+	    GOTO 	loopColorDisable
 
 
     ColorRed:
 
-	    CALL ColorEnable
-	    CALL ColorDisable
-	    CALL ColorDisable
-	    RETURN
+	CALL ColorEnable
+	CALL ColorDisable
+	CALL ColorDisable
+	RETURN
 
 
     ColorGreen:
 
-	    CALL ColorDisable
-	    CALL ColorEnable
-	    CALL ColorDisable
-	    RETURN
+	CALL ColorDisable
+	CALL ColorEnable
+	CALL ColorDisable
+	RETURN
 
 
     ColorBlue:
 
-	    CALL ColorDisable
-	    CALL ColorDisable
-	    CALL ColorEnable
-	    RETURN
+	CALL ColorDisable
+	CALL ColorDisable
+	CALL ColorEnable
+	RETURN
 	    
     Delay:
         
