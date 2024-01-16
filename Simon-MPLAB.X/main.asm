@@ -120,6 +120,9 @@
 ;*******************************************************************************
 
 ; TODO PLACE VARIABLE DEFINITIONS GO HERE
+    var UDATA 0x400
+    colorBitCounter RES	1
+    colorSwitchOn   RES 1
 
 ;*******************************************************************************
 ; Reset Vector
@@ -380,7 +383,7 @@ DEBUTS
 	    EndSetBit
 	    DECF	colorBitCounter					; décrémente le colorBitCounter
 	    MOVLW	0X00
-	    CPFSEQ  colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
+	    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
 		    GOTO	BackToLoopColorEnable					; appel la routine qui renvoie au début de la boucle
 		    RETURN
 	    BackToLoopColorEnable
@@ -395,7 +398,7 @@ DEBUTS
 
     loopColorDisable
 		    MOVLW	0X00
-		    CPFSEQ  colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
+		    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
 		    GOTO	EndIfDisableNull				; appel la routine qui renvoie au début de la boucle
 		    RETURN
 	    EndIfDisableNull
@@ -426,7 +429,7 @@ DEBUTS
 	    CALL ColorEnable
 	    RETURN
 	    
-    Delay:
+    ;Delay:
         
 END
     
