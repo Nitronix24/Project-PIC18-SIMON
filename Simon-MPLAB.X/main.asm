@@ -255,10 +255,10 @@ MAIN_PROG CODE                      ; let linker place main program
 ;*******************************************************************************
  
     ; Configuration initiale LEDs (verte)
-;    BANKSEL TRISC       ; Sélection de la banque pour TRISC
+;    BANKSEL TRISC       ; Sï¿½lection de la banque pour TRISC
 ;    CLRF TRISC          ; Configure PORTC comme sortie
 
-    ; Allumer et éteindre les LEDs
+    ; Allumer et ï¿½teindre les LEDs
 ;    loop:
 ;        CALL TurnOnLD0
 ;        CALL TunOffLD0
@@ -272,7 +272,7 @@ MAIN_PROG CODE                      ; let linker place main program
 
     ; Sous-routine pour allumer toutes les LEDs
 ;    TurnOnAllLEDs:
-;        BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
 ;        BSF LATC, 4     ; Allume la LED sur RC4
 ;        BSF LATC, 5     ; Allume la LED sur RC5
 ;        BSF LATC, 6     ; Allume la LED sur RC6
@@ -282,39 +282,39 @@ MAIN_PROG CODE                      ; let linker place main program
     ; Sous-routien pour alumer un led par une LED
     ;LD0 On
 ;    TurnOnLD0:
-;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
 ;       BSF LATC, 4     ; Allume la LED sur RC4
 ;	RETURN
 
     ;LD1 On
 ;    TurnOnLD1:
-;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
 ;       BSF LATC, 5     ; Allume la LED sur RC4
 ;	RETURN
 
     ;LD2 On
 ;    TurnOnLD2:
-;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
 ;       BSF LATC, 6     ; Allume la LED sur RC4
 ;	RETURN
 
     ;LD3 On
 ;    TurnOnLD3:
-;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
 ;       BSF LATC, 7     ; Allume la LED sur RC4
 ;	RETURN
 	
 	
-    ; Sous-routine pour éteindre toutes les LEDs
+    ; Sous-routine pour ï¿½teindre toutes les LEDs
 ;    TurnOffAllLEDs:
-;        BANKSEL LATC    ; Sélection de la banque pour LATC
-;        BCF LATC, 4     ; Éteint la LED sur RC4
-;        BCF LATC, 5     ; Éteint la LED sur RC5
-;        BCF LATC, 6     ; Éteint la LED sur RC6
-;        BCF LATC, 7     ; Éteint la LED sur RC7
+;        BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
+;        BCF LATC, 4     ; ï¿½teint la LED sur RC4
+;        BCF LATC, 5     ; ï¿½teint la LED sur RC5
+;        BCF LATC, 6     ; ï¿½teint la LED sur RC6
+;        BCF LATC, 7     ; ï¿½teint la LED sur RC7
 ;        RETURN
 
-    ; Sous-rounie pour éteindre une LED
+    ; Sous-rounie pour ï¿½teindre une LED
     ; LD0 Off
 ;    TunOffLD0:
 ;	BANKSEL LATC
@@ -347,10 +347,10 @@ MAIN_PROG CODE                      ; let linker place main program
 
 DEBUTS
     
-    bsf STATUS,5             ; Sélection du registre de configuration
+    bsf STATUS,5             ; Sï¿½lection du registre de configuration
     movlw 0x04                  ; Configuration des broches en sortie
     movwf TRISB                 ; Broches RB0, RB1, RB2, RB3 en sortie
-    bcf STATUS, 5            ; Retour à la banque de registres par défaut
+    bcf STATUS, 5            ; Retour ï¿½ la banque de registres par dï¿½faut
 
     ColorBitOn:
 	
@@ -359,75 +359,75 @@ DEBUTS
 
     ColorBitOff:
 
-	    RETURN b'0'
+	RETURN b'0'
 
 
     ColorEnable:
 
-	    MOVLW	0x08
-	    MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter à 8
-	    MOVLW	0X05
-	    MOVWF	colorSwitchOn					; initialiser la valeur de colorSwitchOn à 5
+	MOVLW	0x08
+	MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter ï¿½ 8
+	MOVLW	0X05
+	MOVWF	colorSwitchOn					; initialiser la valeur de colorSwitchOn ï¿½ 5
 
     LoopColorEnable
-	    CPFSEQ	colorBitCounter,1				; test si le colorSwitchOn = colorBitCounter; skip if =
-		    GOTO	SetBitOff
-		    GOTO	SetBitOn
+	CPFSEQ	colorBitCounter,1				; test si le colorSwitchOn = colorBitCounter; skip if =
+		GOTO	SetBitOff
+		GOTO	SetBitOn
 
-	    SetBitOff
-		    CALL	ColorBitOff						; appel la fonction de mise à 0 du bit
-		    GOTO 	EndSetBit
+	SetBitOff
+		CALL	ColorBitOff						; appel la fonction de mise ï¿½ 0 du bit
+		GOTO 	EndSetBit
 
-	    SetBitOn
-		    CALL 	ColorBitOn 						; appel la fonction de mise à 1 du bit
-	    EndSetBit
-	    DECF	colorBitCounter					; décrémente le colorBitCounter
-	    MOVLW	0X00
-	    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
-		    GOTO	BackToLoopColorEnable					; appel la routine qui renvoie au début de la boucle
-		    RETURN
-	    BackToLoopColorEnable
-		    MOVF 	colorSwitchOn,W,1				; charge colorSwitchOn dans le WREG
-		    GOTO 	LoopColorEnable
+	SetBitOn
+		CALL 	ColorBitOn 						; appel la fonction de mise ï¿½ 1 du bit
+	EndSetBit
+	DECF	colorBitCounter					; dï¿½crï¿½mente le colorBitCounter
+	MOVLW	0X00
+	CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
+		GOTO	BackToLoopColorEnable					; appel la routine qui renvoie au dï¿½but de la boucle
+		RETURN
+	BackToLoopColorEnable
+		MOVF 	colorSwitchOn,W,1				; charge colorSwitchOn dans le WREG
+		GOTO 	LoopColorEnable
 
 
     ColorDisable:
 
-	    MOVLW	0x08
-	    MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter à 8
+	MOVLW	0x08
+	MOVWF	colorBitCounter					; initialiser la valeur de colorBitCounter ï¿½ 8
 
     loopColorDisable
-		    MOVLW	0X00
-		    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
-		    GOTO	EndIfDisableNull				; appel la routine qui renvoie au début de la boucle
-		    RETURN
-	    EndIfDisableNull
-		    CALL	ColorBitOff						; appel la fonction de mise à 0 du bit
-		    GOTO 	loopColorDisable
+	    MOVLW	0X00
+	    CPFSEQ	colorBitCounter,1 				; test si le colorBitCounter = 0; skip if = 0
+	    GOTO	EndIfDisableNull				; appel la routine qui renvoie au dï¿½but de la boucle
+	    RETURN
+	EndIfDisableNull
+	    CALL	ColorBitOff						; appel la fonction de mise ï¿½ 0 du bit
+	    GOTO 	loopColorDisable
 
 
     ColorRed:
 
-	    CALL ColorEnable
-	    CALL ColorDisable
-	    CALL ColorDisable
-	    RETURN
+	CALL ColorEnable
+	CALL ColorDisable
+	CALL ColorDisable
+	RETURN
 
 
     ColorGreen:
 
-	    CALL ColorDisable
-	    CALL ColorEnable
-	    CALL ColorDisable
-	    RETURN
+	CALL ColorDisable
+	CALL ColorEnable
+	CALL ColorDisable
+	RETURN
 
 
     ColorBlue:
 
-	    CALL ColorDisable
-	    CALL ColorDisable
-	    CALL ColorEnable
-	    RETURN
+	CALL ColorDisable
+	CALL ColorDisable
+	CALL ColorEnable
+	RETURN
 	    
     ;Delay:
         
