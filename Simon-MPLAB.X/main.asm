@@ -71,7 +71,7 @@
 ;*******************************************************************************
 
 ; TODO INSERT INCLUDE CODE HERE
-
+#include "p18f25k40.inc"
 ;*******************************************************************************
 ;
 ; TODO Step #2 - Configuration Word Setup
@@ -92,51 +92,10 @@
 ;*******************************************************************************
 
 ; TODO INSERT CONFIG HERE
-
-;*******************************************************************************
-;
-; TODO Step #3 - Variable Definitions
-;
-; Refer to datasheet for available data memory (RAM) organization assuming
-; relocatible code organization (which is an option in project
-; properties > mpasm (Global Options)).  Absolute mode generally should
-; be used sparingly.
-;
-; Example of using GPR Uninitialized Data
-;
-;   GPR_VAR        UDATA
-;   MYVAR1         RES        1      ; User variable linker places
-;   MYVAR2         RES        1      ; User variable linker places
-;   MYVAR3         RES        1      ; User variable linker places
-;
-;   ; Example of using Access Uninitialized Data Section (when available)
-;   ; The variables for the context saving in the device datasheet may need
-;   ; memory reserved here.
-;   INT_VAR        UDATA_ACS
-;   W_TEMP         RES        1      ; w register for context saving (ACCESS)
-;   STATUS_TEMP    RES        1      ; status used for context saving
-;   BSR_TEMP       RES        1      ; bank select used for ISR context saving
-;
-;*******************************************************************************
-
-; TODO PLACE VARIABLE DEFINITIONS GO HERE
-    var UDATA 0x400
-    colorBitCounter RES	1
-    colorSwitchOn   RES 1
-
-;*******************************************************************************
-; Reset Vector
-;*******************************************************************************
-RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    DEBUTS                   ; go to beginning of program
     
 ; PIC18F25K40 Configuration Bit Settings
 
 ; Assembly source line config statements
-
-; Assembly source line config statements
-
-#include "p18f25k40.inc"
 
 ; CONFIG1L
   CONFIG  FEXTOSC = OFF         ; External Oscillator mode Selection bits (Oscillator not enabled)
@@ -199,6 +158,44 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 
 ;*******************************************************************************
+;
+; TODO Step #3 - Variable Definitions
+;
+; Refer to datasheet for available data memory (RAM) organization assuming
+; relocatible code organization (which is an option in project
+; properties > mpasm (Global Options)).  Absolute mode generally should
+; be used sparingly.
+;
+; Example of using GPR Uninitialized Data
+;
+;   GPR_VAR        UDATA
+;   MYVAR1         RES        1      ; User variable linker places
+;   MYVAR2         RES        1      ; User variable linker places
+;   MYVAR3         RES        1      ; User variable linker places
+;
+;   ; Example of using Access Uninitialized Data Section (when available)
+;   ; The variables for the context saving in the device datasheet may need
+;   ; memory reserved here.
+;   INT_VAR        UDATA_ACS
+;   W_TEMP         RES        1      ; w register for context saving (ACCESS)
+;   STATUS_TEMP    RES        1      ; status used for context saving
+;   BSR_TEMP       RES        1      ; bank select used for ISR context saving
+;
+;*******************************************************************************
+
+; TODO PLACE VARIABLE DEFINITIONS GO HERE
+    var UDATA 0x400
+    colorBitCounter RES	1
+    colorSwitchOn   RES 1
+
+;*******************************************************************************
+; Reset Vector
+;*******************************************************************************
+RES_VECT  CODE    0x0000            ; processor reset vector
+    GOTO    DEBUTS                   ; go to beginning of program
+    
+
+;*******************************************************************************
 ; TODO Step #4 - Interrupt Service Routines
 ;
 ; There are a few different ways to structure interrupt routines in the 8
@@ -249,7 +246,8 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 MAIN_PROG CODE                      ; let linker place main program
 
-;DEBUT
+DEBUT
+ 
 ;*******************************************************************************
 ;			    TESTS SUR LES LEDS VERTES
 ;*******************************************************************************
@@ -340,12 +338,13 @@ MAIN_PROG CODE                      ; let linker place main program
 ;	RETURN
 ;
 ;END
+;*******************************************************************************
+    
     
 ;*******************************************************************************
 ;			TESTS SUR LES LEDS RGBW SK6812
 ;*******************************************************************************
-
-DEBUTS
+    
     
     bsf STATUS,5             ; S�lection du registre de configuration
     movlw 0x04                  ; Configuration des broches en sortie
@@ -432,7 +431,8 @@ DEBUTS
     ;Delay:
         
 END
-    
+
+;*******************************************************************************
     
     
     
