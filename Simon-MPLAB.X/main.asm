@@ -125,7 +125,7 @@
 ; Reset Vector
 ;*******************************************************************************
 RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    DEBUT                   ; go to beginning of program
+    GOTO    DEBUTS                   ; go to beginning of program
     
 ; PIC18F25K40 Configuration Bit Settings
 
@@ -246,89 +246,176 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 MAIN_PROG CODE                      ; let linker place main program
 
-DEBUT
-
-    ; TODO Step #5 - Insert Your Program Here
-    
+;DEBUT
+;*******************************************************************************
+;			    TESTS SUR LES LEDS VERTES
+;*******************************************************************************
+ 
+;    GOTO DEBUTS
     ; Configuration initiale LEDs (verte)
-    BANKSEL TRISC       ; Sélection de la banque pour TRISC
-    CLRF TRISC          ; Configure PORTC comme sortie
+;    BANKSEL TRISC       ; Sélection de la banque pour TRISC
+;    CLRF TRISC          ; Configure PORTC comme sortie
 
     ; Allumer et éteindre les LEDs
-    loop:
-        CALL TurnOnLD0
-        CALL TunOffLD0
-        GOTO loop
+;    loop:
+;        CALL TurnOnLD0
+;        CALL TunOffLD0
+;	CALL TurnOnLD1
+;        CALL TunOffLD1
+;	CALL TurnOnLD2
+;        CALL TunOffLD2
+;	CALL TurnOnLD3
+;        CALL TunOffLD3
+;        GOTO loop
 
     ; Sous-routine pour allumer toutes les LEDs
-    TurnOnAllLEDs:
-        BANKSEL LATC    ; Sélection de la banque pour LATC
-        BSF LATC, 4     ; Allume la LED sur RC4
-        BSF LATC, 5     ; Allume la LED sur RC5
-        BSF LATC, 6     ; Allume la LED sur RC6
-        BSF LATC, 7     ; Allume la LED sur RC7
-        RETURN
+;    TurnOnAllLEDs:
+;        BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BSF LATC, 4     ; Allume la LED sur RC4
+;        BSF LATC, 5     ; Allume la LED sur RC5
+;        BSF LATC, 6     ; Allume la LED sur RC6
+;        BSF LATC, 7     ; Allume la LED sur RC7
+;        RETURN
 
     ; Sous-routien pour alumer un led par une LED
     ;LD0 On
-    TurnOnLD0:
-	BANKSEL LATC    ; Sélection de la banque pour LATC
-        BSF LATC, 4     ; Allume la LED sur RC4
-	RETURN
+;    TurnOnLD0:
+;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BSF LATC, 4     ; Allume la LED sur RC4
+;	RETURN
 
     ;LD1 On
-    TurnOnLD1:
-	BANKSEL LATC    ; Sélection de la banque pour LATC
-        BSF LATC, 5     ; Allume la LED sur RC4
-	RETURN
+;    TurnOnLD1:
+;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BSF LATC, 5     ; Allume la LED sur RC4
+;	RETURN
 
     ;LD2 On
-    TurnOnLD2:
-	BANKSEL LATC    ; Sélection de la banque pour LATC
-        BSF LATC, 6     ; Allume la LED sur RC4
-	RETURN
+;    TurnOnLD2:
+;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BSF LATC, 6     ; Allume la LED sur RC4
+;	RETURN
 
     ;LD3 On
-    TurnOnLD3:
-	BANKSEL LATC    ; Sélection de la banque pour LATC
-        BSF LATC, 7     ; Allume la LED sur RC4
-	RETURN
+;    TurnOnLD3:
+;	BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BSF LATC, 7     ; Allume la LED sur RC4
+;	RETURN
 	
 	
     ; Sous-routine pour éteindre toutes les LEDs
-    TurnOffAllLEDs:
-        BANKSEL LATC    ; Sélection de la banque pour LATC
-        BCF LATC, 4     ; Éteint la LED sur RC4
-        BCF LATC, 5     ; Éteint la LED sur RC5
-        BCF LATC, 6     ; Éteint la LED sur RC6
-        BCF LATC, 7     ; Éteint la LED sur RC7
-        RETURN
+;    TurnOffAllLEDs:
+;        BANKSEL LATC    ; Sélection de la banque pour LATC
+;        BCF LATC, 4     ; Éteint la LED sur RC4
+;        BCF LATC, 5     ; Éteint la LED sur RC5
+;        BCF LATC, 6     ; Éteint la LED sur RC6
+;        BCF LATC, 7     ; Éteint la LED sur RC7
+;        RETURN
 
     ; Sous-rounie pour éteindre une LED
     ; LD0 Off
-    TunOffLD0:
-	BANKSEL LATC
-	BCF LATC, 4
-	RETURN
+;    TunOffLD0:
+;	BANKSEL LATC
+;	BCF LATC, 4
+;	RETURN
+;    
+;    ; LD1 Off
+;    TunOffLD1:
+;	BANKSEL LATC
+;	BCF LATC, 5
+;	RETURN
+;
+;    ; LD2 Off
+;    TunOffLD2:
+;	BANKSEL LATC
+;	BCF LATC, 6
+;	RETURN
+;
+;    ; LD3 Off
+;    TunOffLD3:
+;	BANKSEL LATC
+;	BCF LATC, 7
+;	RETURN
+;
+;END
     
-    ; LD1 Off
-    TunOffLD1:
-	BANKSEL LATC
-	BCF LATC, 5
-	RETURN
+;*******************************************************************************
+;			TESTS SUR LES LEDS RGBW SK6812
+;*******************************************************************************
 
-    ; LD2 Off
-    TunOffLD2:
-	BANKSEL LATC
-	BCF LATC, 6
-	RETURN
+DEBUTS
+    
+    BSF STATUS, 5
+    CLRF TRISB
+    BCF STATUS, 5 
+    
+    Send0:
+	b = '0'
+	NOP
+	NOP
+	NOP  
+	b = '0'
+	
+    
+    Send1:
+	b = '1'
+	NOP
+	NOP
+	NOP
+	b = '1'
+	
+    
+    
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    Call Send1
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    Call Send1
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    Call Send0
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    Call Send0
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    CALL Send0
+    
+    goto $
+    
 
-    ; LD3 Off
-    TunOffLD3:
-	BANKSEL LATC
-	BCF LATC, 7
-	RETURN
+END
+    
+    
+    
+    
 
-    END
-
-    ;commentaire test
+    
+    
+    
+    
+	    
+	    
+    
+    
