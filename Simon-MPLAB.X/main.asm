@@ -254,11 +254,47 @@ DEBUT
     BANKSEL TRISC       ; Sélection de la banque pour TRISC
     CLRF TRISC          ; Configure PORTC comme sortie
 
+    ; Configuration initiale des Bouttons
+    ; Configuration de RB3/AN9 comme entrée
+    BANKSEL TRISB   ; Sélectionnez la banque pour TRISB
+    BSF TRISB, 0    ; Mettre le 0ème bit de TRISB à 1 pour configurer RB3 comme entrée
+    BSF TRISB, 1    ; Répéter pour les 3 autres boutons
+    BSF TRISB, 2
+    BSF TRISB, 3
+    BANKSEL ANSELB
+    CLRF ANSELB, 0    ; Mettre le 0ème bit de ANSELB à O pour configurer RB3 comme entrée
+    CLRF ANSELB, 1    ; Répéter pour les 3 autres boutons
+    CLRF ANSELB, 2
+    CLRF ANSELB, 3
+    
     ; Allumer et éteindre les LEDs
     loop:
-        CALL TurnOnLD0
-        CALL TunOffLD0
-        GOTO loop
+        BANKSEL PORTB        ; Sélectionnez la banque pour PORTB
+        BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
+        CALL TurnOnLD3   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+	
+	BTFSC PORTB, 3
+	CALL TurnOffLD3
+
+	BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
+        CALL TurnOnLD2   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        
+	BTFSC PORTB, 2
+	CALL TurnOffLD2
+	
+	BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
+        CALL TurnOnLD1   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        
+	BTFSC PORTB, 1
+	CALL TurnOffLD1
+	
+	BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
+        CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        
+	BTFSC PORTB, 0
+	CALL TurnOffLD0
+	;CALL TurnOffAllLEDs 
+	GOTO loop
 
     ; Sous-routine pour allumer toutes les LEDs
     TurnOnAllLEDs:
@@ -306,25 +342,25 @@ DEBUT
 
     ; Sous-rounie pour éteindre une LED
     ; LD0 Off
-    TunOffLD0:
+    TurnOffLD0:
 	BANKSEL LATC
 	BCF LATC, 4
 	RETURN
     
     ; LD1 Off
-    TunOffLD1:
+    TurnOffLD1:
 	BANKSEL LATC
 	BCF LATC, 5
 	RETURN
 
     ; LD2 Off
-    TunOffLD2:
+    TurnOffLD2:
 	BANKSEL LATC
 	BCF LATC, 6
 	RETURN
 
     ; LD3 Off
-    TunOffLD3:
+    TurnOffLD3:
 	BANKSEL LATC
 	BCF LATC, 7
 	RETURN
