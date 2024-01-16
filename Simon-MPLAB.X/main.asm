@@ -71,7 +71,8 @@
 ;*******************************************************************************
 
 ; TODO INSERT INCLUDE CODE HERE
-
+#include "p18f25k40.inc"
+    
 ;*******************************************************************************
 ;
 ; TODO Step #2 - Configuration Word Setup
@@ -131,9 +132,6 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 ; Assembly source line config statements
 
-; Assembly source line config statements
-
-#include "p18f25k40.inc"
 
 ; CONFIG1L
   CONFIG  FEXTOSC = OFF         ; External Oscillator mode Selection bits (Oscillator not enabled)
