@@ -137,10 +137,10 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 ; CONFIG1L
   CONFIG  FEXTOSC = OFF         ; External Oscillator mode Selection bits (Oscillator not enabled)
-  CONFIG  RSTOSC = SOSC         ; Power-up default value for COSC bits (Secondary Oscillator)
+  CONFIG  RSTOSC = HFINTOSC_64MHZ ; Power-up default value for COSC bits (Secondary Oscillator)
 
 ; CONFIG1H
-  CONFIG  CLKOUTEN = OFF        ; Clock Out Enable bit (CLKOUT function is disabled)
+  CONFIG  CLKOUTEN = On        ; Clock Out Enable bit (CLKOUT function is disabled)
   CONFIG  CSWEN = ON            ; Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
   CONFIG  FCMEN = ON            ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor enabled)
 
@@ -255,7 +255,6 @@ DEBUT
     CLRF TRISC          ; Configure PORTC comme sortie
 
     ; Configuration initiale des Bouttons
-    ; Configuration de RB3/AN9 comme entrée
     BANKSEL TRISB   ; Sélectionnez la banque pour TRISB
     BSF TRISB, 0    ; Mettre le 0ème bit de TRISB à 1 pour configurer RB3 comme entrée
     BSF TRISB, 1    ; Répéter pour les 3 autres boutons
@@ -266,6 +265,37 @@ DEBUT
     CLRF ANSELB, 1    ; Répéter pour les 3 autres boutons
     CLRF ANSELB, 2
     CLRF ANSELB, 3
+    
+    ; début de la configuration PWM
+    MOVLW b'00000100'
+    MOVWF CCPTMRS
+    ; associe le module CCP2 avec le timer 2
+    MOVLB 0x0E
+    ; sélection de la banque d?adresse
+    MOVLW 0x06
+    MOVWF RC1PPS, 1
+    ; associe le pin RC1 avec la fonction de sortie de CCP2
+    BSF TRISA, 6    ; désactivation de la sortie PWM pour configuration
+    MOVLW b'01100000' ;INITIALISE 0
+    MOVLB 0x0F
+    MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271) (0 pour le moment)
+    MOVLW b'10001100'
+    MOVWF CCP2CON   ; configuration du module CCP2 et format des données
+    MOVLW d'00000000'
+    MOVWF CCPR2H
+    MOVLW d'11111111'
+    MOVWF CCPR2L
+    ; fixe le rapport cyclique du signal (voir formule p.272)
+    MOVLW b'0010001'
+    MOVWF T2CLKCON
+    ; configuration de l'horloge du timer 2 = Fosc/4
+    MOVLW b'11110000' ; prescale 1:16, POSTSCALER 1:1
+    MOVWF T2CON
+    ; choix des options du timer 2 (voir p.256)
+    BCF TRISA, 6
+    ; activation de la sortie PWM
+    ; fin de la configuration
+  
     
     ; Allumer et éteindre les LEDs
     loop:
