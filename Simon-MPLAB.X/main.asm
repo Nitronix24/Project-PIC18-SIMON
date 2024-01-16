@@ -381,6 +381,13 @@ ColorYellow:
     CALL ColorDisable
     RETURN
 
+ColorWhite:
+    
+    CALL ColorEnable
+    CALL ColorEnable
+    CALL ColorEnable
+    RETURN
+    
 ColorOff:
 
     CALL ColorDisable
@@ -502,10 +509,24 @@ loop
     call    ColorGreen
     call    ColorBlue
     call    ColorYellow
-    goto loop
-
     
-        
+    call    ColorYellow
+    call    ColorRed
+    call    ColorGreen
+    call    ColorBlue
+    
+    call    ColorBlue
+    call    ColorWhite
+    call    ColorRed
+    call    ColorOff
+    
+    call    ColorOff
+    call    ColorOff
+    call    ColorOff
+    call    ColorOff
+    
+    goto loop
+    
     END
 
 ;*******************************************************************************
