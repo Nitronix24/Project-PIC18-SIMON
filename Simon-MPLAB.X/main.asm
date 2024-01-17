@@ -190,6 +190,11 @@ var	UDATA	    0X400
 colorBitCounter	    RES	    1
 colorSwitchOn	    RES	    1
 
+Var	UDATA_ACS
+randomNum	    RES	    1
+Sequence	    RES	    10
+stage		    RES	    1
+
 ;*******************************************************************************
 ; Reset Vector
 ;*******************************************************************************
@@ -620,7 +625,6 @@ BuzzerOnBtn2:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN 
 
 BuzzerOnBtn1:
@@ -628,7 +632,6 @@ BuzzerOnBtn1:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN 
 
 BuzzerOnBtn3:
@@ -636,7 +639,6 @@ BuzzerOnBtn3:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN
 
 BuzzerOnBtn0:
@@ -644,34 +646,13 @@ BuzzerOnBtn0:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN
 
 BuzzerOff:
     BSF TRISC, 1	; d�sactivation de la sortie PWM (Buzzer)
     RETURN
 
-TEMPO_BTN:
-    MOVLB 0x0E
-    BCF PIR4,2,1      ; mise a 0 du flag
 
-    MOVLB 0x00
-    MOVLW d'0'
-    MOVWF TMR3L
-    MOVWF TMR3L
-
-    BSF T3CON ,0
-
-    MOVLB 0x0E
-    SCRUT_FLAG
-    BTFSS PIR4,2,1      ; temp que flag pas lev 	
-    GOTO SCRUT_FLAG
-
-    BCF PIR4,2,1 
-
-    MOVLB 0x00
-    BCF T3CON ,0
-    RETURN
     
 ;*******************************************************************************
 
@@ -731,21 +712,21 @@ Config_Button:
 ;*******************************************************************************
 
 Config_Buzzer:
-    ; d�but de la configuration PWM
+    ; d?but de la configuration PWM
     MOVLW b'00000100'
     MOVWF CCPTMRS
     ; associe le module CCP2 avec le timer 2
     MOVLB 0x0E
-    ; s�lection de la banque d?adresse
+    ; s?lection de la banque d?adresse
     MOVLW 0x06
     MOVWF RC1PPS, 1
     ; associe le pin RC1 avec la fonction de sortie de CCP2
-    BSF TRISC, 1    ; d�sactivation de la sortie PWM pour configuration
+    BSF TRISC, 1    ; d?sactivation de la sortie PWM pour configuration
     MOVLW b'01100000' ;INITIALISE 0
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271)
+    MOVWF T2PR	    ; fixe la p?riode de PWM (voir formule p.271)
     MOVLW b'10001100'
-    MOVWF CCP2CON   ; configuration du module CCP2 et format des donn�es
+    MOVWF CCP2CON   ; configuration du module CCP2 et format des donn?es
     MOVLW d'00000000'
     MOVWF CCPR2H
     MOVLW d'11111111'
@@ -759,10 +740,37 @@ Config_Buzzer:
     ; choix des options du timer 2 (voir p.256)
     ; BCF TRISC, 1
     ; activation de la sortie PWM
-    ; fin de la configuration   
+    ; fin de la configuration
     Return
 
 ;*******************************************************************************
+
+;*******************************************************************************
+;				Random
+;*******************************************************************************
+
+
+createRandomNum:
+    MOVF    T2TMR, W    ; Chargez la valeur du Timer 2 dans W
+    ANDLW   b'00000011'        ; Appliquez un masque pour obtenir les 2 bits de poids faible
+    BANKSEL 0x100
+    MOVWF   randomNum
+    RETURN
+
+TestRandom:
+    CALL createRandomNum
+    MOVF    randomNum, W    ; Charge la valeur de randomNum dans le registre W
+    BTFSC   STATUS, Z       ; Test si la valeur est 0
+    GOTO    LED0_Buzzer     ; Appelle func1 si la valeur est 0
+    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
+    GOTO    LED1_Buzzer     ; Appelle func2 si la valeur �tait 1
+    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
+    GOTO    LED2_Buzzer     ; Appelle func3 si la valeur �tait 2
+    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
+    CALL    LED3_Buzzer     ; Appelle func4 si la valeur �tait 3
+    main
+    RETURN
+
 
 DEBUT
 
@@ -851,67 +859,71 @@ Defeat:
     CALL    Config_Buzzer
     CALL    Config_Button
     
+    MOVLW   10          ; Charge la valeur 9 dans WREG
+    MOVWF   i           ; Stocke la valeur de WREG dans la variable i
+
     
-    CALL    test_LED_RGB
+    MOVLB   0x01		    ; choisir la banque 1
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de password
     ;CALL    test_button_buzzer
 
-test_button_buzzer:
+loop
+    ; Supposons que randomNum est stock� dans un registre sp�cifique
+    ; et que les adresses des fonctions sont func1, func2, func3, func4
+
+    
+    BANKSEL PORTB        ; S�lectionnez la banque pour PORTB
+    BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
+    CALL TestRandom
+    
+    GOTO loop
+    
     BANKSEL PORTB        ; S�lectionnez la banque pour PORTB
     BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
     CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
 
-    BANKSEL PORTB
-    BTFSC PORTB, 3
-    CALL BuzzerOff
-
-    BANKSEL PORTB
-    BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-    CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-
-    BANKSEL PORTB
-    BTFSC PORTB, 2
-    CALL BuzzerOff
-
-    BANKSEL PORTB
-    BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-    CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-
-    BANKSEL PORTB
-    BTFSC PORTB, 1
-    CALL BuzzerOff
-
-    BANKSEL PORTB
-    BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-    CALL BuzzerOnBtn0
-    ;CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-
-    BANKSEL PORTB
-    BTFSC PORTB, 0
-
-
-    CALL BuzzerOff 
-    GOTO test_button_buzzer
     
-test_LED_RGB:
+LED0_Buzzer:
     CALL    LED0_On
+    CALL    BuzzerOnBtn0
     CALL    Tempo_1s
+    CALL    BuzzerOff
+    CALL    LEDAll_Off
+    GOTO main
     
+ 
+LED1_Buzzer:
     CALL    LED1_On
+    CALL    BuzzerOnBtn1
     CALL    Tempo_1s
-    
+    CALL    BuzzerOff
+    CALL    LEDAll_Off
+    GOTO main
+
+LED2_Buzzer:    
     CALL    LED2_On
+    CALL    BuzzerOnBtn2
     CALL    Tempo_1s
-    
+    CALL    BuzzerOff
+    CALL    LEDAll_Off
+    GOTO main
+
+LED3_Buzzer:
     CALL    LED3_On
+    CALL    BuzzerOnBtn3
     CALL    Tempo_1s
+    CALL    BuzzerOff
+    CALL    LEDAll_Off
+    GOTO main
     
     CALL    LEDAll_Green
     CALL    Tempo_1s
-    
+    CALL    BuzzerOff
     CALL    LEDAll_Off
-    CALL    Tempo_1s
-    
-    goto test_LED_RGB
+    GOTO main
+
     
     goto $
 	
