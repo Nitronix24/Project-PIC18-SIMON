@@ -686,28 +686,28 @@ BuzzerOff:
 LEDBuzz0:
     Call    LED0_On
     Call    BuzzerOnBtn0
-    Call    Tempo0.5s
+    Call    Tempo_100us
     Call    BuzzerOff
     RETURN
     
 LEDBuzz1:
     Call    LED1_On
     Call    BuzzerOnBtn1
-    Call    Tempo0.5s
+    Call    Tempo_100us
     Call    BuzzerOff
     RETURN
     
 LEDBuzz2:
     Call    LED2_On
     Call    BuzzerOnBtn2
-    Call    Tempo0.5s
+    Call    Tempo_100us
     Call    BuzzerOff
     RETURN
     
 LEDBuzz3:
     Call    LED3_On
     Call    BuzzerOnBtn3
-    Call    Tempo0.5s
+    Call    Tempo_100us
     Call    BuzzerOff
     RETURN
     
@@ -723,29 +723,29 @@ ButtonRGB:
     BANKSEL PORTB
     BTFSC   PORTB,  0
 	GOTO	Led1
-	CALL	LED0_On
-	CALL	Tempo_1s
+	CALL	LEDBuzz0
+	RETURN
 	
     Led1
     BTFSC   PORTB,  1
 	GOTO	Led2
-	CALL	LED1_On
-	CALL	Tempo_1s
+	CALL	LEDBuzz1   
+	RETURN
 	
     Led2	
     BTFSC   PORTB,  2
 	GOTO	Led3
-	CALL	LED2_On
-	CALL	Tempo_1s
+	CALL	LEDBuzz2
+	RETURN
 	
     Led3
     BTFSC   PORTB,  3
 	GOTO	ButtonPress_No
-	CALL	LED3_On
-	CALL	Tempo_1s
-	GOTO	ButtonPress_No
+	CALL	LEDBuzz3 
+	RETURN
 	
     ButtonPress_No
+	CALL	Tempo_100us
 	CALL	LEDAll_Off
 	GOTO	ButtonRGB
 	
@@ -860,7 +860,7 @@ Game
     ;Call    Victory
     ;Call    Defeat
     ;Call    Sequence
-    CALL    ButtonRGB
+    Call    ButtonRGB
     Goto    Game
     
 ;*******************************************************************************
