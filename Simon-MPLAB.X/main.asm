@@ -796,7 +796,7 @@ Menu:
 ;				SEQUENCE
 ;*******************************************************************************
 
-Sequence:
+;Sequence:
     
     
     Return
@@ -847,7 +847,7 @@ Defeat:
     CALL    Config_Button
     
     MOVLW   10          ; Charge la valeur 9 dans WREG
-    MOVWF   i           ; Stocke la valeur de WREG dans la variable i
+    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
 
     
     MOVLB   0x01		    ; choisir la banque 1
