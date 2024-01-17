@@ -446,9 +446,10 @@ LEDAll_Off:
 
     
 ;*******************************************************************************
-; Tempo
+;		    FONCTION DE TEMPORISATION
 ;*******************************************************************************
-    
+
+; temporisation 1 seconde (LFINTOSC)
 Tempo_1s:
     
     movlw   b'10010000'		    
@@ -463,46 +464,130 @@ Tempo_1s:
     movlw   0xe8		    ; maj TMR0L
     movwf   TMR0L
     
-tempo_run    
+tempo_1s_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    tempo_run
+    goto    tempo_1s_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
     return
     
-    
-    
-DEBUT
- 
 ;*******************************************************************************
-;			    TESTS SUR LES LEDS VERTES
+    
 ;*******************************************************************************
- 
-    ; Configuration initiale LEDs (verte)
-;    BANKSEL TRISC       ; S�lection de la banque pour TRISC
-;    CLRF TRISC          ; Configure PORTC comme sortie
+;			FONCTION LED VERTE
+;*******************************************************************************
 
-    ; Allumer et �teindre les LEDs
-;    loop:
-;        CALL TurnOnLD0
-;        CALL TunOffLD0
-;	 CALL TurnOnLD1
-;        CALL TunOffLD1
-;	 CALL TurnOnLD2
-;        CALL TunOffLD2
-;	 CALL TurnOnLD3
-;        CALL TunOffLD3
-;        GOTO loop
-    ; Configuration initiale des Bouttons
+TurnOffLD0:
+    BANKSEL LATC
+    BCF LATC, 4
+    RETURN
+
+; LD1 Off
+TurnOffLD1:
+    BANKSEL LATC
+    BCF LATC, 5
+    RETURN
+
+; LD2 Off
+TurnOffLD2:
+    BANKSEL LATC
+    BCF LATC, 6
+    RETURN
+
+; LD3 Off
+TurnOffLD3:
+    BANKSEL LATC
+    BCF LATC, 7
+    RETURN
+
+;*******************************************************************************
+    
+;*******************************************************************************
+;			FONCTION BUZZER
+;*******************************************************************************    
+
+; Buzzer
+BuzzerOnBtn2:
+    MOVLW b'01100000' ;
+    MOVLB 0x0F
+    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    CALL TEMPO_BTN
+    RETURN 
+
+BuzzerOnBtn1:
+    MOVLW b'01000000' ;
+    MOVLB 0x0F
+    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    CALL TEMPO_BTN
+    RETURN 
+
+BuzzerOnBtn3:
+    MOVLW b'01001000' ;
+    MOVLB 0x0F
+    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    CALL TEMPO_BTN
+    RETURN
+
+BuzzerOnBtn0:
+    MOVLW b'01010000' ;
+    MOVLB 0x0F
+    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    CALL TEMPO_BTN
+    RETURN
+
+BuzzerOff:
+    BSF TRISC, 1	; d�sactivation de la sortie PWM (Buzzer)
+    RETURN
+
+TEMPO_BTN:
+    MOVLB 0x0E
+    BCF PIR4,2,1      ; mise a 0 du flag
+
+    MOVLB 0x00
+    MOVLW d'0'
+    MOVWF TMR3L
+    MOVWF TMR3L
+
+    BSF T3CON ,0
+
+    MOVLB 0x0E
+    SCRUT_FLAG
+    BTFSS PIR4,2,1      ; temp que flag pas lev 	
+    GOTO SCRUT_FLAG
+
+    BCF PIR4,2,1 
+
+    MOVLB 0x00
+    BCF T3CON ,0
+    RETURN
+    
+;*******************************************************************************
+
+;*******************************************************************************
+;			    CONFIG BOUTONS
+;*******************************************************************************
+    
+; Configuration initiale des Bouttons
     BANKSEL TRISB   ; S�lectionnez la banque pour TRISB
     BSF TRISB, 0    ; Mettre le 0�me bit de TRISB � 1 pour configurer RB3 comme entr�e
     BSF TRISB, 1    ; R�p�ter pour les 3 autres boutons
     BSF TRISB, 2
     BSF TRISB, 3
+    
     BANKSEL ANSELB
     CLRF ANSELB, 0    ; Mettre le 0�me bit de ANSELB � O pour configurer RB3 comme entr�e
     CLRF ANSELB, 1    ; R�p�ter pour les 3 autres boutons
     CLRF ANSELB, 2
     CLRF ANSELB, 3
+    
+;*******************************************************************************
+
+;*******************************************************************************
+;			    CONFIG DU PWM / BUZZER
+;*******************************************************************************
     
     ; d�but de la configuration PWM
     MOVLW b'00000100'
@@ -532,47 +617,31 @@ DEBUT
     ; choix des options du timer 2 (voir p.256)
     ; BCF TRISC, 1
     ; activation de la sortie PWM
-    ; fin de la configuration
-  
-    
-    ; Allumer et �teindre les LEDs
-    loop:
-        BANKSEL PORTB        ; S�lectionnez la banque pour PORTB
-        BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-        CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-	
-	BANKSEL PORTB
-	BTFSC PORTB, 3
-	CALL BuzzerOff
-	
-	BANKSEL PORTB
-	BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-        CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-        
-	BANKSEL PORTB
-	BTFSC PORTB, 2
-	CALL BuzzerOff
-	
-	BANKSEL PORTB
-	BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-        CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-        
-	BANKSEL PORTB
-	BTFSC PORTB, 1
-	CALL BuzzerOff
-	
-        BANKSEL PORTB
-	BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-        CALL BuzzerOnBtn0
-	;CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
-        
-	BANKSEL PORTB
-	BTFSC PORTB, 0
-	
-	
-	CALL BuzzerOff 
-	GOTO loop
+    ; fin de la configuration    
 
+;*******************************************************************************
+
+DEBUT
+ 
+;*******************************************************************************
+;			    TESTS SUR LES LEDS VERTES
+;*******************************************************************************
+ 
+    ; Configuration initiale LEDs (verte)
+;    BANKSEL TRISC       ; S�lection de la banque pour TRISC
+;    CLRF TRISC          ; Configure PORTC comme sortie
+
+    ; Allumer et �teindre les LEDs
+;    loop:
+;        CALL TurnOnLD0
+;        CALL TunOffLD0
+;	 CALL TurnOnLD1
+;        CALL TunOffLD1
+;	 CALL TurnOnLD2
+;        CALL TunOffLD2
+;	 CALL TurnOnLD3
+;        CALL TunOffLD3
+;        GOTO loop
     ; Sous-routine pour allumer toutes les LEDs
 ;    TurnOnAllLEDs:
 ;        BANKSEL LATC    ; S�lection de la banque pour LATC
@@ -658,9 +727,48 @@ DEBUT
     MOVLW   0x0F
     MOVWF   TRISB
     
-    BANKSEL LATB
+    CALL    test_LED_RGB
+    ;CALL    test_button_buzzer
+; Allumer et �teindre les LEDs
+
+test_button_buzzer:
+    BANKSEL PORTB        ; S�lectionnez la banque pour PORTB
+    BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
+    CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+
+    BANKSEL PORTB
+    BTFSC PORTB, 3
+    CALL BuzzerOff
+
+    BANKSEL PORTB
+    BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
+    CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+
+    BANKSEL PORTB
+    BTFSC PORTB, 2
+    CALL BuzzerOff
+
+    BANKSEL PORTB
+    BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
+    CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+
+    BANKSEL PORTB
+    BTFSC PORTB, 1
+    CALL BuzzerOff
+
+    BANKSEL PORTB
+    BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
+    CALL BuzzerOnBtn0
+    ;CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+
+    BANKSEL PORTB
+    BTFSC PORTB, 0
+
+
+    CALL BuzzerOff 
+    GOTO test_button_buzzer
     
-loop
+test_LED_RGB:
     CALL    LED0_On
     CALL    Tempo_1s
     
@@ -679,90 +787,9 @@ loop
     CALL    LEDAll_Off
     CALL    Tempo_1s
     
-    goto loop
+    goto test_LED_RGB
     
-    TurnOffLD0:
-	BANKSEL LATC
-	BCF LATC, 4
-	RETURN
-    
-    ; LD1 Off
-    TurnOffLD1:
-	BANKSEL LATC
-	BCF LATC, 5
-	RETURN
-
-    ; LD2 Off
-    TurnOffLD2:
-	BANKSEL LATC
-	BCF LATC, 6
-	RETURN
-
-    ; LD3 Off
-    TurnOffLD3:
-	BANKSEL LATC
-	BCF LATC, 7
-	RETURN
-
-	
-    ; Buzzer
-    BuzzerOnBtn2:
-        MOVLW b'01100000' ;
-	MOVLB 0x0F
-	MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
-	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-	CALL TEMPO_BTN
-	RETURN 
-
-    BuzzerOnBtn1:
-        MOVLW b'01000000' ;
-	MOVLB 0x0F
-	MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
-	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-	CALL TEMPO_BTN
-	RETURN 
-
-    BuzzerOnBtn3:
-        MOVLW b'01001000' ;
-	MOVLB 0x0F
-	MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
-	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-	CALL TEMPO_BTN
-	RETURN
-
-    BuzzerOnBtn0:
-        MOVLW b'01010000' ;
-	MOVLB 0x0F
-	MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
-	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-	CALL TEMPO_BTN
-	RETURN
-	
-    BuzzerOff:
-	BSF TRISC, 1	; d�sactivation de la sortie PWM (Buzzer)
-	RETURN
-	
-    TEMPO_BTN:
-	MOVLB 0x0E
-	BCF PIR4,2,1      ; mise a 0 du flag
-    
-	MOVLB 0x00
-	MOVLW d'0'
-	MOVWF TMR3L
-	MOVWF TMR3L
-	
-	BSF T3CON ,0
-	
-	MOVLB 0x0E
-	SCRUT_FLAG
-	BTFSS PIR4,2,1      ; temp que flag pas lev 	
-	GOTO SCRUT_FLAG
-	
-	BCF PIR4,2,1 
-    
-	MOVLB 0x00
-	BCF T3CON ,0
-	RETURN
+    goto $
 	
 	
     END
