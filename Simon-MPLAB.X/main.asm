@@ -156,9 +156,6 @@
 ; CONFIG6H
   CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 
-
-
-
 ;*******************************************************************************
 ;
 ; TODO Step #3 - Variable Definitions
@@ -196,7 +193,6 @@ colorSwitchOn	    RES	    1
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    DEBUT                   ; go to beginning of program
     
-
 ;*******************************************************************************
 ; TODO Step #4 - Interrupt Service Routines
 ;
@@ -424,7 +420,7 @@ LED3_On:
     CALL ColorOff
     CALL ColorOff
     CALL ColorOff
-    CALL ColorYellow
+    CALL ColorWhite
     RETURN
     
 LEDAll_Green:
@@ -433,6 +429,13 @@ LEDAll_Green:
     CALL ColorGreen
     CALL ColorGreen
     RETURN
+    
+LEDAll_Red:
+    CALL ColorRed
+    CALL ColorRed
+    CALL ColorRed
+    CALL ColorRed
+    RETURN
 
 LEDAll_Off:
     CALL ColorOff
@@ -440,8 +443,7 @@ LEDAll_Off:
     CALL ColorOff
     CALL ColorOff
     RETURN
-    
- 
+
 ;*******************************************************************************
 
     
