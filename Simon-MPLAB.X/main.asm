@@ -684,27 +684,24 @@ BuzzerOff:
 ButtonRGB:
     BANKSEL PORTB
     BTFSC   PORTB,  0
-	GOTO	ButtonPress_No
+	GOTO	Led1
 	CALL	LED0_On
 	CALL	Tempo_1s
-	GOTO	Led1
 	
     Led1
-    BTFSS   PORTB,  1
-	GOTO	ButtonPress_No
+    BTFSC   PORTB,  1
+	GOTO	Led2
 	CALL	LED1_On
 	CALL	Tempo_1s
-	GOTO	Led2
 	
     Led2	
     BTFSC   PORTB,  2
-	GOTO	ButtonPress_No
+	GOTO	Led3
 	CALL	LED2_On
 	CALL	Tempo_1s
-	GOTO	Led3
 	
     Led3
-    BTFSS   PORTB,  3
+    BTFSC   PORTB,  3
 	GOTO	ButtonPress_No
 	CALL	LED3_On
 	CALL	Tempo_1s
@@ -818,13 +815,14 @@ DEBUT
     Call    Config_RGB
     Call    Config_Button
     Call    Config_Buzzer
-    
+    CALL    ButtonRGB
 Game   
     ;Call    CreateRandomNumber
-    Call    Menu
+    ;Call    Menu
     ;Call    Victory
-    Call    Defeat
+    ;Call    Defeat
     ;Call    Sequence
+    CALL    ButtonRGB
     Goto    Game
     
 ;*******************************************************************************
