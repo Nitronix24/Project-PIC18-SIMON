@@ -511,7 +511,6 @@ BuzzerOnBtn2:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN 
 
 BuzzerOnBtn1:
@@ -519,7 +518,6 @@ BuzzerOnBtn1:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN 
 
 BuzzerOnBtn3:
@@ -527,7 +525,6 @@ BuzzerOnBtn3:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN
 
 BuzzerOnBtn0:
@@ -535,34 +532,13 @@ BuzzerOnBtn0:
     MOVLB 0x0F
     MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    CALL TEMPO_BTN
     RETURN
 
 BuzzerOff:
     BSF TRISC, 1	; d�sactivation de la sortie PWM (Buzzer)
     RETURN
 
-TEMPO_BTN:
-    MOVLB 0x0E
-    BCF PIR4,2,1      ; mise a 0 du flag
 
-    MOVLB 0x00
-    MOVLW d'0'
-    MOVWF TMR3L
-    MOVWF TMR3L
-
-    BSF T3CON ,0
-
-    MOVLB 0x0E
-    SCRUT_FLAG
-    BTFSS PIR4,2,1      ; temp que flag pas lev 	
-    GOTO SCRUT_FLAG
-
-    BCF PIR4,2,1 
-
-    MOVLB 0x00
-    BCF T3CON ,0
-    RETURN
     
 ;*******************************************************************************
 
@@ -609,35 +585,27 @@ Config_Button:
 ;*******************************************************************************
 
 Config_Buzzer:
-    ; d�but de la configuration PWM
-    MOVLW b'00000100'
-    MOVWF CCPTMRS
-    ; associe le module CCP2 avec le timer 2
-    MOVLB 0x0E
-    ; s�lection de la banque d?adresse
-    MOVLW 0x06
-    MOVWF RC1PPS, 1
-    ; associe le pin RC1 avec la fonction de sortie de CCP2
-    BSF TRISC, 1    ; d�sactivation de la sortie PWM pour configuration
-    MOVLW b'01100000' ;INITIALISE 0
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271)
-    MOVLW b'10001100'
-    MOVWF CCP2CON   ; configuration du module CCP2 et format des donn�es
-    MOVLW d'00000000'
-    MOVWF CCPR2H
-    MOVLW d'11111111'
-    MOVWF CCPR2L
-    ; fixe le rapport cyclique du signal (voir formule p.272)
-    MOVLW b'0010001'
-    MOVWF T2CLKCON
-    ; configuration de l'horloge du timer 2 = Fosc/4
-    MOVLW b'11110000' ; prescale 1:16, POSTSCALER 1:1
-    MOVWF T2CON
-    ; choix des options du timer 2 (voir p.256)
-    ; BCF TRISC, 1
-    ; activation de la sortie PWM
-    ; fin de la configuration   
+    MOVLW b'00000100'
+    MOVWF CCPTMRS, 1; associe le module CCP2 avec le timer 2
+    MOVLB 0x0E; s lection de la banque dadresse
+    MOVLW 0x06
+    MOVWF RC1PPS, 1; associe le pin RC1 avec la fonction de sortie de CCP2
+    MOVLB 0x0F
+    BSF TRISC, 1; d sactivation de la sortie PWM pour configuration
+    MOVLW b'11001000'; On met au pif pour l'instant
+    MOVWF T2PR, 1; fixe la p riode de PWM (voir formule p.271)
+    MOVLW b'10001100'  
+    MOVWF CCP2CON, 1
+    MOVLW b'00000001'; Rien a faire car FMT est   1
+    MOVWF CCPR2H, 1
+    MOVLW b'11111111'; Test
+    MOVWF CCPR2L, 1; fixe le rapport cyclique du signal (voir formule p.272)
+    MOVLW b'00000001'
+    MOVWF T2CLKCON, 1; configuration de horloge du timer 2 = Fosc/4
+    MOVLW b'11110000'
+    MOVWF T2CON, 1; choix des options du timer 2 (voir p.256)
+    BSF TRISC, 1; D sactivation de la sortie PWM
     Return
 
 ;*******************************************************************************
