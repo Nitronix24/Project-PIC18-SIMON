@@ -401,29 +401,29 @@ ColorOff:
     
 LED0_On:
     CALL ColorRed
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorDisable
+    CALL ColorOff
+    CALL ColorOff
+    CALL ColorOff
     RETURN
     
 LED1_On:
-    CALL ColorDisable
+    CALL ColorOff
     CALL ColorBlue
-    CALL ColorDisable
-    CALL ColorDisable
+    CALL ColorOff
+    CALL ColorOff
     RETURN
     
 LED2_On:
-    CALL ColorDisable
-    CALL ColorDisable
+    CALL ColorOff
+    CALL ColorOff
     CALL ColorGreen
-    CALL ColorDisable
+    CALL ColorOff
     RETURN
     
 LED3_On:
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorDisable
+    CALL ColorOff
+    CALL ColorOff
+    CALL ColorOff
     CALL ColorYellow
     RETURN
     
@@ -435,10 +435,10 @@ LEDAll_Green:
     RETURN
 
 LEDAll_Off:
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorDisable
+    CALL ColorOff
+    CALL ColorOff
+    CALL ColorOff
+    CALL ColorOff
     RETURN
     
  
@@ -451,6 +451,23 @@ LEDAll_Off:
     
 Tempo_1s:
     
+    movlw   b'10010000'		    
+    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    
+    movlw   b'10010000'	
+    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    
+    ; initialiser la valeur du timer à 33536
+    movlw   0x86
+    movwf   TMR0H		    ; maj TMR0H
+    movlw   0xe8		    ; maj TMR0L
+    movwf   TMR0L
+    
+tempo_run    
+    btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
+    goto    tempo_run
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de démarrage
+    return
     
     
     
@@ -563,23 +580,26 @@ DEBUT
     
     BANKSEL LATB
     
-
-    CALL ColorRed
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorDisable
+loop
+    CALL    LED0_On
+    CALL    Tempo_1s
     
-    CALL ColorDisable
-    CALL ColorBlue
-    CALL ColorDisable
-    CALL ColorDisable
+    CALL    LED1_On
+    CALL    Tempo_1s
     
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorGreen
-    CALL ColorDisable
+    CALL    LED2_On
+    CALL    Tempo_1s
     
-    goto $
+    CALL    LED3_On
+    CALL    Tempo_1s
+    
+    CALL    LEDAll_Green
+    CALL    Tempo_1s
+    
+    CALL    LEDAll_Off
+    CALL    Tempo_1s
+    
+    goto loop
     
     END
 
