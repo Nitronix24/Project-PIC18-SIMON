@@ -678,6 +678,45 @@ BuzzerOff:
 ;*******************************************************************************
 
 ;*******************************************************************************
+;			FONCTION AWAIT RESPONSE
+;*******************************************************************************
+   
+ButtonRGB:
+    BANKSEL PORTB
+    BTFSC   PORTB,  0
+	GOTO	ButtonPress_No
+	CALL	LED0_On
+	CALL	Tempo_1s
+	GOTO	Led1
+	
+    Led1
+    BTFSS   PORTB,  1
+	GOTO	ButtonPress_No
+	CALL	LED1_On
+	CALL	Tempo_1s
+	GOTO	Led2
+	
+    Led2	
+    BTFSC   PORTB,  2
+	GOTO	ButtonPress_No
+	CALL	LED2_On
+	CALL	Tempo_1s
+	GOTO	Led3
+	
+    Led3
+    BTFSS   PORTB,  3
+	GOTO	ButtonPress_No
+	CALL	LED3_On
+	CALL	Tempo_1s
+	GOTO	ButtonPress_No
+	
+    ButtonPress_No
+	CALL	LEDAll_Off
+	GOTO	ButtonRGB
+	
+;*******************************************************************************  
+    
+;*******************************************************************************
 ;			CONFIG	OSCILLATOR
 ;*******************************************************************************     
 Config_OSC:    
@@ -862,7 +901,6 @@ Defeat:
     CALL    Config_Button
     
     
-    CALL    test_LED_RGB
     ;CALL    test_button_buzzer
 ; Allumer et eteindre les LEDs
 
@@ -894,7 +932,6 @@ test_button_buzzer:
     BANKSEL PORTB
     BTFSS PORTB, 0      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
     CALL BuzzerOnBtn0
-    ;CALL TurnOnLD0	; Appelle la fonction TurnOnAllLEDs si le bouton est presse
 
     BANKSEL PORTB
     BTFSC PORTB, 0
@@ -909,7 +946,7 @@ LED0_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    ;GOTO main
     
  
 LED1_Buzzer:
@@ -918,7 +955,7 @@ LED1_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    ;GOTO main
 
 LED2_Buzzer:    
     CALL    LED2_On
@@ -926,7 +963,7 @@ LED2_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    ;GOTO main
 
 LED3_Buzzer:
     CALL    LED3_On
@@ -934,13 +971,13 @@ LED3_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    ;GOTO main
     
     CALL    LEDAll_Green
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    ;GOTO main
 
     
     goto $
