@@ -651,8 +651,25 @@ TEMPO_BTN:
 ;*******************************************************************************
 ;			    CONFIG BOUTONS
 ;*******************************************************************************
+Config_RGB:
+    BANKSEL OSCFRQ
+    bsf	    OSCFRQ, 3
+    BCF	    OSCFRQ, 1
+    
+    BANKSEL TRISB
+    MOVLW   0x0F
+    MOVWF   TRISB
+    
+    Return
+
+;*******************************************************************************
+    
+;*******************************************************************************
+;			    CONFIG BOUTONS
+;*******************************************************************************
     
 ; Configuration initiale des Bouttons
+Config_Button:
     BANKSEL TRISB   ; Sï¿½lectionnez la banque pour TRISB
     BSF TRISB, 0    ; Mettre le 0ï¿½me bit de TRISB ï¿½ 1 pour configurer RB3 comme entrï¿½e
     BSF TRISB, 1    ; Rï¿½pï¿½ter pour les 3 autres boutons
@@ -665,12 +682,15 @@ TEMPO_BTN:
     CLRF ANSELB, 2
     CLRF ANSELB, 3
     
+    Return
+    
 ;*******************************************************************************
 
 ;*******************************************************************************
 ;			    CONFIG DU PWM / BUZZER
 ;*******************************************************************************
-    
+
+Config_Buzzer:
     ; dï¿½but de la configuration PWM
     MOVLW b'00000100'
     MOVWF CCPTMRS
@@ -699,7 +719,8 @@ TEMPO_BTN:
     ; choix des options du timer 2 (voir p.256)
     ; BCF TRISC, 1
     ; activation de la sortie PWM
-    ; fin de la configuration    
+    ; fin de la configuration   
+    Return
 
 ;*******************************************************************************
 
@@ -752,7 +773,7 @@ Victory:
 ;*******************************************************************************
     
 ;*******************************************************************************
-;			SEQUENCE DE Défaite
+;			SEQUENCE DE Dï¿½faite
 ;*******************************************************************************
 
 Defeat:
@@ -772,7 +793,9 @@ Defeat:
 ;*******************************************************************************
 ;			TESTS SUR LES LEDS RGBW SK6812
 ;*******************************************************************************
-    
+    CALL    Config_RGB
+    CALL    Config_Buzzer
+    CALL    Config_Button
     
     
     CALL    test_LED_RGB
