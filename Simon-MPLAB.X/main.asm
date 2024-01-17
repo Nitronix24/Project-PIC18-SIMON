@@ -538,6 +538,46 @@ tempo_1s_run
     goto    tempo_1s_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
     return
+
+Tempo_0.5s:
+    
+    movlw   b'10010000'		    
+    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    
+    movlw   b'10010000'	
+    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    
+    ; initialiser la valeur du timer � 50036
+    movlw   0xC3
+    movwf   TMR0H		    ; maj TMR0H
+    movlw   0x74		    ; maj TMR0L
+    movwf   TMR0L
+    
+tempo_0.5s_run    
+    btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
+    goto    tempo_0.5s_run  
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
+    return
+
+Tempo_100us:
+    
+    movlw   b'10010000'		    
+    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    
+    movlw   b'10010000'	
+    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    
+    ; initialiser la valeur du timer � 65532
+    movlw   0xFF
+    movwf   TMR0H		    ; maj TMR0H
+    movlw   0xFC		    ; maj TMR0L
+    movwf   TMR0L
+    
+tempo_100us_run    
+    btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
+    goto    tempo_100us_run
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
+    return   
     
 ;*******************************************************************************
     
@@ -734,7 +774,9 @@ DEBUT
 Game   
     ;Call    CreateRandomNumber
     Call    Menu
-    Call    Sequence
+    ;Call    Victory
+    Call    Defeat
+    ;Call    Sequence
     Goto    Game
     
 ;*******************************************************************************
@@ -745,11 +787,12 @@ Menu:
     
     Call    LED2_On
     loop_menu
-    btfss   PORTB, 2
+    btfsc   PORTB, 2
     goto    loop_menu
     Call    LEDAll_Off
-    Call    tempo_1s
+    Call    Tempo_0.5s
     Call    LED2_On
+    Call    Tempo_100us
     Return
     
 ;*******************************************************************************    
@@ -772,13 +815,13 @@ Sequence:
 Victory:
     
     call    LEDAll_Green1
-    call    timer_1s
+    call    Tempo_0.5s
     call    LEDAll_Green2
-    call    timer_1s
+    call    Tempo_0.5s
     call    LEDAll_Green1
-    call    timer_1s
+    call    Tempo_0.5s
     call    LEDAll_Green2
-    call    timer_1s
+    call    Tempo_0.5s
     Return
     
 ;*******************************************************************************
@@ -790,13 +833,13 @@ Victory:
 Defeat:
     
     call    LEDAll_Red1
-    call    timer_1s
+    call    Tempo_0.5s
+    call    LEDAll_Red2
+    call    Tempo_0.5s
     call    LEDAll_Red1
-    call    timer_1s
-    call    LEDAll_Red1
-    call    timer_1s
-    call    LEDAll_Red1
-    call    timer_1s
+    call    Tempo_0.5s
+    call    LEDAll_Red2
+    call    Tempo_0.5s
     Return
     
 ;*******************************************************************************
