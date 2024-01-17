@@ -635,18 +635,34 @@ createRandomNum:
     MOVWF   randomNum
     RETURN
 
-TestRandom:
+Random:
     CALL createRandomNum
-    MOVF    randomNum, W    ; Charge la valeur de randomNum dans le registre W
-    BTFSC   STATUS, Z       ; Test si la valeur est 0
-    GOTO    LED0_Buzzer     ; Appelle func1 si la valeur est 0
-    DCFSNZ  WREG, F         ; Décrémente W et saute si 0
-    GOTO    LED1_Buzzer     ; Appelle func2 si la valeur était 1
-    DCFSNZ  WREG, F         ; Décrémente W et saute si 0
-    GOTO    LED2_Buzzer     ; Appelle func3 si la valeur était 2
-    DCFSNZ  WREG, F         ; Décrémente W et saute si 0
-    CALL    LED3_Buzzer     ; Appelle func4 si la valeur était 3
-    main
+    
+    
+    MOVLW   0               ; Charge la valeur 0 dans WREG pour la comparaison
+    CPFSEQ  randomNum       ; Compare randomNum à 0
+    GOTO    CompareBTN1
+    CALL    LED0_Buzzer     ; Saute si randomNum est égal à 0
+    
+    CompareBTN1
+    MOVLW   1               ; Charge la valeur 1 dans WREG pour la comparaison    
+    CPFSEQ  randomNum       ; Compare randomNum à 1
+    GOTO    CompareBTN2
+    CALL    LED1_Buzzer     ; Saute si randomNum est égal à 1
+    
+    CompareBTN2
+    MOVLW   2               ; Charge la valeur 2 dans WREG pour la comparaison
+    CPFSEQ  randomNum       ; Compare randomNum à 2
+    GOTO    CompareBTN3
+    CALL    LED2_Buzzer     ; Saute si randomNum est égal à 2
+    ; Si aucune des conditions ci-dessus n'est vraie, randomNum doit être 3
+    
+    CompareBTN3
+    MOVLW   3               ; Charge la valeur 3 dans WREG pour la comparaison
+    CPFSEQ  randomNum       ; Compare randomNum à 3
+    GOTO    _return
+    CALL    LED3_Buzzer     ; Appelle la fonction si randomNum est 3
+    _return
     RETURN
 
 
@@ -661,7 +677,7 @@ DEBUT
     CALL    Config_Button
     
     MOVLW   10          ; Charge la valeur 9 dans WREG
-    MOVWF   i           ; Stocke la valeur de WREG dans la variable i
+    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
 
     
     MOVLB   0x01		    ; choisir la banque 1
@@ -678,7 +694,7 @@ loop
     
     BANKSEL PORTB        ; Sï¿½lectionnez la banque pour PORTB
     BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
-    CALL TestRandom
+    CALL Random
     
     GOTO loop
     
@@ -693,16 +709,15 @@ LED0_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
-    
- 
+    RETURN
+
 LED1_Buzzer:
     CALL    LED1_On
     CALL    BuzzerOnBtn1
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    RETURN
 
 LED2_Buzzer:    
     CALL    LED2_On
@@ -710,7 +725,7 @@ LED2_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
+    RETURN
 
 LED3_Buzzer:
     CALL    LED3_On
@@ -718,18 +733,8 @@ LED3_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    GOTO main
-    
-    CALL    LEDAll_Green
-    CALL    Tempo_1s
-    CALL    BuzzerOff
-    CALL    LEDAll_Off
-    GOTO main
-
-    
-    goto $
-	
-	
+    RETURN
+    	
     END
 
 ;*******************************************************************************
