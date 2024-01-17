@@ -420,11 +420,11 @@ ColorBlue:
     CALL ColorEnable
     RETURN
     
-ColorYellow:
+ColorPurple:
     
     CALL ColorEnable
-    CALL ColorEnable
     CALL ColorDisable
+    CALL ColorEnable
     RETURN
 
 ColorWhite:
@@ -466,7 +466,7 @@ LED3_On:
     CALL ColorOff
     CALL ColorOff
     CALL ColorOff
-    CALL ColorYellow
+    CALL ColorPurple
     RETURN
     
 LEDAll_Green:
@@ -483,6 +483,33 @@ LEDAll_Off:
     CALL ColorOff
     RETURN
     
+LEDAll_Green1:
+    CALL ColorGreen
+    CALL ColorOff
+    CALL ColorGreen
+    CALL ColorOff
+    RETURN
+    
+LEDAll_Green2:
+    CALL ColorOff
+    CALL ColorGreen
+    CALL ColorOff
+    CALL ColorGreen
+    RETURN
+
+LEDAll_Red1:
+    CALL ColorRed
+    CALL ColorOff
+    CALL ColorRed
+    CALL ColorOff
+    RETURN
+    
+LEDAll_Red2:
+    CALL ColorOff
+    CALL ColorRed
+    CALL ColorOff
+    CALL ColorRed
+    RETURN
  
 ;*******************************************************************************
 
@@ -541,7 +568,7 @@ TurnOffLD3:
     BCF LATC, 7
     RETURN
 
-;*******************************************************************************
+;*******************************************************************************   
     
 ;*******************************************************************************
 ;			FONCTION BUZZER
@@ -609,6 +636,19 @@ TEMPO_BTN:
 ;*******************************************************************************
 
 ;*******************************************************************************
+;			CONFIG	OSCILLATOR
+;*******************************************************************************     
+    
+    BANKSEL OSCFRQ
+    bsf	    OSCFRQ, 3
+    bcf	    OSCFRQ, 1
+    
+    BANKSEL TRISB
+    MOVLW   0x0F
+    MOVWF   TRISB
+;*******************************************************************************     
+    
+;*******************************************************************************
 ;			    CONFIG BOUTONS
 ;*******************************************************************************
     
@@ -664,114 +704,79 @@ TEMPO_BTN:
 ;*******************************************************************************
 
 DEBUT
- 
+
 ;*******************************************************************************
-;			    TESTS SUR LES LEDS VERTES
+;				MENU
 ;*******************************************************************************
- 
-    ; Configuration initiale LEDs (verte)
-;    BANKSEL TRISC       ; Sï¿½lection de la banque pour TRISC
-;    CLRF TRISC          ; Configure PORTC comme sortie
 
-    ; Allumer et ï¿½teindre les LEDs
-;    loop:
-;        CALL TurnOnLD0
-;        CALL TunOffLD0
-;	 CALL TurnOnLD1
-;        CALL TunOffLD1
-;	 CALL TurnOnLD2
-;        CALL TunOffLD2
-;	 CALL TurnOnLD3
-;        CALL TunOffLD3
-;        GOTO loop
-    ; Sous-routine pour allumer toutes les LEDs
-;    TurnOnAllLEDs:
-;        BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
-;        BSF LATC, 4     ; Allume la LED sur RC4
-;        BSF LATC, 5     ; Allume la LED sur RC5
-;        BSF LATC, 6     ; Allume la LED sur RC6
-;        BSF LATC, 7     ; Allume la LED sur RC7
-;        RETURN
+Menu:
+    
+    Call    LED2_On
+    loop_menu
+    btfss   PORTB, 2
+    goto    loop_menu
+    Call    LEDAll_Off
+    Call    tempo_1s
+    Call    LED2_On
+    Return
+    
+;*******************************************************************************    
 
-    ; Sous-routien pour alumer un led par une LED
-    ;LD0 On
-;    TurnOnLD0:
-;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
-;       BSF LATC, 4     ; Allume la LED sur RC4
-;	RETURN
+;*******************************************************************************
+;				SEQUENCE
+;*******************************************************************************
 
-    ;LD1 On
-;    TurnOnLD1:
-;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
-;       BSF LATC, 5     ; Allume la LED sur RC4
-;	RETURN
+Sequence:
+    
+    
+    Return
+    
+;******************************************************************************* 
+    
+;*******************************************************************************
+;			SEQUENCE DE VICTOIRE
+;*******************************************************************************
 
-    ;LD2 On
-;    TurnOnLD2:
-;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
-;       BSF LATC, 6     ; Allume la LED sur RC4
-;	RETURN
-
-    ;LD3 On
-;    TurnOnLD3:
-;	BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
-;       BSF LATC, 7     ; Allume la LED sur RC4
-;	RETURN
-	
-	
-    ; Sous-routine pour ï¿½teindre toutes les LEDs
-;    TurnOffAllLEDs:
-;        BANKSEL LATC    ; Sï¿½lection de la banque pour LATC
-;        BCF LATC, 4     ; ï¿½teint la LED sur RC4
-;        BCF LATC, 5     ; ï¿½teint la LED sur RC5
-;        BCF LATC, 6     ; ï¿½teint la LED sur RC6
-;        BCF LATC, 7     ; ï¿½teint la LED sur RC7
-;        RETURN
-
-    ; Sous-rounie pour ï¿½teindre une LED
-    ; LD0 Off
-;    TunOffLD0:
-;	BANKSEL LATC
-;	BCF LATC, 4
-;	RETURN
-;    
-;    ; LD1 Off
-;    TunOffLD1:
-;	BANKSEL LATC
-;	BCF LATC, 5
-;	RETURN
-;
-;    ; LD2 Off
-;    TunOffLD2:
-;	BANKSEL LATC
-;	BCF LATC, 6
-;	RETURN
-;
-;    ; LD3 Off
-;    TunOffLD3:
-;	BANKSEL LATC
-;	BCF LATC, 7
-;	RETURN
-;
-;END
+Victory:
+    
+    call    LEDAll_Green1
+    call    timer_1s
+    call    LEDAll_Green2
+    call    timer_1s
+    call    LEDAll_Green1
+    call    timer_1s
+    call    LEDAll_Green2
+    call    timer_1s
+    Return
+    
 ;*******************************************************************************
     
+;*******************************************************************************
+;			SEQUENCE DE Défaite
+;*******************************************************************************
+
+Defeat:
+    
+    call    LEDAll_Red1
+    call    timer_1s
+    call    LEDAll_Red1
+    call    timer_1s
+    call    LEDAll_Red1
+    call    timer_1s
+    call    LEDAll_Red1
+    call    timer_1s
+    Return
+    
+;*******************************************************************************
     
 ;*******************************************************************************
 ;			TESTS SUR LES LEDS RGBW SK6812
 ;*******************************************************************************
     
-    BANKSEL OSCFRQ
-    bsf	    OSCFRQ, 3
-    BCF	    OSCFRQ, 1
     
-    BANKSEL TRISB
-    MOVLW   0x0F
-    MOVWF   TRISB
     
     CALL    test_LED_RGB
     ;CALL    test_button_buzzer
-; Allumer et ï¿½teindre les LEDs
 
 test_button_buzzer:
     BANKSEL PORTB        ; Sï¿½lectionnez la banque pour PORTB
