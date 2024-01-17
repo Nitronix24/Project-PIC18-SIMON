@@ -275,10 +275,10 @@ DEBUT
     MOVLW 0x06
     MOVWF RC1PPS, 1
     ; associe le pin RC1 avec la fonction de sortie de CCP2
-    BSF TRISA, 6    ; désactivation de la sortie PWM pour configuration
+    BSF TRISC, 1    ; désactivation de la sortie PWM pour configuration
     MOVLW b'01100000' ;INITIALISE 0
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271) (0 pour le moment)
+    MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271)
     MOVLW b'10001100'
     MOVWF CCP2CON   ; configuration du module CCP2 et format des données
     MOVLW d'00000000'
@@ -292,7 +292,7 @@ DEBUT
     MOVLW b'11110000' ; prescale 1:16, POSTSCALER 1:1
     MOVWF T2CON
     ; choix des options du timer 2 (voir p.256)
-    BCF TRISA, 6
+    ; BCF TRISC, 1
     ; activation de la sortie PWM
     ; fin de la configuration
   
@@ -301,29 +301,38 @@ DEBUT
     loop:
         BANKSEL PORTB        ; Sélectionnez la banque pour PORTB
         BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
-        CALL TurnOnLD3   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
 	
+	BANKSEL PORTB
 	BTFSC PORTB, 3
-	CALL TurnOffLD3
-
+	CALL BuzzerOff
+	
+	BANKSEL PORTB
 	BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
-        CALL TurnOnLD2   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
         
+	BANKSEL PORTB
 	BTFSC PORTB, 2
-	CALL TurnOffLD2
+	CALL BuzzerOff
 	
+	BANKSEL PORTB
 	BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
-        CALL TurnOnLD1   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
         
+	BANKSEL PORTB
 	BTFSC PORTB, 1
-	CALL TurnOffLD1
+	CALL BuzzerOff
 	
+        BANKSEL PORTB
 	BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est pressé (1 si enfoncé)
-        CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
+        CALL BuzzerOnBtn0
+	;CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressé
         
+	BANKSEL PORTB
 	BTFSC PORTB, 0
-	CALL TurnOffLD0
-	;CALL TurnOffAllLEDs 
+	
+	
+	CALL BuzzerOff 
 	GOTO loop
 
     ; Sous-routine pour allumer toutes les LEDs
@@ -395,6 +404,67 @@ DEBUT
 	BCF LATC, 7
 	RETURN
 
+	
+    ; Buzzer
+    BuzzerOnBtn2:
+        MOVLW b'01100000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN 
+
+    BuzzerOnBtn1:
+        MOVLW b'01000000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN 
+
+    BuzzerOnBtn3:
+        MOVLW b'01001000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN
+
+    BuzzerOnBtn0:
+        MOVLW b'01010000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la période de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN
+	
+    BuzzerOff:
+	BSF TRISC, 1	; désactivation de la sortie PWM (Buzzer)
+	RETURN
+	
+    TEMPO_BTN:
+	MOVLB 0x0E
+	BCF PIR4,2,1      ; mise a 0 du flag
+    
+	MOVLB 0x00
+	MOVLW d'0'
+	MOVWF TMR3L
+	MOVWF TMR3L
+	
+	BSF T3CON ,0
+	
+	MOVLB 0x0E
+	SCRUT_FLAG
+	BTFSS PIR4,2,1      ; temp que flag pas lev 	
+	GOTO SCRUT_FLAG
+	
+	BCF PIR4,2,1 
+    
+	MOVLB 0x00
+	BCF T3CON ,0
+	RETURN
+	
+	
     END
 
     ;commentaire test
