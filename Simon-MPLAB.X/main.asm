@@ -72,6 +72,7 @@
 
 ; TODO INSERT INCLUDE CODE HERE
 #include "p18f25k40.inc"
+    
 ;*******************************************************************************
 ;
 ; TODO Step #2 - Configuration Word Setup
@@ -98,63 +99,63 @@
 ; Assembly source line config statements
 
 ; CONFIG1L
-  CONFIG  FEXTOSC = OFF         ; External Oscillator mode Selection bits (Oscillator not enabled)
-  CONFIG  RSTOSC = HFINTOSC_64MHZ; Power-up default value for COSC bits (HFINTOSC with HFFRQ = 64 MHz and CDIV = 1:1)
+  CONFIG  FEXTOSC = OFF		    ; External Oscillator mode Selection bits (Oscillator not enabled)
+  CONFIG  RSTOSC = HFINTOSC_64MHZ   ; Power-up default value for COSC bits (HFINTOSC with HFFRQ = 64 MHz and CDIV = 1:1)
 
 ; CONFIG1H
-  CONFIG  CLKOUTEN = On        ; Clock Out Enable bit (CLKOUT function is disabled)
-  CONFIG  CSWEN = ON            ; Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
-  CONFIG  FCMEN = ON            ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor enabled)
+  CONFIG  CLKOUTEN = On		    ; Clock Out Enable bit (CLKOUT function is disabled)
+  CONFIG  CSWEN = ON		    ; Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
+  CONFIG  FCMEN = ON		    ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor enabled)
 
 ; CONFIG2L
-  CONFIG  MCLRE = EXTMCLR       ; Master Clear Enable bit (If LVP = 0, MCLR pin is MCLR; If LVP = 1, RE3 pin function is MCLR )
-  CONFIG  PWRTE = OFF           ; Power-up Timer Enable bit (Power up timer disabled)
-  CONFIG  LPBOREN = OFF         ; Low-power BOR enable bit (ULPBOR disabled)
-  CONFIG  BOREN = SBORDIS       ; Brown-out Reset Enable bits (Brown-out Reset enabled , SBOREN bit is ignored)
+  CONFIG  MCLRE = EXTMCLR	    ; Master Clear Enable bit (If LVP = 0, MCLR pin is MCLR; If LVP = 1, RE3 pin function is MCLR )
+  CONFIG  PWRTE = OFF		    ; Power-up Timer Enable bit (Power up timer disabled)
+  CONFIG  LPBOREN = OFF		    ; Low-power BOR enable bit (ULPBOR disabled)
+  CONFIG  BOREN = SBORDIS	    ; Brown-out Reset Enable bits (Brown-out Reset enabled , SBOREN bit is ignored)
 
 ; CONFIG2H
-  CONFIG  BORV = VBOR_2P45      ; Brown Out Reset Voltage selection bits (Brown-out Reset Voltage (VBOR) set to 2.45V)
-  CONFIG  ZCD = OFF             ; ZCD Disable bit (ZCD disabled. ZCD can be enabled by setting the ZCDSEN bit of ZCDCON)
-  CONFIG  PPS1WAY = ON          ; PPSLOCK bit One-Way Set Enable bit (PPSLOCK bit can be cleared and set only once; PPS registers remain locked after one clear/set cycle)
-  CONFIG  STVREN = ON           ; Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
-  CONFIG  DEBUG = OFF           ; Debugger Enable bit (Background debugger disabled)
-  CONFIG  XINST = OFF           ; Extended Instruction Set Enable bit (Extended Instruction Set and Indexed Addressing Mode disabled)
+  CONFIG  BORV = VBOR_2P45	    ; Brown Out Reset Voltage selection bits (Brown-out Reset Voltage (VBOR) set to 2.45V)
+  CONFIG  ZCD = OFF		    ; ZCD Disable bit (ZCD disabled. ZCD can be enabled by setting the ZCDSEN bit of ZCDCON)
+  CONFIG  PPS1WAY = ON		    ; PPSLOCK bit One-Way Set Enable bit (PPSLOCK bit can be cleared and set only once; PPS registers remain locked after one clear/set cycle)
+  CONFIG  STVREN = ON		    ; Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
+  CONFIG  DEBUG = OFF		    ; Debugger Enable bit (Background debugger disabled)
+  CONFIG  XINST = OFF		    ; Extended Instruction Set Enable bit (Extended Instruction Set and Indexed Addressing Mode disabled)
 
 ; CONFIG3L
-  CONFIG  WDTCPS = WDTCPS_31    ; WDT Period Select bits (Divider ratio 1:65536; software control of WDTPS)
-  CONFIG  WDTE = OFF            ; WDT operating mode (WDT Disabled)
+  CONFIG  WDTCPS = WDTCPS_31	    ; WDT Period Select bits (Divider ratio 1:65536; software control of WDTPS)
+  CONFIG  WDTE = OFF		    ; WDT operating mode (WDT Disabled)
 
 ; CONFIG3H
-  CONFIG  WDTCWS = WDTCWS_7     ; WDT Window Select bits (window always open (100%); software control; keyed access not required)
-  CONFIG  WDTCCS = SC           ; WDT input clock selector (Software Control)
+  CONFIG  WDTCWS = WDTCWS_7	    ; WDT Window Select bits (window always open (100%); software control; keyed access not required)
+  CONFIG  WDTCCS = SC		    ; WDT input clock selector (Software Control)
 
 ; CONFIG4L
-  CONFIG  WRT0 = OFF            ; Write Protection Block 0 (Block 0 (000800-001FFFh) not write-protected)
-  CONFIG  WRT1 = OFF            ; Write Protection Block 1 (Block 1 (002000-003FFFh) not write-protected)
-  CONFIG  WRT2 = OFF            ; Write Protection Block 2 (Block 2 (004000-005FFFh) not write-protected)
-  CONFIG  WRT3 = OFF            ; Write Protection Block 3 (Block 3 (006000-007FFFh) not write-protected)
+  CONFIG  WRT0 = OFF		    ; Write Protection Block 0 (Block 0 (000800-001FFFh) not write-protected)
+  CONFIG  WRT1 = OFF		    ; Write Protection Block 1 (Block 1 (002000-003FFFh) not write-protected)
+  CONFIG  WRT2 = OFF		    ; Write Protection Block 2 (Block 2 (004000-005FFFh) not write-protected)
+  CONFIG  WRT3 = OFF		    ; Write Protection Block 3 (Block 3 (006000-007FFFh) not write-protected)
 
 ; CONFIG4H
-  CONFIG  WRTC = OFF            ; Configuration Register Write Protection bit (Configuration registers (300000-30000Bh) not write-protected)
-  CONFIG  WRTB = OFF            ; Boot Block Write Protection bit (Boot Block (000000-0007FFh) not write-protected)
-  CONFIG  WRTD = OFF            ; Data EEPROM Write Protection bit (Data EEPROM not write-protected)
-  CONFIG  SCANE = ON            ; Scanner Enable bit (Scanner module is available for use, SCANMD bit can control the module)
-  CONFIG  LVP = OFF             ; Low Voltage Programming Enable bit (HV on MCLR/VPP must be used for programming)
+  CONFIG  WRTC = OFF		    ; Configuration Register Write Protection bit (Configuration registers (300000-30000Bh) not write-protected)
+  CONFIG  WRTB = OFF		    ; Boot Block Write Protection bit (Boot Block (000000-0007FFh) not write-protected)
+  CONFIG  WRTD = OFF		    ; Data EEPROM Write Protection bit (Data EEPROM not write-protected)
+  CONFIG  SCANE = ON		    ; Scanner Enable bit (Scanner module is available for use, SCANMD bit can control the module)
+  CONFIG  LVP = OFF		    ; Low Voltage Programming Enable bit (HV on MCLR/VPP must be used for programming)
 
 ; CONFIG5L
-  CONFIG  CP = OFF              ; UserNVM Program Memory Code Protection bit (UserNVM code protection disabled)
-  CONFIG  CPD = OFF             ; DataNVM Memory Code Protection bit (DataNVM code protection disabled)
+  CONFIG  CP = OFF		    ; UserNVM Program Memory Code Protection bit (UserNVM code protection disabled)
+  CONFIG  CPD = OFF		    ; DataNVM Memory Code Protection bit (DataNVM code protection disabled)
 
 ; CONFIG5H
 
 ; CONFIG6L
-  CONFIG  EBTR0 = OFF           ; Table Read Protection Block 0 (Block 0 (000800-001FFFh) not protected from table reads executed in other blocks)
-  CONFIG  EBTR1 = OFF           ; Table Read Protection Block 1 (Block 1 (002000-003FFFh) not protected from table reads executed in other blocks)
-  CONFIG  EBTR2 = OFF           ; Table Read Protection Block 2 (Block 2 (004000-005FFFh) not protected from table reads executed in other blocks)
-  CONFIG  EBTR3 = OFF           ; Table Read Protection Block 3 (Block 3 (006000-007FFFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTR0 = OFF		    ; Table Read Protection Block 0 (Block 0 (000800-001FFFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTR1 = OFF		    ; Table Read Protection Block 1 (Block 1 (002000-003FFFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTR2 = OFF		    ; Table Read Protection Block 2 (Block 2 (004000-005FFFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTR3 = OFF		    ; Table Read Protection Block 3 (Block 3 (006000-007FFFh) not protected from table reads executed in other blocks)
 
 ; CONFIG6H
-  CONFIG  EBTRB = OFF           ; Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
+  CONFIG  EBTRB = OFF		    ; Boot Block Table Read Protection bit (Boot Block (000000-0007FFh) not protected from table reads executed in other blocks)
 
 ;*******************************************************************************
 ;
@@ -181,8 +182,9 @@
 ;   BSR_TEMP       RES        1      ; bank select used for ISR context saving
 ;
 ;*******************************************************************************
-
 ; TODO PLACE VARIABLE DEFINITIONS GO HERE
+;*******************************************************************************
+  
 var	UDATA	    0X400
 colorBitCounter	    RES	    1
 colorSwitchOn	    RES	    1
@@ -190,6 +192,7 @@ colorSwitchOn	    RES	    1
 ;*******************************************************************************
 ; Reset Vector
 ;*******************************************************************************
+	    
 RES_VECT  CODE    0x0000            ; processor reset vector
     GOTO    DEBUT                   ; go to beginning of program
     
@@ -244,10 +247,11 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 
 MAIN_PROG CODE                      ; let linker place main program
 
- 
 ;*******************************************************************************
 ; RGB LEDs Functions
 ;*******************************************************************************
+ 
+;Fonction pour mettre a l'etat haut 
 ColorBitOn:
     
     MOVLB   LATB
@@ -276,7 +280,7 @@ ColorBitOn:
     NOP
     Return
 
-
+;Fonction pour mettre a l'etat bas
 ColorBitOff:
     
     MOVLB   LATB
@@ -308,9 +312,9 @@ ColorEnable:
     
     MOVLB	0X04
     MOVLW	0x08
-    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter � 8
+    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter a 8
     MOVLW	0X05
-    MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn � 5
+    MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn a 5
 
 LoopColorEnable
     CPFSEQ	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
@@ -318,16 +322,16 @@ LoopColorEnable
 	    GOTO	SetBitOn
 
     SetBitOff
-	    CALL	ColorBitOff		; appel la fonction de mise � 0 du bit
+	    CALL	ColorBitOff		; appel la fonction de mise a 0 du bit
 	    GOTO 	EndSetBit
 
     SetBitOn
-	    CALL 	ColorBitOn		; appel la fonction de mise � 1 du bit
+	    CALL 	ColorBitOn		; appel la fonction de mise a 1 du bit
     EndSetBit
-    DECF	colorBitCounter			; d�cr�mente le colorBitCounter
+    DECF	colorBitCounter			; decremente le colorBitCounter
     MOVLW	0X00
     CPFSEQ	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
-	    GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au d�but de la boucle
+	    GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au debut de la boucle
 	    RETURN
     BackToLoopColorEnable
 	    MOVF 	colorSwitchOn,W,1	; charge colorSwitchOn dans le WREG
@@ -338,16 +342,16 @@ ColorDisable:
     
     MOVLB	0X04
     MOVLW	0x08
-    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter � 8
+    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter a 8
 
 loopColorDisable
 	MOVLW	0X00
-	CPFSEQ	colorBitCounter,1 	; test si le colorBitCounter = 0; skip if = 0
-	GOTO	EndIfDisableNull	; appel la routine qui renvoie au d�but de la boucle
+	CPFSEQ	colorBitCounter,1		; test si le colorBitCounter = 0; skip if = 0
+	GOTO	EndIfDisableNull		; appel la routine qui renvoie au debut de la boucle
 	RETURN
     EndIfDisableNull
 	DECF	colorBitCounter
-	CALL	ColorBitOff		; appel la fonction de mise � 0 du bit
+	CALL	ColorBitOff			; appel la fonction de mise a 0 du bit
 	GOTO 	loopColorDisable
 
 
@@ -460,7 +464,7 @@ Tempo_1s:
     movlw   b'10010000'	
     movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
-    ; initialiser la valeur du timer � 33536
+    ; initialiser la valeur du timer a 33536
     movlw   0x86
     movwf   TMR0H		    ; maj TMR0H
     movlw   0xe8		    ; maj TMR0L
@@ -469,7 +473,7 @@ Tempo_1s:
 tempo_1s_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
     goto    tempo_1s_run
-    bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de demarrage
     return
     
 ;*******************************************************************************
@@ -511,7 +515,7 @@ TurnOffLD3:
 BuzzerOnBtn2:
     MOVLW b'01100000' ;
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     CALL TEMPO_BTN
     RETURN 
@@ -519,7 +523,7 @@ BuzzerOnBtn2:
 BuzzerOnBtn1:
     MOVLW b'01000000' ;
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     CALL TEMPO_BTN
     RETURN 
@@ -527,7 +531,7 @@ BuzzerOnBtn1:
 BuzzerOnBtn3:
     MOVLW b'01001000' ;
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     CALL TEMPO_BTN
     RETURN
@@ -535,18 +539,18 @@ BuzzerOnBtn3:
 BuzzerOnBtn0:
     MOVLW b'01010000' ;
     MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271) (0 pour le moment)
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     CALL TEMPO_BTN
     RETURN
 
 BuzzerOff:
-    BSF TRISC, 1	; d�sactivation de la sortie PWM (Buzzer)
+    BSF TRISC, 1	; desactivation de la sortie PWM (Buzzer)
     RETURN
 
 TEMPO_BTN:
     MOVLB 0x0E
-    BCF PIR4,2,1      ; mise a 0 du flag
+    BCF PIR4,2,1	; mise a 0 du flag
 
     MOVLB 0x00
     MOVLW d'0'
@@ -571,9 +575,10 @@ TEMPO_BTN:
 ;*******************************************************************************
 ;			    CONFIG BOUTONS
 ;*******************************************************************************
+    
 Config_RGB:
     BANKSEL OSCFRQ
-    bsf	    OSCFRQ, 3
+    BSF	    OSCFRQ, 3
     BCF	    OSCFRQ, 1
     
     BANKSEL TRISB
@@ -590,15 +595,15 @@ Config_RGB:
     
 ; Configuration initiale des Bouttons
 Config_Button:
-    BANKSEL TRISB   ; S�lectionnez la banque pour TRISB
-    BSF TRISB, 0    ; Mettre le 0�me bit de TRISB � 1 pour configurer RB3 comme entr�e
-    BSF TRISB, 1    ; R�p�ter pour les 3 autres boutons
+    BANKSEL TRISB	; Selectionnez la banque pour TRISB
+    BSF TRISB, 0	; Mettre le 0eme bit de TRISB a 1 pour configurer RB3 comme entree
+    BSF TRISB, 1	; Repeter pour les 3 autres boutons
     BSF TRISB, 2
     BSF TRISB, 3
     
     BANKSEL ANSELB
-    CLRF ANSELB, 0    ; Mettre le 0�me bit de ANSELB � O pour configurer RB3 comme entr�e
-    CLRF ANSELB, 1    ; R�p�ter pour les 3 autres boutons
+    CLRF ANSELB, 0	; Mettre le 0eme bit de ANSELB a O pour configurer RB3 comme entree
+    CLRF ANSELB, 1	; Repeter pour les 3 autres boutons
     CLRF ANSELB, 2
     CLRF ANSELB, 3
     
@@ -611,31 +616,37 @@ Config_Button:
 ;*******************************************************************************
 
 Config_Buzzer:
-    ; d�but de la configuration PWM
+    ; debut de la configuration PWM
     MOVLW b'00000100'
     MOVWF CCPTMRS
+    
     ; associe le module CCP2 avec le timer 2
     MOVLB 0x0E
-    ; s�lection de la banque d?adresse
+    
+    ; selection de la banque d?adresse
     MOVLW 0x06
     MOVWF RC1PPS, 1
+    
     ; associe le pin RC1 avec la fonction de sortie de CCP2
-    BSF TRISC, 1    ; d�sactivation de la sortie PWM pour configuration
-    MOVLW b'01100000' ;INITIALISE 0
-    MOVLB 0x0F
-    MOVWF T2PR	    ; fixe la p�riode de PWM (voir formule p.271)
+    BSF TRISC, 1	    ; desactivation de la sortie PWM pour configuration
+    MOVLW b'01100000'	    ;INITIALISE 0
+    MOVLB 0x0F	
+    MOVWF T2PR		    ; fixe la periode de PWM (voir formule p.271)
     MOVLW b'10001100'
-    MOVWF CCP2CON   ; configuration du module CCP2 et format des donn�es
+    MOVWF CCP2CON	    ; configuration du module CCP2 et format des donnees
     MOVLW d'00000000'
     MOVWF CCPR2H
     MOVLW d'11111111'
     MOVWF CCPR2L
+    
     ; fixe le rapport cyclique du signal (voir formule p.272)
     MOVLW b'0010001'
     MOVWF T2CLKCON
+    
     ; configuration de l'horloge du timer 2 = Fosc/4
-    MOVLW b'11110000' ; prescale 1:16, POSTSCALER 1:1
+    MOVLW b'11110000'	    ; prescale 1:16, POSTSCALER 1:1
     MOVWF T2CON
+    
     ; choix des options du timer 2 (voir p.256)
     ; BCF TRISC, 1
     ; activation de la sortie PWM
@@ -651,7 +662,7 @@ DEBUT
 ;*******************************************************************************
  
     ; Configuration initiale LEDs (verte)
-;    BANKSEL TRISC       ; S�lection de la banque pour TRISC
+;    BANKSEL TRISC       ; Selection de la banque pour TRISC
 ;    CLRF TRISC          ; Configure PORTC comme sortie
 
     ; Allumer et �teindre les LEDs
@@ -667,7 +678,7 @@ DEBUT
 ;        GOTO loop
     ; Sous-routine pour allumer toutes les LEDs
 ;    TurnOnAllLEDs:
-;        BANKSEL LATC    ; S�lection de la banque pour LATC
+;        BANKSEL LATC    ; Selection de la banque pour LATC
 ;        BSF LATC, 4     ; Allume la LED sur RC4
 ;        BSF LATC, 5     ; Allume la LED sur RC5
 ;        BSF LATC, 6     ; Allume la LED sur RC6
@@ -677,39 +688,39 @@ DEBUT
     ; Sous-routien pour alumer un led par une LED
     ;LD0 On
 ;    TurnOnLD0:
-;	BANKSEL LATC    ; S�lection de la banque pour LATC
+;	BANKSEL LATC    ; Selection de la banque pour LATC
 ;       BSF LATC, 4     ; Allume la LED sur RC4
 ;	RETURN
 
     ;LD1 On
 ;    TurnOnLD1:
-;	BANKSEL LATC    ; S�lection de la banque pour LATC
+;	BANKSEL LATC    ; Selection de la banque pour LATC
 ;       BSF LATC, 5     ; Allume la LED sur RC4
 ;	RETURN
 
     ;LD2 On
 ;    TurnOnLD2:
-;	BANKSEL LATC    ; S�lection de la banque pour LATC
+;	BANKSEL LATC    ; Selection de la banque pour LATC
 ;       BSF LATC, 6     ; Allume la LED sur RC4
 ;	RETURN
 
     ;LD3 On
 ;    TurnOnLD3:
-;	BANKSEL LATC    ; S�lection de la banque pour LATC
+;	BANKSEL LATC    ; Selection de la banque pour LATC
 ;       BSF LATC, 7     ; Allume la LED sur RC4
 ;	RETURN
 	
 	
-    ; Sous-routine pour �teindre toutes les LEDs
+    ; Sous-routine pour eteindre toutes les LEDs
 ;    TurnOffAllLEDs:
-;        BANKSEL LATC    ; S�lection de la banque pour LATC
-;        BCF LATC, 4     ; �teint la LED sur RC4
-;        BCF LATC, 5     ; �teint la LED sur RC5
-;        BCF LATC, 6     ; �teint la LED sur RC6
-;        BCF LATC, 7     ; �teint la LED sur RC7
+;        BANKSEL LATC    ; Selection de la banque pour LATC
+;        BCF LATC, 4     ; eteint la LED sur RC4
+;        BCF LATC, 5     ; eteint la LED sur RC5
+;        BCF LATC, 6     ; eteint la LED sur RC6
+;        BCF LATC, 7     ; eteint la LED sur RC7
 ;        RETURN
 
-    ; Sous-rounie pour �teindre une LED
+    ; Sous-rounie pour eteindre une LED
     ; LD0 Off
 ;    TunOffLD0:
 ;	BANKSEL LATC
@@ -741,6 +752,7 @@ DEBUT
 ;*******************************************************************************
 ;			TESTS SUR LES LEDS RGBW SK6812
 ;*******************************************************************************
+    
     CALL    Config_RGB
     CALL    Config_Buzzer
     CALL    Config_Button
@@ -748,37 +760,37 @@ DEBUT
     
     CALL    test_LED_RGB
     ;CALL    test_button_buzzer
-; Allumer et �teindre les LEDs
+; Allumer et eteindre les LEDs
 
 test_button_buzzer:
-    BANKSEL PORTB        ; S�lectionnez la banque pour PORTB
-    BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-    CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+    BANKSEL PORTB        ; Selectionnez la banque pour PORTB
+    BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est presse (1 si enfonce)
+    CALL BuzzerOnBtn3	 ; Appelle la fonction TurnOnAllLEDs si le bouton est presse
 
     BANKSEL PORTB
     BTFSC PORTB, 3
     CALL BuzzerOff
 
     BANKSEL PORTB
-    BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-    CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+    BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
+    CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est presse
 
     BANKSEL PORTB
     BTFSC PORTB, 2
     CALL BuzzerOff
 
     BANKSEL PORTB
-    BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
-    CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+    BTFSS PORTB, 1      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
+    CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est presse
 
     BANKSEL PORTB
     BTFSC PORTB, 1
     CALL BuzzerOff
 
     BANKSEL PORTB
-    BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
+    BTFSS PORTB, 0      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
     CALL BuzzerOnBtn0
-    ;CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
+    ;CALL TurnOnLD0	; Appelle la fonction TurnOnAllLEDs si le bouton est presse
 
     BANKSEL PORTB
     BTFSC PORTB, 0
