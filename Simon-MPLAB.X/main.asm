@@ -770,22 +770,32 @@ test_button_buzzer:
     
 test_LED_RGB:
     CALL    LED0_On
+    CALL    BuzzerOnBtn0
     CALL    Tempo_1s
+    CALL    BuzzerOff
     
     CALL    LED1_On
+    CALL    BuzzerOnBtn1
     CALL    Tempo_1s
+    CALL    BuzzerOff
     
     CALL    LED2_On
+    CALL    BuzzerOnBtn2
     CALL    Tempo_1s
+    CALL    BuzzerOff
     
     CALL    LED3_On
+    CALL    BuzzerOnBtn3
     CALL    Tempo_1s
+    CALL    BuzzerOff
     
     CALL    LEDAll_Green
     CALL    Tempo_1s
+    CALL    BuzzerOff
     
     CALL    LEDAll_Off
     CALL    Tempo_1s
+    CALL    BuzzerOff
     
     goto test_LED_RGB
     
