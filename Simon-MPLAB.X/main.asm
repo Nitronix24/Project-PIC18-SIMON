@@ -585,6 +585,20 @@ tempo_100us_run
     return   
     
 ;*******************************************************************************
+
+;*******************************************************************************
+;			FONCTION RANDOM
+;*******************************************************************************
+
+
+createRandomNum:
+    MOVF    T2TMR, W	    ; Chargez la valeur du Timer 2 dans W
+    ANDLW   b'00000011'     ; Appliquez un masque pour obtenir les 2 bits de poids faible
+    BANKSEL 0x100
+    MOVWF   randomNum
+    RETURN
+    
+;*******************************************************************************    
     
 ;*******************************************************************************
 ;			FONCTION LED VERTE
@@ -745,33 +759,6 @@ Config_Buzzer:
 
 ;*******************************************************************************
 
-;*******************************************************************************
-;				Random
-;*******************************************************************************
-
-
-createRandomNum:
-    MOVF    T2TMR, W    ; Chargez la valeur du Timer 2 dans W
-    ANDLW   b'00000011'        ; Appliquez un masque pour obtenir les 2 bits de poids faible
-    BANKSEL 0x100
-    MOVWF   randomNum
-    RETURN
-
-TestRandom:
-    CALL createRandomNum
-    MOVF    randomNum, W    ; Charge la valeur de randomNum dans le registre W
-    BTFSC   STATUS, Z       ; Test si la valeur est 0
-    GOTO    LED0_Buzzer     ; Appelle func1 si la valeur est 0
-    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
-    GOTO    LED1_Buzzer     ; Appelle func2 si la valeur �tait 1
-    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
-    GOTO    LED2_Buzzer     ; Appelle func3 si la valeur �tait 2
-    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
-    CALL    LED3_Buzzer     ; Appelle func4 si la valeur �tait 3
-    main
-    RETURN
-
-
 DEBUT
 
     Call    Config_OSC
@@ -884,6 +871,19 @@ loop
     BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est press� (1 si enfonc�)
     CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est press�
 
+TestRandom:
+    CALL createRandomNum
+    MOVF    randomNum, W    ; Charge la valeur de randomNum dans le registre W
+    BTFSC   STATUS, Z       ; Test si la valeur est 0
+    GOTO    LED0_Buzzer     ; Appelle func1 si la valeur est 0
+    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
+    GOTO    LED1_Buzzer     ; Appelle func2 si la valeur �tait 1
+    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
+    GOTO    LED2_Buzzer     ; Appelle func3 si la valeur �tait 2
+    DCFSNZ  WREG, F         ; D�cr�mente W et saute si 0
+    CALL    LED3_Buzzer     ; Appelle func4 si la valeur �tait 3
+    main
+    RETURN
     
 LED0_Buzzer:
     CALL    LED0_On
