@@ -569,8 +569,25 @@ TEMPO_BTN:
 ;*******************************************************************************
 ;			    CONFIG BOUTONS
 ;*******************************************************************************
+Config_RGB:
+    BANKSEL OSCFRQ
+    bsf	    OSCFRQ, 3
+    BCF	    OSCFRQ, 1
+    
+    BANKSEL TRISB
+    MOVLW   0x0F
+    MOVWF   TRISB
+    
+    Return
+
+;*******************************************************************************
+    
+;*******************************************************************************
+;			    CONFIG BOUTONS
+;*******************************************************************************
     
 ; Configuration initiale des Bouttons
+Config_Button:
     BANKSEL TRISB   ; S�lectionnez la banque pour TRISB
     BSF TRISB, 0    ; Mettre le 0�me bit de TRISB � 1 pour configurer RB3 comme entr�e
     BSF TRISB, 1    ; R�p�ter pour les 3 autres boutons
@@ -583,12 +600,15 @@ TEMPO_BTN:
     CLRF ANSELB, 2
     CLRF ANSELB, 3
     
+    Return
+    
 ;*******************************************************************************
 
 ;*******************************************************************************
 ;			    CONFIG DU PWM / BUZZER
 ;*******************************************************************************
-    
+
+Config_Buzzer:
     ; d�but de la configuration PWM
     MOVLW b'00000100'
     MOVWF CCPTMRS
@@ -617,7 +637,8 @@ TEMPO_BTN:
     ; choix des options du timer 2 (voir p.256)
     ; BCF TRISC, 1
     ; activation de la sortie PWM
-    ; fin de la configuration    
+    ; fin de la configuration   
+    Return
 
 ;*******************************************************************************
 
@@ -718,14 +739,10 @@ DEBUT
 ;*******************************************************************************
 ;			TESTS SUR LES LEDS RGBW SK6812
 ;*******************************************************************************
+    CALL    Config_RGB
+    CALL    Config_Buzzer
+    CALL    Config_Button
     
-    BANKSEL OSCFRQ
-    bsf	    OSCFRQ, 3
-    BCF	    OSCFRQ, 1
-    
-    BANKSEL TRISB
-    MOVLW   0x0F
-    MOVWF   TRISB
     
     CALL    test_LED_RGB
     ;CALL    test_button_buzzer
