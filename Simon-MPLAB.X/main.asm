@@ -677,6 +677,44 @@ BuzzerOff:
     
 ;*******************************************************************************
 
+
+
+;*******************************************************************************
+;			FONCTION LEDBUZZ
+;*******************************************************************************    
+
+LEDBuzz0:
+    Call    LED0_On
+    Call    BuzzerOnBtn0
+    Call    Tempo0.5s
+    Call    BuzzerOff
+    RETURN
+    
+LEDBuzz1:
+    Call    LED1_On
+    Call    BuzzerOnBtn1
+    Call    Tempo0.5s
+    Call    BuzzerOff
+    RETURN
+    
+LEDBuzz2:
+    Call    LED2_On
+    Call    BuzzerOnBtn2
+    Call    Tempo0.5s
+    Call    BuzzerOff
+    RETURN
+    
+LEDBuzz3:
+    Call    LED3_On
+    Call    BuzzerOnBtn3
+    Call    Tempo0.5s
+    Call    BuzzerOff
+    RETURN
+    
+   
+    
+;*******************************************************************************
+    
 ;*******************************************************************************
 ;			FONCTION AWAIT RESPONSE
 ;*******************************************************************************
@@ -822,7 +860,7 @@ DEBUT
 Game   
     ;Call    CreateRandomNumber
     Call    Menu
-    ;Call    Victory
+    Call    Victory
     Call    Defeat
     ;Call    Sequence
     Goto    Game
@@ -839,8 +877,6 @@ Menu:
     goto    loop_menu
     Call    LEDAll_Off
     Call    Tempo_0.5s
-    Call    LED2_On
-    Call    Tempo_100us
     Return
     
 ;*******************************************************************************    
