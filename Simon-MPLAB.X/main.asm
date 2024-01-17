@@ -102,7 +102,7 @@
   CONFIG  RSTOSC = HFINTOSC_64MHZ; Power-up default value for COSC bits (HFINTOSC with HFFRQ = 64 MHz and CDIV = 1:1)
 
 ; CONFIG1H
-  CONFIG  CLKOUTEN = OFF        ; Clock Out Enable bit (CLKOUT function is disabled)
+  CONFIG  CLKOUTEN = On        ; Clock Out Enable bit (CLKOUT function is disabled)
   CONFIG  CSWEN = ON            ; Clock Switch Enable bit (Writing to NOSC and NDIV is allowed)
   CONFIG  FCMEN = ON            ; Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor enabled)
 
@@ -312,9 +312,9 @@ ColorEnable:
     
     MOVLB	0X04
     MOVLW	0x08
-    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter à 8
+    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter ï¿½ 8
     MOVLW	0X05
-    MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn à 5
+    MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn ï¿½ 5
 
 LoopColorEnable
     CPFSEQ	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
@@ -322,16 +322,16 @@ LoopColorEnable
 	    GOTO	SetBitOn
 
     SetBitOff
-	    CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
+	    CALL	ColorBitOff		; appel la fonction de mise ï¿½ 0 du bit
 	    GOTO 	EndSetBit
 
     SetBitOn
-	    CALL 	ColorBitOn		; appel la fonction de mise à 1 du bit
+	    CALL 	ColorBitOn		; appel la fonction de mise ï¿½ 1 du bit
     EndSetBit
-    DECF	colorBitCounter			; décrémente le colorBitCounter
+    DECF	colorBitCounter			; dï¿½crï¿½mente le colorBitCounter
     MOVLW	0X00
     CPFSEQ	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
-	    GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au début de la boucle
+	    GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au dï¿½but de la boucle
 	    RETURN
     BackToLoopColorEnable
 	    MOVF 	colorSwitchOn,W,1	; charge colorSwitchOn dans le WREG
@@ -347,11 +347,11 @@ ColorDisable:
 loopColorDisable
 	MOVLW	0X00
 	CPFSEQ	colorBitCounter,1 	; test si le colorBitCounter = 0; skip if = 0
-	GOTO	EndIfDisableNull	; appel la routine qui renvoie au début de la boucle
+	GOTO	EndIfDisableNull	; appel la routine qui renvoie au dï¿½but de la boucle
 	RETURN
     EndIfDisableNull
 	DECF	colorBitCounter
-	CALL	ColorBitOff		; appel la fonction de mise à 0 du bit
+	CALL	ColorBitOff		; appel la fonction de mise ï¿½ 0 du bit
 	GOTO 	loopColorDisable
 
 
@@ -457,7 +457,7 @@ Tempo_1s:
     movlw   b'10010000'	
     movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
-    ; initialiser la valeur du timer à 33536
+    ; initialiser la valeur du timer ï¿½ 33536
     movlw   0x86
     movwf   TMR0H		    ; maj TMR0H
     movlw   0xe8		    ; maj TMR0L
@@ -466,7 +466,7 @@ Tempo_1s:
 tempo_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
     goto    tempo_run
-    bcf	    T0CON0,7,ACCESS	    ; reset bit de démarrage
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de dï¿½marrage
     return
     
     
@@ -492,6 +492,86 @@ DEBUT
 ;	 CALL TurnOnLD3
 ;        CALL TunOffLD3
 ;        GOTO loop
+    ; Configuration initiale des Bouttons
+    BANKSEL TRISB   ; Sï¿½lectionnez la banque pour TRISB
+    BSF TRISB, 0    ; Mettre le 0ï¿½me bit de TRISB ï¿½ 1 pour configurer RB3 comme entrï¿½e
+    BSF TRISB, 1    ; Rï¿½pï¿½ter pour les 3 autres boutons
+    BSF TRISB, 2
+    BSF TRISB, 3
+    BANKSEL ANSELB
+    CLRF ANSELB, 0    ; Mettre le 0ï¿½me bit de ANSELB ï¿½ O pour configurer RB3 comme entrï¿½e
+    CLRF ANSELB, 1    ; Rï¿½pï¿½ter pour les 3 autres boutons
+    CLRF ANSELB, 2
+    CLRF ANSELB, 3
+    
+    ; dï¿½but de la configuration PWM
+    MOVLW b'00000100'
+    MOVWF CCPTMRS
+    ; associe le module CCP2 avec le timer 2
+    MOVLB 0x0E
+    ; sï¿½lection de la banque d?adresse
+    MOVLW 0x06
+    MOVWF RC1PPS, 1
+    ; associe le pin RC1 avec la fonction de sortie de CCP2
+    BSF TRISC, 1    ; dï¿½sactivation de la sortie PWM pour configuration
+    MOVLW b'01100000' ;INITIALISE 0
+    MOVLB 0x0F
+    MOVWF T2PR	    ; fixe la pï¿½riode de PWM (voir formule p.271)
+    MOVLW b'10001100'
+    MOVWF CCP2CON   ; configuration du module CCP2 et format des donnï¿½es
+    MOVLW d'00000000'
+    MOVWF CCPR2H
+    MOVLW d'11111111'
+    MOVWF CCPR2L
+    ; fixe le rapport cyclique du signal (voir formule p.272)
+    MOVLW b'0010001'
+    MOVWF T2CLKCON
+    ; configuration de l'horloge du timer 2 = Fosc/4
+    MOVLW b'11110000' ; prescale 1:16, POSTSCALER 1:1
+    MOVWF T2CON
+    ; choix des options du timer 2 (voir p.256)
+    ; BCF TRISC, 1
+    ; activation de la sortie PWM
+    ; fin de la configuration
+  
+    
+    ; Allumer et ï¿½teindre les LEDs
+    loop:
+        BANKSEL PORTB        ; Sï¿½lectionnez la banque pour PORTB
+        BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
+        CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressï¿½
+	
+	BANKSEL PORTB
+	BTFSC PORTB, 3
+	CALL BuzzerOff
+	
+	BANKSEL PORTB
+	BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
+        CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressï¿½
+        
+	BANKSEL PORTB
+	BTFSC PORTB, 2
+	CALL BuzzerOff
+	
+	BANKSEL PORTB
+	BTFSS PORTB, 1       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
+        CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressï¿½
+        
+	BANKSEL PORTB
+	BTFSC PORTB, 1
+	CALL BuzzerOff
+	
+        BANKSEL PORTB
+	BTFSS PORTB, 0       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
+        CALL BuzzerOnBtn0
+	;CALL TurnOnLD0   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressï¿½
+        
+	BANKSEL PORTB
+	BTFSC PORTB, 0
+	
+	
+	CALL BuzzerOff 
+	GOTO loop
 
     ; Sous-routine pour allumer toutes les LEDs
 ;    TurnOnAllLEDs:
@@ -601,6 +681,90 @@ loop
     
     goto loop
     
+    TurnOffLD0:
+	BANKSEL LATC
+	BCF LATC, 4
+	RETURN
+    
+    ; LD1 Off
+    TurnOffLD1:
+	BANKSEL LATC
+	BCF LATC, 5
+	RETURN
+
+    ; LD2 Off
+    TurnOffLD2:
+	BANKSEL LATC
+	BCF LATC, 6
+	RETURN
+
+    ; LD3 Off
+    TurnOffLD3:
+	BANKSEL LATC
+	BCF LATC, 7
+	RETURN
+
+	
+    ; Buzzer
+    BuzzerOnBtn2:
+        MOVLW b'01100000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la pï¿½riode de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN 
+
+    BuzzerOnBtn1:
+        MOVLW b'01000000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la pï¿½riode de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN 
+
+    BuzzerOnBtn3:
+        MOVLW b'01001000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la pï¿½riode de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN
+
+    BuzzerOnBtn0:
+        MOVLW b'01010000' ;
+	MOVLB 0x0F
+	MOVWF T2PR	    ; fixe la pï¿½riode de PWM (voir formule p.271) (0 pour le moment)
+	BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+	CALL TEMPO_BTN
+	RETURN
+	
+    BuzzerOff:
+	BSF TRISC, 1	; dï¿½sactivation de la sortie PWM (Buzzer)
+	RETURN
+	
+    TEMPO_BTN:
+	MOVLB 0x0E
+	BCF PIR4,2,1      ; mise a 0 du flag
+    
+	MOVLB 0x00
+	MOVLW d'0'
+	MOVWF TMR3L
+	MOVWF TMR3L
+	
+	BSF T3CON ,0
+	
+	MOVLB 0x0E
+	SCRUT_FLAG
+	BTFSS PIR4,2,1      ; temp que flag pas lev 	
+	GOTO SCRUT_FLAG
+	
+	BCF PIR4,2,1 
+    
+	MOVLB 0x00
+	BCF T3CON ,0
+	RETURN
+	
+	
     END
 
 ;*******************************************************************************
