@@ -193,6 +193,7 @@ Var	UDATA_ACS
 randomNum	    RES	    1
 Sequence	    RES	    10
 stage		    RES	    1
+currentStage	    RES	    1
 
 ;*******************************************************************************
 ; Reset Vector
@@ -804,7 +805,32 @@ ButtonRGB:
 	GOTO	ButtonRGB
 	
 ;*******************************************************************************  
-    
+
+;*******************************************************************************
+;			FUNCTION CHECK END SEQEUNCE
+;******************************************************************************* 	
+
+CheckEndSeq:
+    INCF    FSR1L
+    MOVF    INDF1, W
+    CPFSEQ  0xFF
+    Call    ButtonRGB
+    Goto    Sequence
+    Return	
+	
+;*******************************************************************************
+;			FUNCTION CHECK END GAME
+;******************************************************************************* 	
+
+CheckEndGame:
+    MOVF    FSR1L, W
+    CPFSEQ  stage
+    Call    ButtonRGB
+    Goto    Victory
+    Return
+	
+;******************************************************************************* 	
+	
 ;*******************************************************************************
 ;			CONFIG	OSCILLATOR
 ;*******************************************************************************     
@@ -905,8 +931,10 @@ Config_Buzzer:
 ;			   Config Random
 ;*******************************************************************************
 Config_Random:
-    MOVLW   10          ; Charge la valeur 9 dans WREG
+    MOVLW   d'10'         ; Charge la valeur 9 dans WREG
     MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
+    MOVLW   0x00
+    MOVWF   currentStage
     CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
     
     MOVLB   0x01		    ; choisir la banque 1
