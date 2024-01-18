@@ -627,7 +627,7 @@ createRandomNum:
     RETURN
 
     
-Random:
+AddRandom:
     CALL createRandomNum
     MOVLB   0x01		    ; choisir la banque 1
   
@@ -927,8 +927,7 @@ Config_Random:
     Return
     
 ;*******************************************************************************
-lectureSequence:
-    RETURN
+
 DEBUT
 
     Call    Config_OSC
@@ -967,6 +966,7 @@ Menu:
 ;*******************************************************************************
 
 ;Sequence:
+    Call    AddRandom
     
     
     Return
