@@ -193,7 +193,6 @@ Var	UDATA_ACS
 randomNum	    RES	    1
 Sequence	    RES	    10
 stage		    RES	    1
-
 ;*******************************************************************************
 ; Reset Vector
 ;*******************************************************************************
@@ -635,7 +634,7 @@ Random:
     MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
     
     MOVF    randomNum, W
-    MOVWF   POSTINC0		    ; �crire la valeur de WREG � l'emplacement m�moire point� par FSR
+    MOVWF   POSTINC0		    ; ecrire la valeur de WREG a l'emplacement memoire pointe par FSR
     MOVLW   0xFF
     MOVWF   INDF0
     
@@ -767,6 +766,71 @@ LEDBuzz3:
    
     
 ;*******************************************************************************
+    
+;*******************************************************************************
+;			FONCTION READ SEQUENCE
+;*******************************************************************************
+    
+    
+ReadSequence:
+    
+Comparaison
+    
+    MOVLB   0x01
+    ;Comparaison avec le tableau
+    MOVF    INDF1, W   		    ; Charger l'addresse de la banque dans WREG (ici banque = 1)
+    INCF    FSR1L
+    CPFSEQ  0xFF
+    GOTO    Affichage
+    RETURN
+        
+Affichage
+    
+    ;Comparaison registre avec led
+    CPFSEQ  0
+    GOTO    Comp1
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    Comp1
+    CPFSEQ  1
+    GOTO    Comp2
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    Comp2
+    CPFSEQ  2
+    GOTO    Comp3
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    Comp3
+    CPFSEQ  3
+    GOTO    Comparaison
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    
+    
+    
+;*******************************************************************************
+
     
 ;*******************************************************************************
 ;			FONCTION AWAIT RESPONSE
@@ -906,8 +970,8 @@ Config_Buzzer:
 ;*******************************************************************************
 Config_Random:
     MOVLW   10          ; Charge la valeur 9 dans WREG
-    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
-    CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
+    MOVWF   stage           ; Stocke la valeur de WREG dans la variable stage
+    CLRF    FSR0L		    ; reset la valeur de FSRLow a 0 pour selectionner l'addresse de sequence
     
     MOVLB   0x01		    ; choisir la banque 1
     MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
@@ -938,12 +1002,13 @@ DEBUT
     Call    Config_Random
     
 Game   
-    ;Call    CreateRandomNumber
+    ;Call    createRandomNum
     ;Call    Menu
     ;Call    Victory
     ;Call    Defeat
     ;Call    Sequence
     Call    ButtonRGB
+    Call    ReadSequence
     Goto    Game
     
 ;*******************************************************************************
