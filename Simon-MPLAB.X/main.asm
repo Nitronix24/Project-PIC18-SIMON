@@ -613,21 +613,58 @@ tempo_10ms_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
     return
 ;*******************************************************************************
+ 
 
 ;*******************************************************************************
-;			FONCTION RANDOM
+;			Fonction Random
 ;*******************************************************************************
-
 
 createRandomNum:
-    MOVF    T2TMR, W	    ; Chargez la valeur du Timer 2 dans W
-    ANDLW   b'00000011'     ; Appliquez un masque pour obtenir les 2 bits de poids faible
+    MOVF    T2TMR, W		; Chargez la valeur du Timer 2 dans W
+    ANDLW   b'00000011'		; Appliquez un masque pour obtenir les 2 bits de poids faible
     BANKSEL 0x100
     MOVWF   randomNum
     RETURN
+
     
-;*******************************************************************************    
+Random:
+    CALL createRandomNum
+    MOVLB   0x01		    ; choisir la banque 1
+  
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
     
+    MOVF    randomNum, W
+    MOVWF   POSTINC0		    ; �crire la valeur de WREG � l'emplacement m�moire point� par FSR
+    MOVLW   0xFF
+    MOVWF   INDF0
+    
+;    MOVLW   0               ; Charge la valeur 0 dans WREG pour la comparaison
+;    CPFSEQ  randomNum       ; Compare randomNum � 0
+;    GOTO    CompareBTN1
+;    CALL    LED0_Buzzer     ; Saute si randomNum est �gal � 0
+;    
+;    CompareBTN1
+;    MOVLW   1               ; Charge la valeur 1 dans WREG pour la comparaison    
+;    CPFSEQ  randomNum       ; Compare randomNum � 1
+;    GOTO    CompareBTN2
+;    CALL    LED1_Buzzer     ; Saute si randomNum est �gal � 1
+;    
+;    CompareBTN2
+;    MOVLW   2               ; Charge la valeur 2 dans WREG pour la comparaison
+;    CPFSEQ  randomNum       ; Compare randomNum � 2
+;    GOTO    CompareBTN3
+;    CALL    LED2_Buzzer     ; Saute si randomNum est �gal � 2
+;    ; Si aucune des conditions ci-dessus n'est vraie, randomNum doit �tre 3
+;    
+;    CompareBTN3
+;    MOVLW   3               ; Charge la valeur 3 dans WREG pour la comparaison
+;    CPFSEQ  randomNum       ; Compare randomNum � 3
+;    GOTO    _return
+;    CALL    LED3_Buzzer     ; Appelle la fonction si randomNum est 3
+;    _return
+;    RETURN    
+
 ;*******************************************************************************
 ;			FONCTION LED VERTE
 ;*******************************************************************************
@@ -863,57 +900,33 @@ Config_Buzzer:
     Return
 
 ;*******************************************************************************
-
+    
 ;*******************************************************************************
-;				Random
+;			   Config Random
 ;*******************************************************************************
-
-
-createRandomNum:
-    MOVF    T2TMR, W    ; Chargez la valeur du Timer 2 dans W
-    ANDLW   b'00000011'        ; Appliquez un masque pour obtenir les 2 bits de poids faible
-    BANKSEL 0x100
-    MOVWF   randomNum
-    RETURN
-
-Random:
-    CALL createRandomNum
+Config_Random:
+    MOVLW   10          ; Charge la valeur 9 dans WREG
+    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
+    CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
+    
     MOVLB   0x01		    ; choisir la banque 1
-  
     MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
     MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    MOVLW   0x0F
+    MOVWF    FSR0L		    ; Met la valeur de FSRLow � 16 pour s�lectionner la derni�re addresse de la sequence
     
-    MOVF    randomNum, W
-    MOVWF   POSTINC0		    ; �crire la valeur de WREG � l'emplacement m�moire point� par FSR
-    MOVLW   0xFF
-    MOVWF   INDF0
+    MOVLB   0x01		    ; choisir la banque 1
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR1H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    CLRF    FSR1L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de la sequence
     
-    MOVLW   0               ; Charge la valeur 0 dans WREG pour la comparaison
-    CPFSEQ  randomNum       ; Compare randomNum � 0
-    GOTO    CompareBTN1
-    CALL    LED0_Buzzer     ; Saute si randomNum est �gal � 0
+    sequenceInitTab		    ; Routine qui s'assure que le tableau soit vide avant de commencer a �crire
+    CLRF    INDF0
+    DECFSZ  FSR0L
+    GOTO    sequenceInitTab    
+    Return
     
-    CompareBTN1
-    MOVLW   1               ; Charge la valeur 1 dans WREG pour la comparaison    
-    CPFSEQ  randomNum       ; Compare randomNum � 1
-    GOTO    CompareBTN2
-    CALL    LED1_Buzzer     ; Saute si randomNum est �gal � 1
-    
-    CompareBTN2
-    MOVLW   2               ; Charge la valeur 2 dans WREG pour la comparaison
-    CPFSEQ  randomNum       ; Compare randomNum � 2
-    GOTO    CompareBTN3
-    CALL    LED2_Buzzer     ; Saute si randomNum est �gal � 2
-    ; Si aucune des conditions ci-dessus n'est vraie, randomNum doit �tre 3
-    
-    CompareBTN3
-    MOVLW   3               ; Charge la valeur 3 dans WREG pour la comparaison
-    CPFSEQ  randomNum       ; Compare randomNum � 3
-    GOTO    _return
-    CALL    LED3_Buzzer     ; Appelle la fonction si randomNum est 3
-    _return
-    RETURN
-
+;*******************************************************************************
 lectureSequence:
     RETURN
 DEBUT
@@ -922,6 +935,7 @@ DEBUT
     Call    Config_RGB
     Call    Config_Button
     Call    Config_Buzzer
+    Call    Config_Random
     
 Game   
     ;Call    CreateRandomNumber
@@ -1003,25 +1017,7 @@ Defeat:
     CALL    Config_Buzzer
     CALL    Config_Button
     
-    MOVLW   10          ; Charge la valeur 9 dans WREG
-    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
-    CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
     
-    MOVLB   0x01		    ; choisir la banque 1
-    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
-    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
-    MOVLW   0x0F
-    MOVWF    FSR0L		    ; Met la valeur de FSRLow � 16 pour s�lectionner la derni�re addresse de la sequence
-    
-    MOVLB   0x01		    ; choisir la banque 1
-    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
-    MOVWF   FSR1H		    ; Mettre la valeur de WREG dans le registre FSRHigh
-    CLRF    FSR1L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de la sequence
-    
-    sequenceInitTab		    ; Routine qui s'assure que le tableau soit vide avant de commencer a �crire
-    CLRF    INDF0
-    DECFSZ  FSR0L
-    GOTO    sequenceInitTab
     
     
     
