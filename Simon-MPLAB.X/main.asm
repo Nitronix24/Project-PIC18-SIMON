@@ -662,29 +662,30 @@ TurnOffLD3:
 ;*******************************************************************************    
 
 ; Buzzer
-BuzzerOnBtn2:
-    MOVLW b'01100000' ;
+    
+BuzzerOnBtn0:
+    MOVLW d'118'  ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerOnBtn1:
+    MOVLW d'105' ;
     MOVLB 0x0F
     MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     RETURN 
-
-BuzzerOnBtn1:
-    MOVLW b'01000000' ;
+    
+BuzzerOnBtn2:
+    MOVLW d'94' ;
     MOVLB 0x0F
     MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     RETURN 
 
 BuzzerOnBtn3:
-    MOVLW b'01001000' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
-    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
-
-BuzzerOnBtn0:
-    MOVLW b'01010000' ;
+    MOVLW d'158' ;
     MOVLB 0x0F
     MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
@@ -697,8 +698,6 @@ BuzzerOff:
 
     
 ;*******************************************************************************
-
-
 
 ;*******************************************************************************
 ;			FONCTION LEDBUZZ
