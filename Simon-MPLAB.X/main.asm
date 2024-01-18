@@ -1154,17 +1154,13 @@ DEBUT
     Call    Config_Random
 
 test_loop
-    ;Call    BuzzerSi3
-    ;Call    Tempo_1s
-    ;Call    BuzzerDo4
-    ;Call    Tempo_1s
-   ; Call    BuzzerSol4
-    ;Call    Tempo_1s
-   ; Call    BuzzerLa4
-   ; Call    Tempo_1s
+    Call    BuzzerDo6
+    Call    Tempo_1s
+    Call    BuzzerDo4
+    Call    Tempo_1s
     
-   ; Call    BuzzerOff
-   ; Goto    test_loop
+    Call    BuzzerOff
+    Goto    test_loop
     
     
 Game   
