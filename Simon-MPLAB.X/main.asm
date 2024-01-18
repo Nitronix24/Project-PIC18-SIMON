@@ -601,7 +601,7 @@ Tempo_10ms:
     movlw   b'10010000'	
     movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
-    ; initialiser la valeur du timer a 65 226
+    ; initialiser la valeur du timer a 65ï¿½226
     movlw   0xFE
     movwf   TMR0H		    ; maj TMR0H
     movlw   0xCA		    ; maj TMR0L
@@ -864,6 +864,58 @@ Config_Buzzer:
 
 ;*******************************************************************************
 
+;*******************************************************************************
+;				Random
+;*******************************************************************************
+
+
+createRandomNum:
+    MOVF    T2TMR, W    ; Chargez la valeur du Timer 2 dans W
+    ANDLW   b'00000011'        ; Appliquez un masque pour obtenir les 2 bits de poids faible
+    BANKSEL 0x100
+    MOVWF   randomNum
+    RETURN
+
+Random:
+    CALL createRandomNum
+    MOVLB   0x01		    ; choisir la banque 1
+  
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    
+    MOVF    randomNum, W
+    MOVWF   POSTINC0		    ; ï¿½crire la valeur de WREG ï¿½ l'emplacement mï¿½moire pointï¿½ par FSR
+    MOVLW   0xFF
+    MOVWF   INDF0
+    
+    MOVLW   0               ; Charge la valeur 0 dans WREG pour la comparaison
+    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 0
+    GOTO    CompareBTN1
+    CALL    LED0_Buzzer     ; Saute si randomNum est ï¿½gal ï¿½ 0
+    
+    CompareBTN1
+    MOVLW   1               ; Charge la valeur 1 dans WREG pour la comparaison    
+    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 1
+    GOTO    CompareBTN2
+    CALL    LED1_Buzzer     ; Saute si randomNum est ï¿½gal ï¿½ 1
+    
+    CompareBTN2
+    MOVLW   2               ; Charge la valeur 2 dans WREG pour la comparaison
+    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 2
+    GOTO    CompareBTN3
+    CALL    LED2_Buzzer     ; Saute si randomNum est ï¿½gal ï¿½ 2
+    ; Si aucune des conditions ci-dessus n'est vraie, randomNum doit ï¿½tre 3
+    
+    CompareBTN3
+    MOVLW   3               ; Charge la valeur 3 dans WREG pour la comparaison
+    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 3
+    GOTO    _return
+    CALL    LED3_Buzzer     ; Appelle la fonction si randomNum est 3
+    _return
+    RETURN
+
+lectureSequence:
+    RETURN
 DEBUT
 
     Call    Config_OSC
@@ -951,6 +1003,27 @@ Defeat:
     CALL    Config_Buzzer
     CALL    Config_Button
     
+    MOVLW   10          ; Charge la valeur 9 dans WREG
+    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
+    CLRF    FSR0L		    ; reset la valeur de FSRLow ï¿½ 0 pour sï¿½lectionner l'addresse de sï¿½quence
+    
+    MOVLB   0x01		    ; choisir la banque 1
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    MOVLW   0x0F
+    MOVWF    FSR0L		    ; Met la valeur de FSRLow ï¿½ 16 pour sï¿½lectionner la derniï¿½re addresse de la sequence
+    
+    MOVLB   0x01		    ; choisir la banque 1
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR1H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    CLRF    FSR1L		    ; reset la valeur de FSRLow ï¿½ 0 pour sï¿½lectionner l'addresse de la sequence
+    
+    sequenceInitTab		    ; Routine qui s'assure que le tableau soit vide avant de commencer a ï¿½crire
+    CLRF    INDF0
+    DECFSZ  FSR0L
+    GOTO    sequenceInitTab
+    
+    
     
     ;CALL    test_button_buzzer
 ; Allumer et eteindre les LEDs
@@ -991,22 +1064,22 @@ test_button_buzzer:
     CALL BuzzerOff 
     GOTO test_button_buzzer
     
+    
 LED0_Buzzer:
     CALL    LED0_On
     CALL    BuzzerOnBtn0
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    ;GOTO main
-    
- 
+    RETURN
+
 LED1_Buzzer:
     CALL    LED1_On
     CALL    BuzzerOnBtn1
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    ;GOTO main
+    RETURN
 
 LED2_Buzzer:    
     CALL    LED2_On
@@ -1014,7 +1087,7 @@ LED2_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    ;GOTO main
+    RETURN
 
 LED3_Buzzer:
     CALL    LED3_On
@@ -1022,18 +1095,8 @@ LED3_Buzzer:
     CALL    Tempo_1s
     CALL    BuzzerOff
     CALL    LEDAll_Off
-    ;GOTO main
-    
-    CALL    LEDAll_Green
-    CALL    Tempo_1s
-    CALL    BuzzerOff
-    CALL    LEDAll_Off
-    ;GOTO main
-
-    
-    goto $
-	
-	
+    RETURN
+    	
     END
 
 ;*******************************************************************************
