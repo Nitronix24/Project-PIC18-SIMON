@@ -1196,14 +1196,14 @@ DEBUT
     Call    Config_Random
 
 test_loop
-    Call    BuzzerDo6
-    Call    Tempo_1s
-    Call    BuzzerOff
-    Call    BuzzerDo4
-    Call    Tempo_1s
+   ; Call    BuzzerDo6
+    ;Call    Tempo_1s
+   ; Call    BuzzerOff
+   ; Call    BuzzerDo4
+   ; Call    Tempo_1s
     
-    Call    BuzzerOff
-    Goto    test_loop
+   ; Call    BuzzerOff
+    ;Goto    test_loop
     
     
 Game   
