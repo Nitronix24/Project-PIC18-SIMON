@@ -637,7 +637,15 @@ createRandomNum:
 
 Random:
     CALL createRandomNum
+    MOVLB   0x01		    ; choisir la banque 1
+  
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
     
+    MOVF    randomNum, W
+    MOVWF   POSTINC0		    ; Écrire la valeur de WREG à l'emplacement mémoire pointé par FSR
+    MOVLW   0xFF
+    MOVWF   INDF0
     
     MOVLW   0               ; Charge la valeur 0 dans WREG pour la comparaison
     CPFSEQ  randomNum       ; Compare randomNum à 0
@@ -665,7 +673,8 @@ Random:
     _return
     RETURN
 
-
+lectureSequence:
+    RETURN
 DEBUT
 
 
@@ -678,12 +687,26 @@ DEBUT
     
     MOVLW   10          ; Charge la valeur 9 dans WREG
     MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
-
+    CLRF    FSR0L		    ; reset la valeur de FSRLow à 0 pour sélectionner l'addresse de séquence
     
     MOVLB   0x01		    ; choisir la banque 1
     MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
     MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
-    CLRF    FSR0L		    ; reset la valeur de FSRLow à 0 pour sélectionner l'addresse de password
+    MOVLW   0x0F
+    MOVWF    FSR0L		    ; Met la valeur de FSRLow à 16 pour sélectionner la dernière addresse de la sequence
+    
+    MOVLB   0x01		    ; choisir la banque 1
+    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    MOVWF   FSR1H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    CLRF    FSR1L		    ; reset la valeur de FSRLow à 0 pour sélectionner l'addresse de la sequence
+    
+    sequenceInitTab		    ; Routine qui s'assure que le tableau soit vide avant de commencer a écrire
+    CLRF    INDF0
+    DECFSZ  FSR0L
+    GOTO    sequenceInitTab
+    
+    
+    
     ;CALL    test_button_buzzer
 ; Allumer et ï¿½teindre les LEDs
 
@@ -695,6 +718,10 @@ loop
     BANKSEL PORTB        ; Sï¿½lectionnez la banque pour PORTB
     BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
     CALL Random
+
+    BANKSEL PORTB        ; Sï¿½lectionnez la banque pour PORTB
+    BTFSS PORTB, 2       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
+    CALL Random
     
     GOTO loop
     
@@ -702,6 +729,7 @@ loop
     BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est pressï¿½ (1 si enfoncï¿½)
     CALL BuzzerOnBtn3   ; Appelle la fonction TurnOnAllLEDs si le bouton est pressï¿½
 
+    
     
 LED0_Buzzer:
     CALL    LED0_On
