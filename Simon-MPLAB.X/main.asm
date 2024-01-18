@@ -200,6 +200,11 @@ isEndSeq	    RES	    1
 isEndGame	    RES	    1
 isVictory	    RES	    1
 
+constZero	    RES	    1
+constUn		    RES	    1	    
+constDeux	    RES	    1	    
+constTrois	    RES	    1	
+constFF		    RES	    1	    
 
 ;*******************************************************************************
 ; Reset Vector
@@ -727,25 +732,33 @@ BuzzerOff:
 LEDBuzz0:
     Call    LED0_On
     Call    BuzzerOnBtn0
-    Call    Tempo_10ms
+    Call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
     RETURN
     
 LEDBuzz1:
     Call    LED1_On
     Call    BuzzerOnBtn1
-    Call    Tempo_10ms
+    Call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
     RETURN
     
 LEDBuzz2:
     Call    LED2_On
     Call    BuzzerOnBtn2
-    Call    Tempo_10ms
+    Call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
     RETURN
     
 LEDBuzz3:
-    Call    BuzzerOnBtn3
     Call    LED3_On
-    Call    Tempo_10ms
+    Call    BuzzerOnBtn3
+    Call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
     RETURN
     
    
@@ -758,57 +771,42 @@ LEDBuzz3:
     
     
 ReadSequence:
-    
+     
 Comparaison
     
     MOVLB   0x01
     ;Comparaison avec le tableau
     MOVF    INDF1, W   		    ; Charger l'addresse de la banque dans WREG (ici banque = 1)
     INCF    FSR1L
-    CPFSEQ  0xFF
+    CPFSEQ  constFF
     GOTO    Affichage
+    CLRF    FSR1L
     RETURN
         
 Affichage
     
     ;Comparaison registre avec led
-    CPFSEQ  0
+    CPFSEQ  constZero
     GOTO    Comp1
-    CALL    LED0_On
-    CALL    BuzzerOnBtn0
-    CALL    Tempo_0.5s
-    CALL    LEDAll_Off
-    CALL    BuzzerOff
+    CALL    LEDBuzz0
     GOTO    Comparaison
     
-    Comp1
-    CPFSEQ  1
+Comp1
+    CPFSEQ  constUn
     GOTO    Comp2
-    CALL    LED0_On
-    CALL    BuzzerOnBtn0
-    CALL    Tempo_0.5s
-    CALL    LEDAll_Off
-    CALL    BuzzerOff
+    CALL    LEDBuzz1
     GOTO    Comparaison
     
-    Comp2
-    CPFSEQ  2
+Comp2
+    CPFSEQ  constDeux
     GOTO    Comp3
-    CALL    LED0_On
-    CALL    BuzzerOnBtn0
-    CALL    Tempo_0.5s
-    CALL    LEDAll_Off
-    CALL    BuzzerOff
+    CALL    LEDBuzz2
     GOTO    Comparaison
     
-    Comp3
-    CPFSEQ  3
+Comp3
+    CPFSEQ  constTrois
     GOTO    Comparaison
-    CALL    LED0_On
-    CALL    BuzzerOnBtn0
-    CALL    Tempo_0.5s
-    CALL    LEDAll_Off
-    CALL    BuzzerOff
+    CALL    LEDBuzz3
     GOTO    Comparaison
     
     
@@ -826,24 +824,32 @@ AwaitButton:
     BTFSC   PORTB,  0
 	GOTO	Led1
 	CALL	LEDBuzz0
+	Movlw	0x00
+	Movwf	lastBtnPressed
 	RETURN
 	
     Led1
     BTFSC   PORTB,  1
 	GOTO	Led2
-	CALL	LEDBuzz1   
+	CALL	LEDBuzz1
+	Movlw	0x01
+	Movwf	lastBtnPressed
 	RETURN
 	
     Led2	
     BTFSC   PORTB,  2
 	GOTO	Led3
 	CALL	LEDBuzz2
+	Movlw	0x02
+	Movwf	lastBtnPressed
 	RETURN
 	
     Led3
     BTFSC   PORTB,  3
 	GOTO	ButtonPress_No
-	CALL	LEDBuzz3 
+	CALL	LEDBuzz3
+	Movlw	0x03
+	Movwf	lastBtnPressed
 	RETURN
 	
     ButtonPress_No
@@ -858,7 +864,7 @@ AwaitButton:
 ;			Check Valid
 ;*******************************************************************************  
 CheckValid:
-
+    
     MOVF    INDF1,W          ; Charge la valeur du pointeur de lecture dans WREG pour la comparaison
     CPFSEQ  lastBtnPressed  ; Compare randomNum � 0
     Goto    CheckValid_else
@@ -879,7 +885,7 @@ CheckValid_else
 CheckEndSeq:
     INCF    FSR1L
     MOVF    INDF1, W
-    CPFSEQ  0xFF
+    CPFSEQ  constFF
     Goto    CheckEndSeq_else
     Movlw   0x01
     Movwf   isEndSeq
@@ -1011,6 +1017,17 @@ Config_Random:
     MOVWF   stage		    ; Stocke la valeur de WREG dans la variable stage
     CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
     
+    Movlw   0x00
+    Movwf   constZero
+    Movlw   0x01
+    Movwf   constUn
+    Movlw   0x02
+    Movwf   constDeux
+    Movlw   0x03
+    Movwf   constTrois
+    Movlw   0xff
+    Movwf   constFF
+    
     MOVLB   0x01		    ; choisir la banque 1
     MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
     MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
@@ -1037,12 +1054,17 @@ DEBUT
     Call    Config_Button
     Call    Config_Buzzer
     Call    Config_Random
+
+test_loop
+    ;Call    AwaitButton
+    ;Goto    test_loop
+    
     
 Game   
     Call    Menu
 Sequence
     Call    AddRandom
-    ;Call    ReadSequence
+    Call    ReadSequence
 CheckButton
     Call    AwaitButton
     Call    CheckValid
@@ -1051,7 +1073,7 @@ CheckButton
     
     Movlw   0x01
     CPFSEQ  isValid
-    Call    Defeat
+    Goto    Defeat
     Movlw   0x01
     CPFSEQ  isEndSeq
     Goto    CheckButton
@@ -1059,8 +1081,19 @@ CheckButton
     CPFSEQ  isEndGame
     Goto    Sequence
     Call    Victory
+    Goto    DEBUT
     
-    Goto    Game
+Defeat
+    
+    call    LEDAll_Red1
+    call    Tempo_0.5s
+    call    LEDAll_Red2
+    call    Tempo_0.5s
+    call    LEDAll_Red1
+    call    Tempo_0.5s
+    call    LEDAll_Red2
+    call    Tempo_0.5s
+    Goto    DEBUT
     
 ;*******************************************************************************
 ;				MENU
@@ -1100,17 +1133,17 @@ Victory:
 ;			SEQUENCE DE DEFAITE
 ;*******************************************************************************
 
-Defeat:
-    
-    call    LEDAll_Red1
-    call    Tempo_0.5s
-    call    LEDAll_Red2
-    call    Tempo_0.5s
-    call    LEDAll_Red1
-    call    Tempo_0.5s
-    call    LEDAll_Red2
-    call    Tempo_0.5s
-    Return
+;Defeat
+;    
+;    call    LEDAll_Red1
+;    call    Tempo_0.5s
+ ;   call    LEDAll_Red2
+ ;   call    Tempo_0.5s
+ ;   call    LEDAll_Red1
+ ;   call    Tempo_0.5s
+  ;  call    LEDAll_Red2
+  ;;  call    Tempo_0.5s
+
     
 ;*******************************************************************************
     
