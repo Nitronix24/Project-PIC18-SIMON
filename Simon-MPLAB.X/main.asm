@@ -756,7 +756,7 @@ LEDBuzz3:
 ;			FONCTION AWAIT RESPONSE
 ;*******************************************************************************
    
-ButtonRGB:
+AwaitButton:
     BANKSEL PORTB
     BTFSC   PORTB,  0
 	GOTO	Led1
@@ -785,7 +785,7 @@ ButtonRGB:
 	CALL	Tempo_100us
 	CALL	LEDAll_Off
 	Call    BuzzerOff
-	GOTO	ButtonRGB
+	GOTO	AwaitButton
 	
 ;*******************************************************************************  
 
@@ -796,8 +796,13 @@ CheckValid:
 
     MOVF    INDF1,W          ; Charge la valeur du pointeur de lecture dans WREG pour la comparaison
     CPFSEQ  lastBtnPressed  ; Compare randomNum � 0
-    GOTO    Defeat
-    CALL    CheckEndSeq
+    Goto    CheckValid_else
+    Movlw   0x01
+    Movwf   isValid
+    Return
+CheckValid_else    
+    Movlw   0x00
+    Movwf   isValid
     Return
     
 ;*******************************************************************************  	
@@ -810,8 +815,13 @@ CheckEndSeq:
     INCF    FSR1L
     MOVF    INDF1, W
     CPFSEQ  0xFF
-    Call    ButtonRGB
-    Goto    Sequence
+    Goto    CheckEndSeq_else
+    Movlw   0x01
+    Movwf   isEndSeq
+    Return
+CheckEndSeq_else    
+    Movlw   0x00
+    Movwf   isEndSeq
     Return	
 	
 ;*******************************************************************************
@@ -821,8 +831,13 @@ CheckEndSeq:
 CheckEndGame:
     MOVF    FSR1L, W
     CPFSEQ  stage
-    Call    ButtonRGB
-    Goto    Victory
+    Goto    CheckEndGame_else
+    Movlw   0x01
+    Movwf   isEndGame
+    Return
+CheckEndGame_else    
+    Movlw   0x00
+    Movwf   isEndGame
     Return
 	
 ;******************************************************************************* 	
@@ -959,12 +974,27 @@ DEBUT
     Call    Config_Random
     
 Game   
-    ;Call    CreateRandomNumber
-    ;Call    Menu
-    ;Call    Victory
-    ;Call    Defeat
-    ;Call    Sequence
-    Call    ButtonRGB
+    Call    Menu
+Sequence
+    Call    AddRandom
+    ;Call    ReadSequence
+CheckButton
+    Call    AwaitButton
+    Call    CheckValid
+    Call    CheckEndSeq
+    Call    CheckEndGame
+    
+    Movlw   0x01
+    CPFSEQ  isValid
+    Call    Defeat
+    Movlw   0x01
+    CPFSEQ  isEndSeq
+    Goto    CheckButton
+    Movlw   0x01
+    CPFSEQ  isEndGame
+    Goto    Sequence
+    Call    Victory
+    
     Goto    Game
     
 ;*******************************************************************************
@@ -982,21 +1012,7 @@ Menu:
     Return
     
 ;*******************************************************************************    
-
-;*******************************************************************************
-;				SEQUENCE
-;*******************************************************************************
-
-;Sequence:
-    Call    AddRandom
-    ;Call    ReadSequence
-    Call    ButtonRGB
-    ;Call    CheckValid
-    ;Call    CheckEnd
-    Return
-    
-;******************************************************************************* 
-    
+   
 ;*******************************************************************************
 ;			SEQUENCE DE VICTOIRE
 ;*******************************************************************************
