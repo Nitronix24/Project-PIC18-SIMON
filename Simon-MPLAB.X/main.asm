@@ -859,7 +859,49 @@ LEDBuzz3:
     Call    Tempo_100us
     RETURN
     
-   
+LEDBuzzInput0:
+    Call    LED0_On
+    Call    Tempo_100us
+    Call    BuzzerOnBtn0
+    Call    Tempo_1s
+    Call    BuzzerOff
+    Call    Tempo_100us
+    Call    LEDAll_Off
+    Call    Tempo_100us
+    RETURN
+    
+LEDBuzzInput1:
+    Call    LED1_On
+    Call    Tempo_100us
+    Call    BuzzerOnBtn1
+    Call    Tempo_1s
+    Call    BuzzerOff
+    Call    Tempo_100us
+    Call    LEDAll_Off
+    Call    Tempo_100us
+    RETURN
+    
+LEDBuzzInput2:
+    Call    LED2_On
+    Call    Tempo_100us
+    Call    BuzzerOnBtn2
+    Call    Tempo_1s
+    Call    BuzzerOff
+    Call    Tempo_100us
+    Call    LEDAll_Off
+    Call    Tempo_100us
+    RETURN
+    
+LEDBuzzInput3:
+    Call    LED3_On
+    Call    Tempo_100us
+    Call    BuzzerOnBtn3
+    Call    Tempo_1s
+    Call    BuzzerOff
+    Call    Tempo_100us
+    Call    LEDAll_Off
+    Call    Tempo_100us
+    RETURN   
     
 ;*******************************************************************************
     
@@ -951,9 +993,9 @@ AwaitButton:
 	RETURN
 	
     ButtonPress_No
-	CALL	Tempo_100us
-	CALL	LEDAll_Off
-	Call    BuzzerOff
+	;CALL	Tempo_100us
+	;CALL	LEDAll_Off
+	;Call    BuzzerOff
 	GOTO	AwaitButton
 	
 ;*******************************************************************************  
@@ -1154,13 +1196,13 @@ DEBUT
     Call    Config_Random
 
 test_loop
-    Call    BuzzerDo6
-    Call    Tempo_1s
-    Call    BuzzerDo4
-    Call    Tempo_1s
+    ;Call    BuzzerDo6
+    ;Call    Tempo_1s
+    ;Call    BuzzerDo4
+    ;Call    Tempo_1s
     
-    Call    BuzzerOff
-    Goto    test_loop
+    ;Call    BuzzerOff
+    ;Goto    test_loop
     
     
 Game   
