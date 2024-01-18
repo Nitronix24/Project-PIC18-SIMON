@@ -967,8 +967,10 @@ Menu:
 
 ;Sequence:
     Call    AddRandom
-    
-    
+    ;Call    ReadSequence
+    Call    ButtonRGB
+    ;Call    CheckValid
+    ;Call    CheckEnd
     Return
     
 ;******************************************************************************* 
