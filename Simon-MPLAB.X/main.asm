@@ -211,7 +211,7 @@ constFF		    RES	    1
 ;*******************************************************************************
 	    
 RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    DEBUT                   ; go to beginning of program
+    GOTO    MUSIQUE                   ; go to beginning of program
     
 ;*******************************************************************************
 ; TODO Step #4 - Interrupt Service Routines
@@ -801,14 +801,45 @@ BuzzerDo6:
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     RETURN
     
-
-    
 BuzzerOff:
     BSF TRISC, 1	; desactivation de la sortie PWM (Buzzer)
     RETURN
-
-
     
+BuzzerBsFadiese:
+    MOVLW d'369' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+    
+BuzzerLoseSol:
+    MOVLW d'85' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerLoseRe:
+    MOVLW d'83' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerLoseMi:
+    MOVLW d'73' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerLoseDo:
+    MOVLW d'63' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
 ;*******************************************************************************
 
 ;*******************************************************************************
@@ -1054,6 +1085,197 @@ CheckEndGame_else
 ;******************************************************************************* 	
 	
 ;*******************************************************************************
+;			FUNCTION MUSIQUE
+;*******************************************************************************
+    
+Musiques:
+    
+    ;Re
+    call    LED0_On
+    Call    BuzzerRe5
+    call    Tempo_1s
+    ;Mi
+    call    LED1_On
+    Call    BuzzerMi5
+    call    Tempo_1s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.5s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.5s
+          
+    
+    ;Re
+    call    LED0_On
+    Call    BuzzerRe5
+    call    Tempo_1s
+    ;Mi
+    call    LED1_On
+    Call    BuzzerMi5
+    call    Tempo_1s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.5s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.5s
+    
+    
+    ;Re
+    call    LED0_On
+    Call    BuzzerRe5
+    call    Tempo_1s
+    ;Mi
+    call    LED1_On
+    Call    BuzzerMi5
+    call    Tempo_1s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.5s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    ;Fa #
+    call    LED3_On
+    Call    BuzzerBsFadiese
+    call    Tempo_1s
+    
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.5s
+    
+    Goto    Game
+   
+;*******************************************************************************
+    
+;*******************************************************************************
 ;			CONFIG	OSCILLATOR
 ;*******************************************************************************     
 Config_OSC:    
@@ -1186,7 +1408,16 @@ Config_Random:
     Return
     
 ;*******************************************************************************
-
+MUSIQUE
+    Call    Config_OSC
+    Call    Config_RGB
+    Call    Config_Button
+    Call    Config_Buzzer
+    Call    Config_Random
+    
+    ;Call    Musiques
+    Goto    DEBUT
+    
 DEBUT
 
     Call    Config_OSC
@@ -1194,8 +1425,7 @@ DEBUT
     Call    Config_Button
     Call    Config_Buzzer
     Call    Config_Random
-
-test_loop
+;test_loop
    ; Call    BuzzerDo6
     ;Call    Tempo_1s
    ; Call    BuzzerOff
@@ -1204,7 +1434,6 @@ test_loop
     
    ; Call    BuzzerOff
     ;Goto    test_loop
-    
     
 Game   
     Call    Menu
@@ -1232,16 +1461,16 @@ CheckButton
 Defeat
     
     call    LEDAll_Red1
-    Call    BuzzerDo6
-    call    Tempo_0.5s
+    Call    BuzzerLoseSol
+    call    Tempo_1s
     call    LEDAll_Red2
-    Call    BuzzerSi3
-    call    Tempo_0.5s
+    Call    BuzzerLoseRe
+    call    Tempo_1s
     call    LEDAll_Red1
-    Call    BuzzerLa4
-    call    Tempo_0.5s
+    Call    BuzzerLoseMi
+    call    Tempo_1s
     call    LEDAll_Red2
-    Call    BuzzerSol5
+    Call    BuzzerLoseDo
     call    Tempo_1s
     Call    BuzzerOff
     Goto    DEBUT
@@ -1249,7 +1478,7 @@ Defeat
 ;*******************************************************************************
 ;				MENU
 ;*******************************************************************************
-
+    
 Menu:
     
     Call    LED2_On
