@@ -191,8 +191,10 @@ colorSwitchOn	    RES	    1
 
 Var	UDATA_ACS
 randomNum	    RES	    1
-Sequence	    RES	    10
+
 stage		    RES	    1
+lastBtnPressed	    RES	    1
+
 
 ;*******************************************************************************
 ; Reset Vector
@@ -638,32 +640,9 @@ AddRandom:
     MOVWF   POSTINC0		    ; ï¿½crire la valeur de WREG ï¿½ l'emplacement mï¿½moire pointï¿½ par FSR
     MOVLW   0xFF
     MOVWF   INDF0
-    
-;    MOVLW   0               ; Charge la valeur 0 dans WREG pour la comparaison
-;    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 0
-;    GOTO    CompareBTN1
-;    CALL    LED0_Buzzer     ; Saute si randomNum est ï¿½gal ï¿½ 0
-;    
-;    CompareBTN1
-;    MOVLW   1               ; Charge la valeur 1 dans WREG pour la comparaison    
-;    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 1
-;    GOTO    CompareBTN2
-;    CALL    LED1_Buzzer     ; Saute si randomNum est ï¿½gal ï¿½ 1
-;    
-;    CompareBTN2
-;    MOVLW   2               ; Charge la valeur 2 dans WREG pour la comparaison
-;    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 2
-;    GOTO    CompareBTN3
-;    CALL    LED2_Buzzer     ; Saute si randomNum est ï¿½gal ï¿½ 2
-;    ; Si aucune des conditions ci-dessus n'est vraie, randomNum doit ï¿½tre 3
-;    
-;    CompareBTN3
-;    MOVLW   3               ; Charge la valeur 3 dans WREG pour la comparaison
-;    CPFSEQ  randomNum       ; Compare randomNum ï¿½ 3
-;    GOTO    _return
-;    CALL    LED3_Buzzer     ; Appelle la fonction si randomNum est 3
-;    _return
-;    RETURN    
+
+    CLRF    FSR1L		    ; Réninitialise le pointeur de lecture
+    RETURN    
 
 ;*******************************************************************************
 ;			FONCTION LED VERTE
@@ -804,7 +783,20 @@ ButtonRGB:
 	GOTO	ButtonRGB
 	
 ;*******************************************************************************  
+
+;*******************************************************************************  
+;			Check Valid
+;*******************************************************************************  
+CheckValid:
+
+    MOVF    INDF1,W          ; Charge la valeur du pointeur de lecture dans WREG pour la comparaison
+    CPFSEQ  lastBtnPressed  ; Compare randomNum ï¿½ 0
+    GOTO    Defeat
+    CALL    CheckEndSeq
+    Return
     
+;*******************************************************************************  
+	
 ;*******************************************************************************
 ;			CONFIG	OSCILLATOR
 ;*******************************************************************************     
@@ -905,8 +897,8 @@ Config_Buzzer:
 ;			   Config Random
 ;*******************************************************************************
 Config_Random:
-    MOVLW   10          ; Charge la valeur 9 dans WREG
-    MOVWF   stage           ; Stocke la valeur de WREG dans la variable i
+    MOVLW   10			    ; Charge la valeur 9 dans WREG
+    MOVWF   stage		    ; Stocke la valeur de WREG dans la variable stage
     CLRF    FSR0L		    ; reset la valeur de FSRLow ï¿½ 0 pour sï¿½lectionner l'addresse de sï¿½quence
     
     MOVLB   0x01		    ; choisir la banque 1
@@ -923,7 +915,7 @@ Config_Random:
     sequenceInitTab		    ; Routine qui s'assure que le tableau soit vide avant de commencer a ï¿½crire
     CLRF    INDF0
     DECFSZ  FSR0L
-    GOTO    sequenceInitTab    
+    GOTO    sequenceInitTab
     Return
     
 ;*******************************************************************************
