@@ -737,6 +737,72 @@ BuzzerOnBtn3:
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     RETURN
 
+BuzzerSi3:
+    MOVLW d'62' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN    
+    
+BuzzerDo4:
+    MOVLW d'59' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN    
+
+BuzzerSol4:
+    MOVLW d'79' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN 
+
+BuzzerLa4:
+    MOVLW d'70' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+    
+BuzzerDo5:
+    MOVLW d'62' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerRe5:
+    MOVLW d'105' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerMi5:
+    MOVLW d'94' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerSol5:
+    MOVLW d'158' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+BuzzerDo6:
+    MOVLW d'118' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
+    
+
+    
 BuzzerOff:
     BSF TRISC, 1	; desactivation de la sortie PWM (Buzzer)
     RETURN
@@ -1045,7 +1111,7 @@ Config_Buzzer:
 ;			   Config Random
 ;*******************************************************************************
 Config_Random:
-    MOVLW   0x04			    ; Charge la valeur 9 dans WREG
+    MOVLW   0x10			    ; Charge la valeur 9 dans WREG
     MOVWF   stage		    ; Stocke la valeur de WREG dans la variable stage
     CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
     
@@ -1088,8 +1154,17 @@ DEBUT
     Call    Config_Random
 
 test_loop
-    ;Call    AwaitButton
-    ;Goto    test_loop
+    ;Call    BuzzerSi3
+    ;Call    Tempo_1s
+    ;Call    BuzzerDo4
+    ;Call    Tempo_1s
+   ; Call    BuzzerSol4
+    ;Call    Tempo_1s
+   ; Call    BuzzerLa4
+   ; Call    Tempo_1s
+    
+   ; Call    BuzzerOff
+   ; Goto    test_loop
     
     
 Game   
@@ -1118,13 +1193,18 @@ CheckButton
 Defeat
     
     call    LEDAll_Red1
+    Call    BuzzerDo6
     call    Tempo_0.5s
     call    LEDAll_Red2
+    Call    BuzzerSi3
     call    Tempo_0.5s
     call    LEDAll_Red1
+    Call    BuzzerLa4
     call    Tempo_0.5s
     call    LEDAll_Red2
-    call    Tempo_0.5s
+    Call    BuzzerSol5
+    call    Tempo_1s
+    Call    BuzzerOff
     Goto    DEBUT
     
 ;*******************************************************************************
@@ -1160,121 +1240,6 @@ Victory:
     Return
     
 ;*******************************************************************************
-    
-;*******************************************************************************
-;			SEQUENCE DE DEFAITE
-;*******************************************************************************
-
-;Defeat
-;    
-;    call    LEDAll_Red1
-;    call    Tempo_0.5s
- ;   call    LEDAll_Red2
- ;   call    Tempo_0.5s
- ;   call    LEDAll_Red1
- ;   call    Tempo_0.5s
-  ;  call    LEDAll_Red2
-  ;;  call    Tempo_0.5s
-
-    
-;*******************************************************************************
-    
-;*******************************************************************************
-;			TESTS SUR LES LEDS RGBW SK6812
-;*******************************************************************************
-    
-    CALL    Config_RGB
-    CALL    Config_Buzzer
-    CALL    Config_Button
-    
-    
-    
-    
-    
-    ;CALL    test_button_buzzer
-; Allumer et eteindre les LEDs
-
-test_button_buzzer:
-    BANKSEL PORTB        ; Selectionnez la banque pour PORTB
-    BTFSS PORTB, 3       ; Testez si le bouton sur RB3 est presse (1 si enfonce)
-    CALL BuzzerOnBtn3	 ; Appelle la fonction TurnOnAllLEDs si le bouton est presse
-
-    BANKSEL PORTB
-    BTFSC PORTB, 3
-    CALL BuzzerOff
-
-    BANKSEL PORTB
-    BTFSS PORTB, 2      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
-    CALL BuzzerOnBtn2   ; Appelle la fonction TurnOnAllLEDs si le bouton est presse
-
-    BANKSEL PORTB
-    BTFSC PORTB, 2
-    CALL BuzzerOff
-
-    BANKSEL PORTB
-    BTFSS PORTB, 1      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
-    CALL BuzzerOnBtn1   ; Appelle la fonction TurnOnAllLEDs si le bouton est presse
-
-    BANKSEL PORTB
-    BTFSC PORTB, 1
-    CALL BuzzerOff
-
-    BANKSEL PORTB
-    BTFSS PORTB, 0      ; Testez si le bouton sur RB3 est presse (1 si enfonce)
-    CALL BuzzerOnBtn0
-
-    BANKSEL PORTB
-    BTFSC PORTB, 0
-
-
-    CALL BuzzerOff 
-    GOTO test_button_buzzer
-    
-    
-LED0_Buzzer:
-    CALL    LED0_On
-    CALL    BuzzerOnBtn0
-    CALL    Tempo_1s
-    CALL    BuzzerOff
-    CALL    LEDAll_Off
-    RETURN
-
-LED1_Buzzer:
-    CALL    LED1_On
-    CALL    BuzzerOnBtn1
-    CALL    Tempo_1s
-    CALL    BuzzerOff
-    CALL    LEDAll_Off
-    RETURN
-
-LED2_Buzzer:    
-    CALL    LED2_On
-    CALL    BuzzerOnBtn2
-    CALL    Tempo_1s
-    CALL    BuzzerOff
-    CALL    LEDAll_Off
-    RETURN
-
-LED3_Buzzer:
-    CALL    LED3_On
-    CALL    BuzzerOnBtn3
-    CALL    Tempo_1s
-    CALL    BuzzerOff
-    CALL    LEDAll_Off
-    RETURN
-    	
+  
     END
-
-;*******************************************************************************
-    
-    
-    
-
-    
-    
-    
-    
-	    
-	    
-    
     
