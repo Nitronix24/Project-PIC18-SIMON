@@ -427,8 +427,8 @@ ColorBlue:
     
 ColorPurple:
     
-    CALL ColorEnable
     CALL ColorDisable
+    CALL ColorEnable
     CALL ColorEnable
     RETURN
 
@@ -591,6 +591,27 @@ tempo_100us_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de dï¿½marrage
     return   
     
+    
+
+Tempo_10ms:
+    
+    movlw   b'10010000'		    
+    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    
+    movlw   b'10010000'	
+    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    
+    ; initialiser la valeur du timer a 65 226
+    movlw   0xFE
+    movwf   TMR0H		    ; maj TMR0H
+    movlw   0xCA		    ; maj TMR0L
+    movwf   TMR0L
+    
+tempo_10ms_run    
+    btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
+    goto    tempo_10ms_run
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de dï¿½marrage
+    return
 ;*******************************************************************************
 
 ;*******************************************************************************
@@ -686,29 +707,25 @@ BuzzerOff:
 LEDBuzz0:
     Call    LED0_On
     Call    BuzzerOnBtn0
-    Call    Tempo_100us
-    Call    BuzzerOff
+    Call    Tempo_10ms
     RETURN
     
 LEDBuzz1:
     Call    LED1_On
     Call    BuzzerOnBtn1
-    Call    Tempo_100us
-    Call    BuzzerOff
+    Call    Tempo_10ms
     RETURN
     
 LEDBuzz2:
     Call    LED2_On
     Call    BuzzerOnBtn2
-    Call    Tempo_100us
-    Call    BuzzerOff
+    Call    Tempo_10ms
     RETURN
     
 LEDBuzz3:
-    Call    LED3_On
     Call    BuzzerOnBtn3
-    Call    Tempo_100us
-    Call    BuzzerOff
+    Call    LED3_On
+    Call    Tempo_10ms
     RETURN
     
    
@@ -747,6 +764,7 @@ ButtonRGB:
     ButtonPress_No
 	CALL	Tempo_100us
 	CALL	LEDAll_Off
+	Call    BuzzerOff
 	GOTO	ButtonRGB
 	
 ;*******************************************************************************  
@@ -853,7 +871,7 @@ DEBUT
     Call    Config_RGB
     Call    Config_Button
     Call    Config_Buzzer
-    CALL    ButtonRGB
+    
 Game   
     ;Call    CreateRandomNumber
     ;Call    Menu
