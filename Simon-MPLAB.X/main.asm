@@ -624,6 +624,26 @@ tempo_10ms_run
     goto    tempo_10ms_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de dï¿½marrage
     return
+    
+Tempo_0.2s:
+    
+    movlw   b'10010000'		    
+    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    
+    movlw   b'10010000'	
+    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    
+    ; initialiser la valeur du timer a 58 036
+    movlw   0xE2
+    movwf   TMR0H		    ; maj TMR0H
+    movlw   0xB4		    ; maj TMR0L
+    movwf   TMR0L
+    
+Tempo_0.2s_run    
+    btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
+    goto    Tempo_0.2s_run
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de dï¿½marrage
+    return
 ;*******************************************************************************
  
 
@@ -731,34 +751,46 @@ BuzzerOff:
 
 LEDBuzz0:
     Call    LED0_On
+    Call    Tempo_100us
     Call    BuzzerOnBtn0
     Call    Tempo_0.5s
     Call    BuzzerOff
+    Call    Tempo_100us
     Call    LEDAll_Off
+    Call    Tempo_100us
     RETURN
     
 LEDBuzz1:
     Call    LED1_On
+    Call    Tempo_100us
     Call    BuzzerOnBtn1
     Call    Tempo_0.5s
     Call    BuzzerOff
+    Call    Tempo_100us
     Call    LEDAll_Off
+    Call    Tempo_100us
     RETURN
     
 LEDBuzz2:
     Call    LED2_On
+    Call    Tempo_100us
     Call    BuzzerOnBtn2
     Call    Tempo_0.5s
     Call    BuzzerOff
+    Call    Tempo_100us
     Call    LEDAll_Off
+    Call    Tempo_100us
     RETURN
     
 LEDBuzz3:
     Call    LED3_On
+    Call    Tempo_100us
     Call    BuzzerOnBtn3
     Call    Tempo_0.5s
     Call    BuzzerOff
+    Call    Tempo_100us
     Call    LEDAll_Off
+    Call    Tempo_100us
     RETURN
     
    
@@ -773,7 +805,7 @@ LEDBuzz3:
 ReadSequence:
      
 Comparaison
-    
+    Call    Tempo_0.2s
     MOVLB   0x01
     ;Comparaison avec le tableau
     MOVF    INDF1, W   		    ; Charger l'addresse de la banque dans WREG (ici banque = 1)
@@ -1013,7 +1045,7 @@ Config_Buzzer:
 ;			   Config Random
 ;*******************************************************************************
 Config_Random:
-    MOVLW   10			    ; Charge la valeur 9 dans WREG
+    MOVLW   0x04			    ; Charge la valeur 9 dans WREG
     MOVWF   stage		    ; Stocke la valeur de WREG dans la variable stage
     CLRF    FSR0L		    ; reset la valeur de FSRLow ï¿½ 0 pour sï¿½lectionner l'addresse de sï¿½quence
     
