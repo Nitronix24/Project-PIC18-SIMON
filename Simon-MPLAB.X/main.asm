@@ -642,7 +642,7 @@ AddRandom:
     MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
     
     MOVF    randomNum, W
-    MOVWF   POSTINC0		    ; �crire la valeur de WREG � l'emplacement m�moire point� par FSR
+    MOVWF   POSTINC0		    ; ecrire la valeur de WREG a l'emplacement memoire pointe par FSR
     MOVLW   0xFF
     MOVWF   INDF0
 
@@ -751,6 +751,71 @@ LEDBuzz3:
    
     
 ;*******************************************************************************
+    
+;*******************************************************************************
+;			FONCTION READ SEQUENCE
+;*******************************************************************************
+    
+    
+ReadSequence:
+    
+Comparaison
+    
+    MOVLB   0x01
+    ;Comparaison avec le tableau
+    MOVF    INDF1, W   		    ; Charger l'addresse de la banque dans WREG (ici banque = 1)
+    INCF    FSR1L
+    CPFSEQ  0xFF
+    GOTO    Affichage
+    RETURN
+        
+Affichage
+    
+    ;Comparaison registre avec led
+    CPFSEQ  0
+    GOTO    Comp1
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    Comp1
+    CPFSEQ  1
+    GOTO    Comp2
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    Comp2
+    CPFSEQ  2
+    GOTO    Comp3
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    Comp3
+    CPFSEQ  3
+    GOTO    Comparaison
+    CALL    LED0_On
+    CALL    BuzzerOnBtn0
+    CALL    Tempo_0.5s
+    CALL    LEDAll_Off
+    CALL    BuzzerOff
+    GOTO    Comparaison
+    
+    
+    
+    
+;*******************************************************************************
+
     
 ;*******************************************************************************
 ;			FONCTION AWAIT RESPONSE
