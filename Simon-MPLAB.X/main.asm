@@ -457,6 +457,13 @@ ColorOff:
     CALL ColorDisable
     CALL ColorDisable
     RETURN
+
+ColorOn:
+
+    CALL ColorEnable
+    CALL ColorEnable
+    CALL ColorEnable
+    RETURN
     
 LED0_On:
     CALL ColorRed
@@ -505,6 +512,13 @@ LEDAll_Off:
     CALL ColorOff
     CALL ColorOff
     CALL ColorOff
+    RETURN
+
+LEDAll_On:
+    CALL ColorOn
+    CALL ColorOn
+    CALL ColorOn
+    CALL ColorOn
     RETURN
     
 LEDAll_Green1:
@@ -812,6 +826,12 @@ BuzzerBsFadiese:
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
     RETURN
     
+BuzzerSoldiese:
+    MOVLW d'415' ;
+    MOVLB 0x0F
+    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
+    RETURN
     
 BuzzerLoseSol:
     MOVLW d'85' ;
@@ -1093,7 +1113,7 @@ CheckEndGame_else
 ;			FUNCTION MUSIQUE
 ;*******************************************************************************
     
-Musiques:
+MusiquesBS:
     
     ;Re
     call    LED0_On
@@ -1278,6 +1298,207 @@ Musiques:
     
     Goto    Game
    
+MusiquesVST:
+    
+    ;Mi
+    call    LEDAll_On
+    Call    BuzzerMi5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Mi
+    call    LEDAll_On
+    Call    BuzzerMi5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Mi
+    call    LEDAll_On
+    Call    BuzzerMi5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Re
+    call    LEDAll_On
+    Call    BuzzerRe5
+    call    Tempo_1s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Re
+    call    LEDAll_On
+    Call    BuzzerRe5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Re
+    call    LEDAll_On
+    Call    BuzzerRe5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Re
+    call    LEDAll_On
+    Call    BuzzerRe5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Si
+    call    LEDAll_On
+    Call    BuzzerSi3
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Re
+    call    LEDAll_On
+    Call    BuzzerRe5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Mi
+    call    LEDAll_On
+    Call    BuzzerMi5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;La
+    call    LEDAll_On
+    Call    BuzzerLa4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Si
+    call    LEDAll_On
+    Call    BuzzerSi3
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Re
+    call    LEDAll_On
+    Call    BuzzerRe5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Si
+    call    LEDAll_On
+    Call    BuzzerSi3
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Mi
+    call    LEDAll_On
+    Call    BuzzerMi5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Do
+    call    LEDAll_On
+    Call    BuzzerDo4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;Si
+    call    LEDAll_On
+    Call    BuzzerSi3
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;La
+    call    LEDAll_On
+    Call    BuzzerLa4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s	
+    ;Si
+    call    LEDAll_On
+    Call    BuzzerSi3
+    call    Tempo_1s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;SolDiese
+    call    LEDAll_On
+    Call    BuzzerSoldiese
+    call    Tempo_1s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    ;La
+    call    LEDAll_On
+    Call    BuzzerLa4
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_0.2s
+    
+    Return
+    
 ;*******************************************************************************
     
 ;*******************************************************************************
@@ -1420,7 +1641,8 @@ MUSIQUE
     Call    Config_Buzzer
     Call    Config_Random
     
-    Call    Musiques
+    ;Call    MusiquesBS
+    Call    MusiquesVST
     Goto    DEBUT
     
 DEBUT
