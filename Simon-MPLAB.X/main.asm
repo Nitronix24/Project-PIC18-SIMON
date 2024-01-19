@@ -548,6 +548,13 @@ LEDAll_Red2:
     CALL ColorOff
     CALL ColorRed
     RETURN
+
+LEDAll_Menu:
+    CALL ColorRed
+    CALL ColorOff
+    CALL ColorGreen
+    CALL ColorOff
+    RETURN
  
 ;*******************************************************************************
 
@@ -1129,8 +1136,37 @@ CheckEndGame_else
     Movwf   isEndGame
     Return
 	
-;******************************************************************************* 	
+;******************************************************************************* 
+    
+;*******************************************************************************
+;			FONCTION PIANO
+;*******************************************************************************
+Piano:
+    Call    LEDAll_Off
+    Call    Tempo_0.5s
+    BANKSEL PORTB
+    Led0_p
+    BTFSC   PORTB,  0
+	GOTO	Led1_p
+	CALL	LEDBuzz0
 	
+    Led1_p
+    BTFSC   PORTB,  1
+	GOTO	Led2_p
+	CALL	LEDBuzz1
+	
+    Led2_p	
+    BTFSC   PORTB,  2
+	GOTO	Led3_p
+	CALL	LEDBuzz2
+	
+    Led3_p
+    BTFSC   PORTB,  3
+	GOTO	Led0_p
+	CALL	LEDBuzz3
+	GOTO	Led0_p
+;*******************************************************************************
+    
 ;*******************************************************************************
 ;			FUNCTION MUSIQUE
 ;*******************************************************************************
@@ -1749,13 +1785,27 @@ Defeat
     
 Menu:
     
-    Call    LED2_On
-    loop_menu
-    btfsc   PORTB, 2
-    goto    loop_menu
-    Call    LEDAll_Off
-    Call    Tempo_0.5s
-    Return
+    Call    LEDAll_Menu
+    
+    ;btfsc   PORTB, 2
+    ;goto    loop_menu
+    ;Call    LEDAll_Off
+    ;Call    Tempo_0.5s
+    ;Return
+    
+    BANKSEL PORTB
+    LedJeu
+	BTFSC   PORTB,  0
+	GOTO	LedPiano
+	CALL	Piano
+	
+    LedPiano
+	BTFSC   PORTB,  2
+	GOTO	LedJeu
+	GOTO	Sequence
+   
+	RETURN
+	
     
 ;*******************************************************************************    
    
