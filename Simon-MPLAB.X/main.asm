@@ -865,6 +865,27 @@ LEDBuzz3:
     Call    LEDAll_Off
     Call    Tempo_100us
     RETURN
+
+LEDBuzz0_piano:
+    Call    LED0_On
+    Call    BuzzerOnBtn0
+    Call    Tempo_10ms
+    RETURN
+LEDBuzz1_piano:
+    Call    LED1_On
+    Call    BuzzerOnBtn1
+    Call    Tempo_10ms
+    RETURN
+LEDBuzz2_piano:
+    Call    LED2_On
+    Call    BuzzerOnBtn2
+    Call    Tempo_10ms
+    RETURN
+LEDBuzz3_piano:
+    Call    BuzzerOnBtn3
+    Call    LED3_On
+    Call    Tempo_10ms
+    RETURN
     
 LEDBuzzInput0:
     Call    LED0_On
@@ -1064,29 +1085,32 @@ CheckEndGame_else
 ;			FONCTION PIANO
 ;*******************************************************************************
 Piano:
-    Call    LEDAll_Off
-    Call    Tempo_0.5s
     BANKSEL PORTB
-    Led0_p
+    loop_piano
     BTFSC   PORTB,  0
-	GOTO	Led1_p
-	CALL	LEDBuzz0
-	
-    Led1_p
+	GOTO	Led1_piano
+	CALL	LEDBuzz0_piano
+	GOTO	ButtonPress_No_piano
+    Led1_piano
     BTFSC   PORTB,  1
-	GOTO	Led2_p
-	CALL	LEDBuzz1
-	
-    Led2_p	
+	GOTO	Led2_piano
+	CALL	LEDBuzz1_piano
+	GOTO	ButtonPress_No_piano
+    Led2_piano
     BTFSC   PORTB,  2
-	GOTO	Led3_p
-	CALL	LEDBuzz2
-	
-    Led3_p
+	GOTO	Led3
+	CALL	LEDBuzz2_piano
+	GOTO	ButtonPress_No_piano
+    Led3_piano
     BTFSC   PORTB,  3
-	GOTO	Led0_p
-	CALL	LEDBuzz3
-	GOTO	Led0_p
+	GOTO	ButtonPress_No_piano
+	CALL	LEDBuzz3_piano
+	GOTO	ButtonPress_No_piano
+    ButtonPress_No_piano
+	CALL	Tempo_100us
+	CALL	LEDAll_Off
+	Call    BuzzerOff
+	GOTO	loop_piano
 ;*******************************************************************************
     
 ;*******************************************************************************
