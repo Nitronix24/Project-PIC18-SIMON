@@ -1060,6 +1060,11 @@ CheckEndSeq:
     Goto    CheckEndSeq_else
     Movlw   0x01
     Movwf   isEndSeq
+    call    LEDAll_Green
+    Call    BuzzerLoseSol
+    call    Tempo_0.5s
+    call    LEDAll_Off
+    Call    BuzzerOff
     Return
 CheckEndSeq_else    
     Movlw   0x00
@@ -1415,7 +1420,7 @@ MUSIQUE
     Call    Config_Buzzer
     Call    Config_Random
     
-    ;Call    Musiques
+    Call    Musiques
     Goto    DEBUT
     
 DEBUT
