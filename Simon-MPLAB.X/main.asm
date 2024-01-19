@@ -624,6 +624,26 @@ tempo_10ms_run
     goto    tempo_10ms_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
     return
+
+Tempo_20ms:
+    
+    movlw   b'10010000'		    
+    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    
+    movlw   b'10010000'	
+    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    
+    ; initialiser la valeur du timer a 64916
+    movlw   0xFD
+    movwf   TMR0H		    ; maj TMR0H
+    movlw   0x94		    ; maj TMR0L
+    movwf   TMR0L
+    
+tempo_20ms_run    
+    btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
+    goto    tempo_20ms_run
+    bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
+    return    
     
 Tempo_0.2s:
     
@@ -1060,9 +1080,11 @@ CheckEndSeq:
     Goto    CheckEndSeq_else
     Movlw   0x01
     Movwf   isEndSeq
+    Call    Tempo_0.2s
     call    LEDAll_Green
     Call    BuzzerLoseSol
     call    Tempo_0.5s
+    Call    Tempo_0.2s
     call    LEDAll_Off
     Call    BuzzerOff
     Return
@@ -1093,7 +1115,7 @@ CheckEndGame_else
 ;			FUNCTION MUSIQUE
 ;*******************************************************************************
     
-Musiques:
+BabyShark:
     
     ;Re
     call    LED0_On
@@ -1109,174 +1131,206 @@ Musiques:
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.5s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
     call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
           
     
     ;Re
     call    LED0_On
     Call    BuzzerRe5
-    call    Tempo_1s
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
     ;Mi
     call    LED1_On
     Call    BuzzerMi5
-    call    Tempo_1s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.5s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.5s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.5s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.5s
+    call    Tempo_20ms
     
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+          
     
     ;Re
     call    LED0_On
     Call    BuzzerRe5
-    call    Tempo_1s
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
     ;Mi
     call    LED1_On
     Call    BuzzerMi5
-    call    Tempo_1s
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.5s
-    ;Sol
-    call    LED2_On
-    Call    BuzzerSol5
-    call    Tempo_0.2s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Sol
     call    LED2_On
     Call    BuzzerSol5
     call    Tempo_0.5s
-    ;Fa #
-    call    LED3_On
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.2s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    
+     ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    ;Sol
+    call    LED2_On
+    Call    BuzzerSol5
+    call    Tempo_0.5s
+    Call    BuzzerOff
+    Call    LEDAll_Off
+    call    Tempo_20ms
+    
+    ;Fa#
+    Call    LED3_On
     Call    BuzzerBsFadiese
-    call    Tempo_1s
-    
+    call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.5s
+    call    Tempo_100us
     
-    Goto    Game
+    Return
    
 ;*******************************************************************************
     
@@ -1420,7 +1474,7 @@ MUSIQUE
     Call    Config_Buzzer
     Call    Config_Random
     
-    Call    Musiques
+    Call    BabyShark
     Goto    DEBUT
     
 DEBUT
@@ -1466,16 +1520,16 @@ CheckButton
 Defeat
     
     call    LEDAll_Red1
-    Call    BuzzerLoseSol
+    Call    BuzzerLa4
     call    Tempo_1s
     call    LEDAll_Red2
-    Call    BuzzerLoseRe
+    Call    BuzzerSol4
     call    Tempo_1s
     call    LEDAll_Red1
-    Call    BuzzerLoseMi
+    Call    BuzzerLa4
     call    Tempo_1s
     call    LEDAll_Red2
-    Call    BuzzerLoseDo
+    Call    BuzzerSol4
     call    Tempo_1s
     Call    BuzzerOff
     Goto    DEBUT
