@@ -211,7 +211,7 @@ constFF		    RES	    1
 ;*******************************************************************************
 	    
 RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    DEBUT                   ; go to beginning of program
+    Goto    DEBUT                   ; go to beginning of program
     
 ;*******************************************************************************
 ; TODO Step #4 - Interrupt Service Routines
@@ -239,9 +239,9 @@ RES_VECT  CODE    0x0000            ; processor reset vector
 ;----------------------------------PIC18's--------------------------------------
 ;
 ; ISRHV     CODE    0x0008
-;     GOTO    HIGH_ISR
+;     Goto    HIGH_ISR
 ; ISRLV     CODE    0x0018
-;     GOTO    LOW_ISR
+;     Goto    LOW_ISR
 ;
 ; ISRH      CODE                     ; let linker place high ISR routine
 ; HIGH_ISR
@@ -268,38 +268,38 @@ ConfigPWM:
 ; D�but de la configuration
 
 ; Associer le module CCP2 avec le timer 2
-MOVLW     b'00000100'
-MOVWF     CCPTMRS                
+Movlw     b'00000100'
+Movwf     CCPTMRS                
 
 ; S�lection de la banque d?adresse
-MOVLB    0x02
+Movlb    0x02
 
 ; Associer le pin RC1 avec la fonction de sortie de CCP2
-MOVLW     0x06
-MOVWF     RC1PPS
+Movlw     0x06
+Movwf     RC1PPS
 
 ; D�sactivation de la sortie PWM pour configuration ; Fixe la p�riode de PWM
 BSF       TRISC, 1 
-MOVLW     0xFF
-MOVWF     T2PR
+Movlw     0xFF
+Movwf     T2PR
 
 ; Configuration du module CCP2 et format des donn�es
-MOVLW     b'10001100'
-MOVWF     CCP2CON                 
+Movlw     b'10001100'
+Movwf     CCP2CON                 
 
 ; Fixe le rapport cyclique du signal
-MOVLW     d'01111111'   ; Valeur arbitraire, ajustez en fonction de vos besoins
-MOVWF     CCPR2H 
-MOVLW     d'00000001'   ; Valeur arbitraire, ajustez en fonction de vos besoins
-MOVWF     CCPR2L 
+Movlw     d'01111111'   ; Valeur arbitraire, ajustez en fonction de vos besoins
+Movwf     CCPR2H 
+Movlw     d'00000001'   ; Valeur arbitraire, ajustez en fonction de vos besoins
+Movwf     CCPR2L 
 
 ; Configuration de l?horloge du timer 2 = Fosc/4
-MOVLW     b'00000001'
-MOVWF     T2CLKCON
+Movlw     b'00000001'
+Movwf     T2CLKCON
 
 ; Choix des options du timer 2
-MOVLW     b'00000100'
-MOVWF     T2CON
+Movlw     b'00000100'
+Movwf     T2CON
 
 ; Activation de la sortie PWM
 BCF       TRISC, 1
@@ -313,7 +313,7 @@ BCF       TRISC, 1
 ;Fonction pour mettre a l'etat haut 
 ColorBitOn:
     
-    MOVLB   LATB
+    Movlb   LATB
     BSF	    LATB,5
     ; attendre 0.82us
     NOP
@@ -342,7 +342,7 @@ ColorBitOn:
 ;Fonction pour mettre a l'etat bas
 ColorBitOff:
     
-    MOVLB   LATB
+    Movlb   LATB
     BSF LATB,5 
     ; attendre 0.32us
     NOP
@@ -369,192 +369,192 @@ ColorBitOff:
 
 ColorEnable:
     
-    MOVLB	0X04
-    MOVLW	0x08
-    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter a 8
-    MOVLW	0X05
-    MOVWF	colorSwitchOn			; initialiser la valeur de colorSwitchOn a 5
+    Movlb	0X04
+    Movlw	0x08
+    Movwf	colorBitCounter			; initialiser la valeur de colorBitCounter a 8
+    Movlw	0X05
+    Movwf	colorSwitchOn			; initialiser la valeur de colorSwitchOn a 5
 
 LoopColorEnable
-    CPFSEQ	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
-	    GOTO	SetBitOff
-	    GOTO	SetBitOn
+    Cpfseq	colorBitCounter,1		; test si le colorSwitchOn = colorBitCounter; skip if =
+	    Goto	SetBitOff
+	    Goto	SetBitOn
 
     SetBitOff
-	    CALL	ColorBitOff		; appel la fonction de mise a 0 du bit
-	    GOTO 	EndSetBit
+	    Call	ColorBitOff		; appel la fonction de mise a 0 du bit
+	    Goto 	EndSetBit
 
     SetBitOn
-	    CALL 	ColorBitOn		; appel la fonction de mise a 1 du bit
+	    Call 	ColorBitOn		; appel la fonction de mise a 1 du bit
     EndSetBit
     DECF	colorBitCounter			; decremente le colorBitCounter
-    MOVLW	0X00
-    CPFSEQ	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
-	    GOTO	BackToLoopColorEnable	; appel la routine qui renvoie au debut de la boucle
-	    RETURN
+    Movlw	0X00
+    Cpfseq	colorBitCounter,1 		; test si le colorBitCounter = 0; skip if = 0
+	    Goto	BackToLoopColorEnable	; appel la routine qui renvoie au debut de la boucle
+	    Return
     BackToLoopColorEnable
 	    MOVF 	colorSwitchOn,W,1	; charge colorSwitchOn dans le WREG
-	    GOTO 	LoopColorEnable
+	    Goto 	LoopColorEnable
 
 
 ColorDisable:
     
-    MOVLB	0X04
-    MOVLW	0x08
-    MOVWF	colorBitCounter			; initialiser la valeur de colorBitCounter a 8
+    Movlb	0X04
+    Movlw	0x08
+    Movwf	colorBitCounter			; initialiser la valeur de colorBitCounter a 8
 
 loopColorDisable
-	MOVLW	0X00
-	CPFSEQ	colorBitCounter,1		; test si le colorBitCounter = 0; skip if = 0
-	GOTO	EndIfDisableNull		; appel la routine qui renvoie au debut de la boucle
-	RETURN
+	Movlw	0X00
+	Cpfseq	colorBitCounter,1		; test si le colorBitCounter = 0; skip if = 0
+	Goto	EndIfDisableNull		; appel la routine qui renvoie au debut de la boucle
+	Return
     EndIfDisableNull
 	DECF	colorBitCounter
-	CALL	ColorBitOff			; appel la fonction de mise a 0 du bit
-	GOTO 	loopColorDisable
+	Call	ColorBitOff			; appel la fonction de mise a 0 du bit
+	Goto 	loopColorDisable
 
 
 ColorRed:
     
-    CALL ColorDisable
-    CALL ColorEnable
-    CALL ColorDisable
-    RETURN
+    Call ColorDisable
+    Call ColorEnable
+    Call ColorDisable
+    Return
 
 
 ColorGreen:
 
-    CALL ColorEnable
-    CALL ColorDisable
-    CALL ColorDisable
-    RETURN
+    Call ColorEnable
+    Call ColorDisable
+    Call ColorDisable
+    Return
 
 
 ColorBlue:
 
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorEnable
-    RETURN
+    Call ColorDisable
+    Call ColorDisable
+    Call ColorEnable
+    Return
     
 ColorPurple:
     
-    CALL ColorDisable
-    CALL ColorEnable
-    CALL ColorEnable
-    RETURN
+    Call ColorDisable
+    Call ColorEnable
+    Call ColorEnable
+    Return
 
 ColorWhite:
     
-    CALL ColorEnable
-    CALL ColorEnable
-    CALL ColorEnable
-    RETURN
+    Call ColorEnable
+    Call ColorEnable
+    Call ColorEnable
+    Return
     
 ColorOff:
 
-    CALL ColorDisable
-    CALL ColorDisable
-    CALL ColorDisable
-    RETURN
+    Call ColorDisable
+    Call ColorDisable
+    Call ColorDisable
+    Return
 
 ColorOn:
 
-    CALL ColorEnable
-    CALL ColorEnable
-    CALL ColorEnable
-    RETURN
+    Call ColorEnable
+    Call ColorEnable
+    Call ColorEnable
+    Return
     
 LED0_On:
-    CALL ColorRed
-    CALL ColorOff
-    CALL ColorOff
-    CALL ColorOff
-    RETURN
+    Call ColorRed
+    Call ColorOff
+    Call ColorOff
+    Call ColorOff
+    Return
     
 LED1_On:
-    CALL ColorOff
-    CALL ColorBlue
-    CALL ColorOff
-    CALL ColorOff
-    RETURN
+    Call ColorOff
+    Call ColorBlue
+    Call ColorOff
+    Call ColorOff
+    Return
     
 LED2_On:
-    CALL ColorOff
-    CALL ColorOff
-    CALL ColorGreen
-    CALL ColorOff
-    RETURN
+    Call ColorOff
+    Call ColorOff
+    Call ColorGreen
+    Call ColorOff
+    Return
     
 LED3_On:
-    CALL ColorOff
-    CALL ColorOff
-    CALL ColorOff
-    CALL ColorPurple
-    RETURN
+    Call ColorOff
+    Call ColorOff
+    Call ColorOff
+    Call ColorPurple
+    Return
     
 LEDAll_Green:
-    CALL ColorGreen
-    CALL ColorGreen
-    CALL ColorGreen
-    CALL ColorGreen
-    RETURN
+    Call ColorGreen
+    Call ColorGreen
+    Call ColorGreen
+    Call ColorGreen
+    Return
     
 LEDAll_Red:
-    CALL ColorRed
-    CALL ColorRed
-    CALL ColorRed
-    CALL ColorRed
-    RETURN
+    Call ColorRed
+    Call ColorRed
+    Call ColorRed
+    Call ColorRed
+    Return
 
 LEDAll_Off:
-    CALL ColorOff
-    CALL ColorOff
-    CALL ColorOff
-    CALL ColorOff
-    RETURN
+    Call ColorOff
+    Call ColorOff
+    Call ColorOff
+    Call ColorOff
+    Return
 
 LEDAll_On:
-    CALL ColorOn
-    CALL ColorOn
-    CALL ColorOn
-    CALL ColorOn
-    RETURN
+    Call ColorOn
+    Call ColorOn
+    Call ColorOn
+    Call ColorOn
+    Return
     
 LEDAll_Green1:
-    CALL ColorGreen
-    CALL ColorOff
-    CALL ColorGreen
-    CALL ColorOff
-    RETURN
+    Call ColorGreen
+    Call ColorOff
+    Call ColorGreen
+    Call ColorOff
+    Return
     
 LEDAll_Green2:
-    CALL ColorOff
-    CALL ColorGreen
-    CALL ColorOff
-    CALL ColorGreen
-    RETURN
+    Call ColorOff
+    Call ColorGreen
+    Call ColorOff
+    Call ColorGreen
+    Return
 
 LEDAll_Red1:
-    CALL ColorRed
-    CALL ColorOff
-    CALL ColorRed
-    CALL ColorOff
-    RETURN
+    Call ColorRed
+    Call ColorOff
+    Call ColorRed
+    Call ColorOff
+    Return
     
 LEDAll_Red2:
-    CALL ColorOff
-    CALL ColorRed
-    CALL ColorOff
-    CALL ColorRed
-    RETURN
+    Call ColorOff
+    Call ColorRed
+    Call ColorOff
+    Call ColorRed
+    Return
 
 LEDAll_Menu:
-    CALL ColorRed
-    CALL ColorBlue
-    CALL ColorGreen
-    CALL ColorPurple
-    RETURN
+    Call ColorRed
+    Call ColorBlue
+    Call ColorGreen
+    Call ColorPurple
+    Return
  
 ;*******************************************************************************
 
@@ -566,125 +566,125 @@ LEDAll_Menu:
 ; temporisation 1 seconde (LFINTOSC)
 Tempo_1s:
     
-    movlw   b'10010000'		    
-    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    Movlw   b'10010000'		    
+    Movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
     
-    movlw   b'10010000'	
-    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    Movlw   b'10010000'	
+    Movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
     ; initialiser la valeur du timer a 33536
-    movlw   0x86
-    movwf   TMR0H		    ; maj TMR0H
-    movlw   0xe8		    ; maj TMR0L
-    movwf   TMR0L
+    Movlw   0x86
+    Movwf   TMR0H		    ; maj TMR0H
+    Movlw   0xe8		    ; maj TMR0L
+    Movwf   TMR0L
     
 tempo_1s_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    tempo_1s_run
+    Goto    tempo_1s_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de demarrage
-    return
+    Return
 
 Tempo_0.5s:
     
-    movlw   b'10010000'		    
-    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    Movlw   b'10010000'		    
+    Movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
     
-    movlw   b'10010000'	
-    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    Movlw   b'10010000'	
+    Movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
     ; initialiser la valeur du timer � 50036
-    movlw   0xC3
-    movwf   TMR0H		    ; maj TMR0H
-    movlw   0x74		    ; maj TMR0L
-    movwf   TMR0L
+    Movlw   0xC3
+    Movwf   TMR0H		    ; maj TMR0H
+    Movlw   0x74		    ; maj TMR0L
+    Movwf   TMR0L
     
 tempo_0.5s_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    tempo_0.5s_run  
+    Goto    tempo_0.5s_run  
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
-    return
+    Return
 
 Tempo_100us:
     
-    movlw   b'10010000'		    
-    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    Movlw   b'10010000'		    
+    Movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
     
-    movlw   b'10010000'	
-    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    Movlw   b'10010000'	
+    Movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
     ; initialiser la valeur du timer � 65532
-    movlw   0xFF
-    movwf   TMR0H		    ; maj TMR0H
-    movlw   0xFC		    ; maj TMR0L
-    movwf   TMR0L
+    Movlw   0xFF
+    Movwf   TMR0H		    ; maj TMR0H
+    Movlw   0xFC		    ; maj TMR0L
+    Movwf   TMR0L
     
 tempo_100us_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    tempo_100us_run
+    Goto    tempo_100us_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
-    return   
+    Return   
     
     
 
 Tempo_10ms:
     
-    movlw   b'10010000'		    
-    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    Movlw   b'10010000'		    
+    Movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
     
-    movlw   b'10010000'	
-    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    Movlw   b'10010000'	
+    Movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
     ; initialiser la valeur du timer a 65�226
-    movlw   0xFE
-    movwf   TMR0H		    ; maj TMR0H
-    movlw   0xCA		    ; maj TMR0L
-    movwf   TMR0L
+    Movlw   0xFE
+    Movwf   TMR0H		    ; maj TMR0H
+    Movlw   0xCA		    ; maj TMR0L
+    Movwf   TMR0L
     
 tempo_10ms_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    tempo_10ms_run
+    Goto    tempo_10ms_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
-    return
+    Return
 
 Tempo_20ms:
     
-    movlw   b'10010000'		    
-    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    Movlw   b'10010000'		    
+    Movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
     
-    movlw   b'10010000'	
-    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    Movlw   b'10010000'	
+    Movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
     ; initialiser la valeur du timer a 64916
-    movlw   0xFD
-    movwf   TMR0H		    ; maj TMR0H
-    movlw   0x94		    ; maj TMR0L
-    movwf   TMR0L
+    Movlw   0xFD
+    Movwf   TMR0H		    ; maj TMR0H
+    Movlw   0x94		    ; maj TMR0L
+    Movwf   TMR0L
     
 tempo_20ms_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    tempo_20ms_run
+    Goto    tempo_20ms_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
-    return    
+    Return    
     
 Tempo_0.2s:
     
-    movlw   b'10010000'		    
-    movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
+    Movlw   b'10010000'		    
+    Movwf   T0CON0, ACCESS	    ; timer1 clock Sosc
     
-    movlw   b'10010000'	
-    movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
+    Movlw   b'10010000'	
+    Movwf   T0CON1, ACCESS	    ; set les valeurs du registre T0CON1
     
     ; initialiser la valeur du timer a 58�036
-    movlw   0xE2
-    movwf   TMR0H		    ; maj TMR0H
-    movlw   0xB4		    ; maj TMR0L
-    movwf   TMR0L
+    Movlw   0xE2
+    Movwf   TMR0H		    ; maj TMR0H
+    Movlw   0xB4		    ; maj TMR0L
+    Movwf   TMR0L
     
 Tempo_0.2s_run    
     btfss   T0CON0,5,ACCESS	    ; tester l'overflow du timer
-    goto    Tempo_0.2s_run
+    Goto    Tempo_0.2s_run
     bcf	    T0CON0,7,ACCESS	    ; reset bit de d�marrage
-    return
+    Return
 ;*******************************************************************************
  
 
@@ -696,24 +696,24 @@ createRandomNum:
     MOVF    T2TMR, W		; Chargez la valeur du Timer 2 dans W
     ANDLW   b'00000011'		; Appliquez un masque pour obtenir les 2 bits de poids faible
     BANKSEL 0x100
-    MOVWF   randomNum
-    RETURN
+    Movwf   randomNum
+    Return
 
     
 AddRandom:
-    CALL createRandomNum
-    MOVLB   0x01		    ; choisir la banque 1
+    Call createRandomNum
+    Movlb   0x01		    ; choisir la banque 1
   
-    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
-    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    Movlw   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    Movwf   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
     
     MOVF    randomNum, W
-    MOVWF   POSTINC0		    ; ecrire la valeur de WREG a l'emplacement memoire pointe par FSR
-    MOVLW   0xFF
-    MOVWF   INDF0
+    Movwf   POSTINC0		    ; ecrire la valeur de WREG a l'emplacement memoire pointe par FSR
+    Movlw   0xFF
+    Movwf   INDF0
 
-    CLRF    FSR1L		    ; R�ninitialise le pointeur de lecture
-    RETURN    
+    Clrf    FSR1L		    ; R�ninitialise le pointeur de lecture
+    Return    
 
 ;*******************************************************************************
 ;			FONCTION LED VERTE
@@ -722,25 +722,25 @@ AddRandom:
 TurnOffLD0:
     BANKSEL LATC
     BCF LATC, 4
-    RETURN
+    Return
 
 ; LD1 Off
 TurnOffLD1:
     BANKSEL LATC
     BCF LATC, 5
-    RETURN
+    Return
 
 ; LD2 Off
 TurnOffLD2:
     BANKSEL LATC
     BCF LATC, 6
-    RETURN
+    Return
 
 ; LD3 Off
 TurnOffLD3:
     BANKSEL LATC
     BCF LATC, 7
-    RETURN
+    Return
 
 ;*******************************************************************************   
     
@@ -751,142 +751,142 @@ TurnOffLD3:
 ; Buzzer
     
 BuzzerOnBtn0:
-    MOVLW d'118'  ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'118'  ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerOnBtn1:
-    MOVLW d'105' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'105' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN 
+    Return 
     
 BuzzerOnBtn2:
-    MOVLW d'94' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'94' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN 
+    Return 
 
 BuzzerOnBtn3:
-    MOVLW d'158' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'158' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
 
 BuzzerSi3:
-    MOVLW d'62' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'62' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN    
+    Return    
     
 BuzzerDo4:
-    MOVLW d'59' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'59' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN    
+    Return    
 
 BuzzerSol4:
-    MOVLW d'79' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'79' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN 
+    Return 
 
 BuzzerLa4:
-    MOVLW d'70' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'70' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
     
 BuzzerDo5:
-    MOVLW d'62' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'62' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerRe5:
-    MOVLW d'105' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'105' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerMi5:
-    MOVLW d'94' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'94' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerSol5:
-    MOVLW d'158' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'158' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerDo6:
-    MOVLW d'118' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'118' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerOff:
     BSF TRISC, 1	; desactivation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerBsFadiese:
-    MOVLW d'369' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'369' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerSoldiese:
-    MOVLW d'415' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'415' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerLoseSol:
-    MOVLW d'85' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'85' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerLoseRe:
-    MOVLW d'83' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'83' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerLoseMi:
-    MOVLW d'73' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'73' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
     
 BuzzerLoseDo:
-    MOVLW d'63' ;
-    MOVLB 0x0F
-    MOVWF T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
+    Movlw d'63' ;
+    Movlb 0x0F
+    Movwf T2PR		; fixe la periode de PWM (voir formule p.271) (0 pour le moment)
     BCF TRISC, 1	; activation de la sortie PWM (Buzzer)
-    RETURN
+    Return
 ;*******************************************************************************
 
 ;*******************************************************************************
@@ -902,7 +902,7 @@ LEDBuzz0:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzz1:
     Call    LED1_On
@@ -913,7 +913,7 @@ LEDBuzz1:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzz2:
     Call    LED2_On
@@ -924,7 +924,7 @@ LEDBuzz2:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzz3:
     Call    LED3_On
@@ -935,7 +935,7 @@ LEDBuzz3:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzzInput0:
     Call    LED0_On
@@ -946,7 +946,7 @@ LEDBuzzInput0:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzzInput1:
     Call    LED1_On
@@ -957,7 +957,7 @@ LEDBuzzInput1:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzzInput2:
     Call    LED2_On
@@ -968,7 +968,7 @@ LEDBuzzInput2:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN
+    Return
     
 LEDBuzzInput3:
     Call    LED3_On
@@ -979,7 +979,7 @@ LEDBuzzInput3:
     Call    Tempo_100us
     Call    LEDAll_Off
     Call    Tempo_100us
-    RETURN   
+    Return   
     
 ;*******************************************************************************
     
@@ -992,40 +992,40 @@ ReadSequence:
      
 Comparaison
     Call    Tempo_0.2s
-    MOVLB   0x01
+    Movlb   0x01
     ;Comparaison avec le tableau
     MOVF    INDF1, W   		    ; Charger l'addresse de la banque dans WREG (ici banque = 1)
     INCF    FSR1L
-    CPFSEQ  constFF
-    GOTO    Affichage
-    CLRF    FSR1L
-    RETURN
+    Cpfseq  constFF
+    Goto    Affichage
+    Clrf    FSR1L
+    Return
         
 Affichage
     
     ;Comparaison registre avec led
-    CPFSEQ  constZero
-    GOTO    Comp1
-    CALL    LEDBuzz0
-    GOTO    Comparaison
+    Cpfseq  constZero
+    Goto    Comp1
+    Call    LEDBuzz0
+    Goto    Comparaison
     
 Comp1
-    CPFSEQ  constUn
-    GOTO    Comp2
-    CALL    LEDBuzz1
-    GOTO    Comparaison
+    Cpfseq  constUn
+    Goto    Comp2
+    Call    LEDBuzz1
+    Goto    Comparaison
     
 Comp2
-    CPFSEQ  constDeux
-    GOTO    Comp3
-    CALL    LEDBuzz2
-    GOTO    Comparaison
+    Cpfseq  constDeux
+    Goto    Comp3
+    Call    LEDBuzz2
+    Goto    Comparaison
     
 Comp3
-    CPFSEQ  constTrois
-    GOTO    Comparaison
-    CALL    LEDBuzz3
-    GOTO    Comparaison
+    Cpfseq  constTrois
+    Goto    Comparaison
+    Call    LEDBuzz3
+    Goto    Comparaison
     
     
     
@@ -1039,42 +1039,42 @@ Comp3
    
 AwaitButton:
     BANKSEL PORTB
-    BTFSC   PORTB,  0
-	GOTO	Led1
-	CALL	LEDBuzz0
+    Btfsc   PORTB,  0
+	Goto	Led1
+	Call	LEDBuzz0
 	Movlw	0x00
 	Movwf	lastBtnPressed
-	RETURN
+	Return
 	
     Led1
-    BTFSC   PORTB,  1
-	GOTO	Led2
-	CALL	LEDBuzz1
+    Btfsc   PORTB,  1
+	Goto	Led2
+	Call	LEDBuzz1
 	Movlw	0x01
 	Movwf	lastBtnPressed
-	RETURN
+	Return
 	
     Led2	
-    BTFSC   PORTB,  2
-	GOTO	Led3
-	CALL	LEDBuzz2
+    Btfsc   PORTB,  2
+	Goto	Led3
+	Call	LEDBuzz2
 	Movlw	0x02
 	Movwf	lastBtnPressed
-	RETURN
+	Return
 	
     Led3
-    BTFSC   PORTB,  3
-	GOTO	ButtonPress_No
-	CALL	LEDBuzz3
+    Btfsc   PORTB,  3
+	Goto	ButtonPress_No
+	Call	LEDBuzz3
 	Movlw	0x03
 	Movwf	lastBtnPressed
-	RETURN
+	Return
 	
     ButtonPress_No
-	;CALL	Tempo_100us
-	;CALL	LEDAll_Off
+	;Call	Tempo_100us
+	;Call	LEDAll_Off
 	;Call    BuzzerOff
-	GOTO	AwaitButton
+	Goto	AwaitButton
 	
 ;*******************************************************************************  
 
@@ -1084,7 +1084,7 @@ AwaitButton:
 CheckValid:
     
     MOVF    INDF1,W          ; Charge la valeur du pointeur de lecture dans WREG pour la comparaison
-    CPFSEQ  lastBtnPressed  ; Compare randomNum � 0
+    Cpfseq  lastBtnPressed  ; Compare randomNum � 0
     Goto    CheckValid_else
     Movlw   0x01
     Movwf   isValid
@@ -1103,16 +1103,16 @@ CheckValid_else
 CheckEndSeq:
     INCF    FSR1L
     MOVF    INDF1, W
-    CPFSEQ  constFF
+    Cpfseq  constFF
     Goto    CheckEndSeq_else
     Movlw   0x01
     Movwf   isEndSeq
     Call    Tempo_0.2s
-    call    LEDAll_Green
+    Call    LEDAll_Green
     Call    BuzzerLoseSol
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    Tempo_0.2s
-    call    LEDAll_Off
+    Call    LEDAll_Off
     Call    BuzzerOff
     Return
 CheckEndSeq_else    
@@ -1126,7 +1126,7 @@ CheckEndSeq_else
 
 CheckEndGame:
     MOVF    FSR1L, W
-    CPFSEQ  stage
+    Cpfseq  stage
     Goto    CheckEndGame_else
     Movlw   0x01
     Movwf   isEndGame
@@ -1146,25 +1146,25 @@ Piano:
     Call    Tempo_0.5s
     BANKSEL PORTB
     Led0_p
-    BTFSC   PORTB,  0
-	GOTO	Led1_p
-	CALL	LEDBuzz0
+    Btfsc   PORTB,  0
+	Goto	Led1_p
+	Call	LEDBuzz0
 	
     Led1_p
-    BTFSC   PORTB,  1
-	GOTO	Led2_p
-	CALL	LEDBuzz1
+    Btfsc   PORTB,  1
+	Goto	Led2_p
+	Call	LEDBuzz1
 	
     Led2_p	
-    BTFSC   PORTB,  2
-	GOTO	Led3_p
-	CALL	LEDBuzz2
+    Btfsc   PORTB,  2
+	Goto	Led3_p
+	Call	LEDBuzz2
 	
     Led3_p
-    BTFSC   PORTB,  3
-	GOTO	Led0_p
-	CALL	LEDBuzz3
-	GOTO	Led0_p
+    Btfsc   PORTB,  3
+	Goto	Led0_p
+	Call	LEDBuzz3
+	Goto	Led0_p
 ;*******************************************************************************
     
 ;*******************************************************************************
@@ -1174,405 +1174,405 @@ Piano:
 BabyShark:
     
     ;Re
-    call    LED0_On
+    Call    LED0_On
     Call    BuzzerRe5
-    call    Tempo_1s
+    Call    Tempo_1s
     ;Mi
-    call    LED1_On
+    Call    LED1_On
     Call    BuzzerMi5
-    call    Tempo_1s
+    Call    Tempo_1s
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.2s
+    Call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.2s
+    Call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
           
     
     ;Re
-    call    LED0_On
+    Call    LED0_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Mi
-    call    LED1_On
+    Call    LED1_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.2s
+    Call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.2s
+    Call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
           
     
     ;Re
-    call    LED0_On
+    Call    LED0_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Mi
-    call    LED1_On
+    Call    LED1_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.2s
+    Call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.2s
+    Call    Tempo_0.2s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     
      ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Sol
-    call    LED2_On
+    Call    LED2_On
     Call    BuzzerSol5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     
     ;Fa#
     Call    LED3_On
     Call    BuzzerBsFadiese
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_100us
+    Call    Tempo_100us
     
     Return
    
 VoisSurTonChemin:
     
     ;Mi
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Mi
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Mi
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Re
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerRe5
-    call    Tempo_1s
-    call    Tempo_1s
+    Call    Tempo_1s
+    Call    Tempo_1s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Re
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Re
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Re
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Si
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerSi3
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Re
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Mi
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;La
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerLa4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Si
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerSi3
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Re
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerRe5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Si
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerSi3
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Mi
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerMi5
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Do
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerDo4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;Si
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerSi3
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     ;La
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerLa4
-    call    Tempo_0.5s
+    Call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms	
+    Call    Tempo_20ms	
     ;Si
-    call    LEDAll_On
+    Call    LEDAll_On
     Call    BuzzerSi3
-    call    Tempo_1s
+    Call    Tempo_1s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_20ms
+    Call    Tempo_20ms
     
     Return
     
@@ -1587,8 +1587,8 @@ Config_OSC:
     bcf	    OSCFRQ, 1
     
     BANKSEL TRISB
-    MOVLW   0x0F
-    MOVWF   TRISB
+    Movlw   0x0F
+    Movwf   TRISB
     Return
 ;*******************************************************************************     
     
@@ -1602,8 +1602,8 @@ Config_RGB:
     BCF	    OSCFRQ, 1
     
     BANKSEL TRISB
-    MOVLW   0x0F
-    MOVWF   TRISB
+    Movlw   0x0F
+    Movwf   TRISB
     Return
 
 ;*******************************************************************************
@@ -1621,10 +1621,10 @@ Config_Button:
     BSF TRISB, 3
     
     BANKSEL ANSELB
-    CLRF ANSELB, 0	; Mettre le 0eme bit de ANSELB a O pour configurer RB3 comme entree
-    CLRF ANSELB, 1	; Repeter pour les 3 autres boutons
-    CLRF ANSELB, 2
-    CLRF ANSELB, 3
+    Clrf ANSELB, 0	; Mettre le 0eme bit de ANSELB a O pour configurer RB3 comme entree
+    Clrf ANSELB, 1	; Repeter pour les 3 autres boutons
+    Clrf ANSELB, 2
+    Clrf ANSELB, 3
     
     Return
     
@@ -1636,35 +1636,35 @@ Config_Button:
 
 Config_Buzzer:
     ; debut de la configuration PWM
-    MOVLW b'00000100'
-    MOVWF CCPTMRS
+    Movlw b'00000100'
+    Movwf CCPTMRS
     
     ; associe le module CCP2 avec le timer 2
-    MOVLB 0x0E
+    Movlb 0x0E
     
     ; selection de la banque d?adresse
-    MOVLW 0x06
-    MOVWF RC1PPS, 1
+    Movlw 0x06
+    Movwf RC1PPS, 1
     
     ; associe le pin RC1 avec la fonction de sortie de CCP2
     BSF TRISC, 1	    ; desactivation de la sortie PWM pour configuration
-    MOVLW b'01100000'	    ;INITIALISE 0
-    MOVLB 0x0F	
-    MOVWF T2PR		    ; fixe la periode de PWM (voir formule p.271)
-    MOVLW b'10001100'
-    MOVWF CCP2CON	    ; configuration du module CCP2 et format des donnees
-    MOVLW d'00000000'
-    MOVWF CCPR2H
-    MOVLW d'11111111'
-    MOVWF CCPR2L
+    Movlw b'01100000'	    ;INITIALISE 0
+    Movlb 0x0F	
+    Movwf T2PR		    ; fixe la periode de PWM (voir formule p.271)
+    Movlw b'10001100'
+    Movwf CCP2CON	    ; configuration du module CCP2 et format des donnees
+    Movlw d'00000000'
+    Movwf CCPR2H
+    Movlw d'11111111'
+    Movwf CCPR2L
     
     ; fixe le rapport cyclique du signal (voir formule p.272)
-    MOVLW b'0010001'
-    MOVWF T2CLKCON
+    Movlw b'0010001'
+    Movwf T2CLKCON
     
     ; configuration de l'horloge du timer 2 = Fosc/4
-    MOVLW b'11110000'	    ; prescale 1:16, POSTSCALER 1:1
-    MOVWF T2CON
+    Movlw b'11110000'	    ; prescale 1:16, POSTSCALER 1:1
+    Movwf T2CON
     
     ; choix des options du timer 2 (voir p.256)
     ; BCF TRISC, 1
@@ -1678,9 +1678,9 @@ Config_Buzzer:
 ;			   Config Random
 ;*******************************************************************************
 Config_Random:
-    MOVLW   0x10			    ; Charge la valeur 9 dans WREG
-    MOVWF   stage		    ; Stocke la valeur de WREG dans la variable stage
-    CLRF    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
+    Movlw   0x10			    ; Charge la valeur 9 dans WREG
+    Movwf   stage		    ; Stocke la valeur de WREG dans la variable stage
+    Clrf    FSR0L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de s�quence
     
     Movlw   0x00
     Movwf   constZero
@@ -1693,21 +1693,21 @@ Config_Random:
     Movlw   0xff
     Movwf   constFF
     
-    MOVLB   0x01		    ; choisir la banque 1
-    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
-    MOVWF   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
-    MOVLW   0x0F
-    MOVWF    FSR0L		    ; Met la valeur de FSRLow � 16 pour s�lectionner la derni�re addresse de la sequence
+    Movlb   0x01		    ; choisir la banque 1
+    Movlw   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    Movwf   FSR0H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    Movlw   0x0F
+    Movwf    FSR0L		    ; Met la valeur de FSRLow � 16 pour s�lectionner la derni�re addresse de la sequence
     
-    MOVLB   0x01		    ; choisir la banque 1
-    MOVLW   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
-    MOVWF   FSR1H		    ; Mettre la valeur de WREG dans le registre FSRHigh
-    CLRF    FSR1L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de la sequence
+    Movlb   0x01		    ; choisir la banque 1
+    Movlw   0x01		    ; Charger l'addresse de la banque de password dans WREG (ici banque = 1)
+    Movwf   FSR1H		    ; Mettre la valeur de WREG dans le registre FSRHigh
+    Clrf    FSR1L		    ; reset la valeur de FSRLow � 0 pour s�lectionner l'addresse de la sequence
     
     sequenceInitTab		    ; Routine qui s'assure que le tableau soit vide avant de commencer a �crire
-    CLRF    INDF0
-    DECFSZ  FSR0L
-    GOTO    sequenceInitTab
+    Clrf    INDF0
+    Decfsz  FSR0L
+    Goto    sequenceInitTab
     Return
     
 ;*******************************************************************************
@@ -1719,15 +1719,6 @@ DEBUT
     Call    Config_Button
     Call    Config_Buzzer
     Call    Config_Random
-;test_loop
-   ; Call    BuzzerDo6
-    ;Call    Tempo_1s
-   ; Call    BuzzerOff
-   ; Call    BuzzerDo4
-   ; Call    Tempo_1s
-    
-   ; Call    BuzzerOff
-    ;Goto    test_loop
     
 Game   
     Call    Menu
@@ -1741,31 +1732,31 @@ CheckButton
     Call    CheckEndGame
     
     Movlw   0x01
-    CPFSEQ  isValid
+    Cpfseq  isValid
     Goto    Defeat
     Movlw   0x01
-    CPFSEQ  isEndSeq
+    Cpfseq  isEndSeq
     Goto    CheckButton
     Movlw   0x01
-    CPFSEQ  isEndGame
+    Cpfseq  isEndGame
     Goto    Sequence
     Call    Victory
     Goto    DEBUT
     
 Defeat
     
-    call    LEDAll_Red1
+    Call    LEDAll_Red1
     Call    BuzzerLa4
-    call    Tempo_1s
-    call    LEDAll_Red2
+    Call    Tempo_1s
+    Call    LEDAll_Red2
     Call    BuzzerSol4
-    call    Tempo_1s
-    call    LEDAll_Red1
+    Call    Tempo_1s
+    Call    LEDAll_Red1
     Call    BuzzerLa4
-    call    Tempo_1s
-    call    LEDAll_Red2
+    Call    Tempo_1s
+    Call    LEDAll_Red2
     Call    BuzzerSol4
-    call    Tempo_1s
+    Call    Tempo_1s
     Call    BuzzerOff
     Goto    DEBUT
     
@@ -1777,36 +1768,30 @@ Menu:
     
     Call    LEDAll_Menu
     
-    ;btfsc   PORTB, 2
-    ;goto    loop_menu
-    ;Call    LEDAll_Off
-    ;Call    Tempo_0.5s
-    ;Return
-    
     BANKSEL PORTB
     LedPiano
-	BTFSC   PORTB,  0
-	GOTO	Music1
-	CALL	Piano
+	Btfsc   PORTB,  0
+	Goto	Music1
+	Call	Piano
 	Call    LEDAll_Menu
 	
     Music1
-	BTFSC   PORTB,  1
-	GOTO	Simon
+	Btfsc   PORTB,  1
+	Goto	Simon
 	Call	BabyShark
 	Call    LEDAll_Menu
 	
     Simon
-	BTFSC   PORTB,  2
-	GOTO	Music2
+	Btfsc   PORTB,  2
+	Goto	Music2
 	Return
 	
     Music2
-	BTFSC   PORTB,  3
-	GOTO	LedPiano
+	Btfsc   PORTB,  3
+	Goto	LedPiano
 	Call	VoisSurTonChemin
 	Call    LEDAll_Menu
-	GOTO	LedPiano
+	Goto	LedPiano
 	
 	
 	
@@ -1819,14 +1804,14 @@ Menu:
 
 Victory:
     
-    call    LEDAll_Green1
-    call    Tempo_0.5s
-    call    LEDAll_Green2
-    call    Tempo_0.5s
-    call    LEDAll_Green1
-    call    Tempo_0.5s
-    call    LEDAll_Green2
-    call    Tempo_0.5s
+    Call    LEDAll_Green1
+    Call    Tempo_0.5s
+    Call    LEDAll_Green2
+    Call    Tempo_0.5s
+    Call    LEDAll_Green1
+    Call    Tempo_0.5s
+    Call    LEDAll_Green2
+    Call    Tempo_0.5s
     Return
     
 ;*******************************************************************************
