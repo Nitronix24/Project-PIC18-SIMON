@@ -211,7 +211,7 @@ constFF		    RES	    1
 ;*******************************************************************************
 	    
 RES_VECT  CODE    0x0000            ; processor reset vector
-    GOTO    MUSIQUE                   ; go to beginning of program
+    GOTO    DEBUT                   ; go to beginning of program
     
 ;*******************************************************************************
 ; TODO Step #4 - Interrupt Service Routines
@@ -551,9 +551,9 @@ LEDAll_Red2:
 
 LEDAll_Menu:
     CALL ColorRed
-    CALL ColorOff
+    CALL ColorBlue
     CALL ColorGreen
-    CALL ColorOff
+    CALL ColorPurple
     RETURN
  
 ;*******************************************************************************
@@ -1711,17 +1711,7 @@ Config_Random:
     Return
     
 ;*******************************************************************************
-MUSIQUE
-    Call    Config_OSC
-    Call    Config_RGB
-    Call    Config_Button
-    Call    Config_Buzzer
-    Call    Config_Random
-    
-    Call    BabyShark
-    Call    VoisSurTonChemin
-    Goto    DEBUT
-    
+
 DEBUT
 
     Call    Config_OSC
@@ -1794,17 +1784,31 @@ Menu:
     ;Return
     
     BANKSEL PORTB
-    LedJeu
-	BTFSC   PORTB,  0
-	GOTO	LedPiano
-	CALL	Piano
-	
     LedPiano
+	BTFSC   PORTB,  0
+	GOTO	Music1
+	CALL	Piano
+	Call    LEDAll_Menu
+	
+    Music1
+	BTFSC   PORTB,  1
+	GOTO	Simon
+	Call	BabyShark
+	Call    LEDAll_Menu
+	
+    Simon
 	BTFSC   PORTB,  2
-	GOTO	LedJeu
-	GOTO	Sequence
-   
-	RETURN
+	GOTO	Music2
+	Return
+	
+    Music2
+	BTFSC   PORTB,  3
+	GOTO	LedPiano
+	Call	VoisSurTonChemin
+	Call    LEDAll_Menu
+	GOTO	LedPiano
+	
+	
 	
     
 ;*******************************************************************************    
