@@ -1352,7 +1352,7 @@ BabyShark:
     
     Return
    
-MusiquesVST:
+VoisSurTonChemin:
     
     ;Mi
     call    LEDAll_On
@@ -1360,196 +1360,183 @@ MusiquesVST:
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Mi
     call    LEDAll_On
     Call    BuzzerMi5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Mi
     call    LEDAll_On
     Call    BuzzerMi5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Re
     call    LEDAll_On
     Call    BuzzerRe5
     call    Tempo_1s
+    call    Tempo_1s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Re
     call    LEDAll_On
     Call    BuzzerRe5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Re
     call    LEDAll_On
     Call    BuzzerRe5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Re
     call    LEDAll_On
     Call    BuzzerRe5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Si
     call    LEDAll_On
     Call    BuzzerSi3
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Re
     call    LEDAll_On
     Call    BuzzerRe5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Mi
     call    LEDAll_On
     Call    BuzzerMi5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;La
     call    LEDAll_On
     Call    BuzzerLa4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Si
     call    LEDAll_On
     Call    BuzzerSi3
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Re
     call    LEDAll_On
     Call    BuzzerRe5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Si
     call    LEDAll_On
     Call    BuzzerSi3
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Mi
     call    LEDAll_On
     Call    BuzzerMi5
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Do
     call    LEDAll_On
     Call    BuzzerDo4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;Si
     call    LEDAll_On
     Call    BuzzerSi3
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     ;La
     call    LEDAll_On
     Call    BuzzerLa4
     call    Tempo_0.5s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s	
+    call    Tempo_20ms	
     ;Si
     call    LEDAll_On
     Call    BuzzerSi3
     call    Tempo_1s
     Call    BuzzerOff
     Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;SolDiese
-    call    LEDAll_On
-    Call    BuzzerSoldiese
-    call    Tempo_1s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
-    ;La
-    call    LEDAll_On
-    Call    BuzzerLa4
-    call    Tempo_0.5s
-    Call    BuzzerOff
-    Call    LEDAll_Off
-    call    Tempo_0.2s
+    call    Tempo_20ms
     
     Return
     
@@ -1696,6 +1683,7 @@ MUSIQUE
     Call    Config_Random
     
     Call    BabyShark
+    Call    VoisSurTonChemin
     Goto    DEBUT
     
 DEBUT
