@@ -59,7 +59,11 @@ Les pistes restantes seront expliquées plus tard, car elles serviront pour la m
 Pour programmer le PIC18F25K40, vous pouvez utiliser le logiciel propriétaire de microchip MPLAB X dans la version 5.35 qui possède le compilateur assembleur nécessaire.
 
 [Site Microchip](https://www.microchip.com/en-us/tools-resources/archives/mplab-ecosystem)
-[MPLAB X IDE](https://ww1.microchip.com/downloads/en/DeviceDoc/MPLABX-v5.35-windows-installer.exe)
+[MPLAB X IDE](![PCB_through-hole_components_placement](https://github.com/Nitronix24/Project-PIC18-SIMON/assets/96538782/c3d1b24a-dfb9-4d7b-a6ac-a10d720b4faf)
+![PCB_scheme](https://github.com/Nitronix24/Project-PIC18-SIMON/assets/96538782/17ff6501-19de-441c-9a02-8488a439dc74)
+![PCB_real_components_placement](https://github.com/Nitronix24/Project-PIC18-SIMON/assets/96538782/2ada7310-15e0-4f59-abe1-df6e358c839f)
+![PCB_CMS_components_placement](https://github.com/Nitronix24/Project-PIC18-SIMON/assets/96538782/4cace3a5-eaef-4408-81dd-5390e496308c)
+https://ww1.microchip.com/downloads/en/DeviceDoc/MPLABX-v5.35-windows-installer.exe)
 
 ## Quick Start
 
