@@ -20,7 +20,8 @@ On dispose du matériel suivant :
 Pour réaliser le montage suivant, vous devez souder les composants ci-dessus selon le schéma suivant :
 <center>PCB Scheme<center/>
 
-![[PCB_scheme.png]]
+<img style="margin-left: auto; margin-right: auto; width: 30%; height: 30%" src="PCB_scheme.png"></img>
+
 
 Pour les composants CMS (Composants Montés en Surface), on peut souder au fer à souder standard, cependant cela étant assez difficile, vous pouvez utiliser un four à refusion pour obtenir un résultat plus propre.
 
