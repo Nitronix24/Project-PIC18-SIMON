@@ -19,16 +19,14 @@ On dispose du matériel suivant :
 # Electronic Assembly
 Pour réaliser le montage suivant, vous devez souder les composants ci-dessus selon le schéma suivant :
 <center><i>PCB Scheme<i/><center/>
-	
-<div style"text-align: center">
+
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_scheme.png"></img>
-</div>
 
 Pour les composants CMS (Composants Montés en Surface), on peut souder au fer à souder standard, cependant cela étant assez difficile, vous pouvez utiliser un four à refusion pour obtenir un résultat plus propre.
 
 <center><i>PCB CMS Components<i/><center/>
 
-![[PCB_CMS_components_placement.jpg]]
+<img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_CMS_components_placement.jpg"></img>
 Rouge : résistances 2.2 kOhm
 Vert : LED verte - package 0805
 Jaune : condensateur 100 nF - package 0805
@@ -40,7 +38,7 @@ Pour les composants traversants, vous pouvez les souder au fer à souder standar
 
 <center><i>PCB through-hole Components<i/><center/>
 
-![[PCB_through-hole_components_placement.jpg]]
+<img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_through-hole_components_placement.jpg"></img>
 Rouge : bouton
 Vert : résistance Master Clear 10 kOhm
 Jaune : buzzer
@@ -50,7 +48,7 @@ Marron : support droit mâle 6 contacts pour branchement du PicKit3
 Noir : fil de sortie de la masse pour les mesures à l'oscilloscope 
 
 Une fois tous les composants ci-dessus soudés, vous devriez obtenir le résultat suivant :
-![[PCB_real_components_placement.jpg]]
+<img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_real_components_placement.jpg"></img>
 
 Les pistes restantes seront expliquées plus tard, car elles serviront pour la mise sur batterie de la carte.
 
