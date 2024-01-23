@@ -29,11 +29,8 @@ Pour les composants CMS (Composants Montés en Surface), on peut souder au fer �
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_CMS_components_placement.jpg"></img>
 
 Rouge : résistances 2.2 kOhm
-
 Vert : LED verte - package 0805
-
 Jaune : condensateur 100 nF - package 0805
-
 Bleu : LED SK6812 RGB
 
 **Attention au sens des composants polarisés (LED)**
