@@ -18,13 +18,13 @@ On dispose du matériel suivant :
 
 # Electronic Assembly
 Pour réaliser le montage suivant, vous devez souder les composants ci-dessus selon le schéma suivant :
-<center><i>PCB Scheme<i/><center/>
+<center> PCB Scheme <center/>
 
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_scheme.png"></img>
 
 Pour les composants CMS (Composants Montés en Surface), on peut souder au fer à souder standard, cependant cela étant assez difficile, vous pouvez utiliser un four à refusion pour obtenir un résultat plus propre.
 
-<center><i>PCB CMS Components<i/><center/>
+<center> PCB CMS Components <center/>
 
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_CMS_components_placement.jpg"></img>
 
@@ -40,7 +40,7 @@ Bleu : LED SK6812 RGB
 
 Pour les composants traversants, vous pouvez les souder au fer à souder standard après avoir soudé les composants CMS.
 
-<center><i>PCB through-hole Components<i/><center/>
+<center> PCB through-hole Components <center/>
 
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_through-hole_components_placement.jpg"></img>
 
