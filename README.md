@@ -18,7 +18,8 @@ On dispose du matériel suivant :
 
 # Electronic Assembly
 Pour réaliser le montage suivant, vous devez souder les composants ci-dessus selon le schéma suivant :
-<div style"text-align: center">PCB Scheme
+<center><i>PCB Scheme<i/><center/>
+<div style"text-align: center">
 <img style="text-align: center; width: 50%; height: 50%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_scheme.png"></img>
 </div>
 
