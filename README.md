@@ -72,7 +72,7 @@ Pour programmer le PIC18F25K40, vous pouvez utiliser le logiciel propriétaire d
 
 ## Quick Start
 
-Si vous souhaitez uniquement cloner le projet, rendez-vous directement à la partie [[#Clone from repository]].
+Si vous souhaitez uniquement cloner le projet, rendez-vous directement à la partie [Clone from repository](https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/README.md#clone-from-repository).
 
 Une fois le logiciel installé, vous devez créer un projet en suivant les instructions suivantes :
 
