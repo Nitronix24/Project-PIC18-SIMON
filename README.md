@@ -29,8 +29,11 @@ Pour les composants CMS (Composants Montés en Surface), on peut souder au fer �
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_CMS_components_placement.jpg"></img>
 
 Rouge : résistances 2.2 kOhm
+
 Vert : LED verte - package 0805
+
 Jaune : condensateur 100 nF - package 0805
+
 Bleu : LED SK6812 RGB
 
 **Attention au sens des composants polarisés (LED)**
@@ -42,11 +45,17 @@ Pour les composants traversants, vous pouvez les souder au fer à souder standar
 <img style=" display: block; text-align: center; width: 70%; height: 70%" src="https://github.com/Nitronix24/Project-PIC18-SIMON/blob/main/img/PCB_through-hole_components_placement.jpg"></img>
 
 Rouge : bouton
+
 Vert : résistance Master Clear 10 kOhm
+
 Jaune : buzzer
+
 Bleu : PIC18F25K40
+
 Orange : condensateur de découplage 100 nF non polarisé (céramique)
+
 Marron : support droit mâle 6 contacts pour branchement du PicKit3
+
 Noir : fil de sortie de la masse pour les mesures à l'oscilloscope 
 
 Une fois tous les composants ci-dessus soudés, vous devriez obtenir le résultat suivant :
